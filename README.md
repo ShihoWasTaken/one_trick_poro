@@ -1,7 +1,7 @@
 One Trick Poro - League of Legends website
 ==========
 
-[![SensioLabsInsight](https://insight.sensiolabs.com/projects/24802f4a-e5ec-4b13-bc32-17691e69b64d/big.png)](https://insight.sensiolabs.com/projects/24802f4a-e5ec-4b13-bc32-17691e69b64d)
+[![SensioLabsInsight](https://insight.sensiolabs.com/projects/bffd0741-786b-4a3c-808d-23ffc51b95a3/big.png)](https://insight.sensiolabs.com/projects/bffd0741-786b-4a3c-808d-23ffc51b95a3)
 
 This website is a Symfony 3 project created in order to allow people all around the world to trade pokemons to fill their pokedex.
 
