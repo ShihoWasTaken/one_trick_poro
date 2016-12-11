@@ -4,6 +4,7 @@ namespace AppBundle\Services;
 
 use AppBundle\Entity\StaticData\Champion;
 use Symfony\Component\Config\Definition\Exception\Exception;
+use AppBundle\Services\LoLAPI\LoLAPIService;
 use Symfony\Component\DependencyInjection\ContainerInterface as Container;
 use Doctrine\ORM\Query;
 

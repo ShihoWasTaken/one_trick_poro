@@ -14,6 +14,7 @@ class SummonerController extends Controller
         $api = $this->container->get('app.lolapi');
         $sum = $this->container->get('app.lolsummoner');
         $topChampionsMastery = $api->getMasteryTopChampions($summonerId);
+        $static_data_version = $this->container->getParameter('static_data_version');
 
         $soloq = $sum->getSummonerRank($summonerId);
         if(!isset($soloq))
@@ -52,6 +53,7 @@ class SummonerController extends Controller
                 'summoner' => $summoner,
                 'soloq' => $soloq,
                 'soloqimg' => $soloqimg,
+                'static_data_version' => $static_data_version,
             ));
     }
 
