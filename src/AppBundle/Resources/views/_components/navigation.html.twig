@@ -1,0 +1,87 @@
+<nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+	<div class="container">
+		<div class="navbar-header">
+			<a class="navbar-brand" href="{{ url('app_homepage') }}">{{ 'sitename' | trans }}</a>
+			<ul class="nav navbar-nav">
+                {% if not is_granted('IS_AUTHENTICATED_REMEMBERED') %}
+                    <li><a href="{{ path('fos_user_registration_register') }}">{{ 'navbar.register' | trans }}</a></li>
+                    <li><a href="{{ path('fos_user_security_login') }}">{{ 'navbar.login' | trans }}</a></li>
+                {% else %}
+					<li><a href="{{ path('app_profile',  {'userId':app.user.id}) }}">{{ 'navbar.account' | trans }}</a></li>
+                    <li><a href="{{ path('fos_user_security_logout') }}">Se déconnecter</a></li>
+                {% endif %}
+				<li><a href="#" type="button" data-toggle="modal" data-target="#modalChooseLanguage">Langage: {{ app.request.locale | upper }} <span class="caret"></span></a></li>
+			</ul>
+			<form class="navbar-form navbar-left" role="search" action="{{ path('app_searchbar') }}" method="post">
+				<div class="input-group">
+					{#
+					<div class="input-group-btn">
+						<select name="region" class="form-control">
+							<option value="euw">EUW</option>
+							<option value="na">NA</option>
+							<option value="kr">KR</option>
+							<option value="oce">OCE</option>
+							<option value="eune">EUNE</option>
+						</select>
+					</div>
+					#}
+					<span class="input-group-btn">
+						<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modalChooseRegion">EUW <span class="caret"></span></button>
+					</span>
+					<input name="searchbar-region" type="hidden" value="euw">
+					<input name="searchbar-summonerName" type="text" class="form-control" placeholder="Chercher invocateur (EUW)">
+					<span class="input-group-btn">
+						<button class="btn btn-primary" type="submit"><i class="fa fa-search" aria-hidden="true"></i></button>
+					</span>
+				</div>
+			</form>
+		</div>
+	</div>
+</nav>
+
+<!-- Modal -->
+<div id="modalChooseRegion" class="modal" role="dialog">
+	<div class="modal-dialog">
+
+		<!-- Modal content-->
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal">&times;</button>
+				<h4 class="modal-title">Change region</h4>
+			</div>
+			<div class="modal-body">
+				<p>Some text in the modal.</p>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+			</div>
+		</div>
+
+	</div>
+</div>
+
+{# Modal link summoner #}
+<div id="modalChooseLanguage" class="modal" role="dialog">
+	<div class="modal-dialog">
+
+		<!-- Modal content-->
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal">&times;</button>
+				<h4 class="modal-title">Choix langue</h4>
+			</div>
+			<div class="modal-body">
+				<div class="row">
+					<a href="{{ path(app.request.attributes.get('_route'), app.request.attributes.get('_route_params')|merge({'_locale':'en'}) ) }}"><div class="col-md-6"><img class='flag' src='{{ asset('bundles/app/images/flags/EN.png' ) }}' /> English</div></a>
+					<a href="{{ path(app.request.attributes.get('_route'), app.request.attributes.get('_route_params')|merge({'_locale':'fr'}) ) }}"><div class="col-md-6"><img class='flag' src='{{ asset('bundles/app/images/flags/FR.png' ) }}' /> Français</div></a>
+					{#
+					<a href="{{ path(app.request.attributes.get('_route'), app.request.attributes.get('_route_params')|merge({'_locale':'es'}) ) }}"><div class="col-md-6"><img class='flag' src='{{ asset('bundles/app/images/flags/ES.png' ) }}' /> Español</div></a>
+					<a href="{{ path(app.request.attributes.get('_route'), app.request.attributes.get('_route_params')|merge({'_locale':'de'}) ) }}"><div class="col-md-6"><img class='flag' src='{{ asset('bundles/app/images/flags/DE.png' ) }}' /> Deutsch</div></a>
+					<a href="{{ path(app.request.attributes.get('_route'), app.request.attributes.get('_route_params')|merge({'_locale':'it'}) ) }}"><div class="col-md-6"><img class='flag' src='{{ asset('bundles/app/images/flags/IT.png' ) }}' /> Italiano</div></a>
+					#}
+				</div>
+			</div>
+		</div>
+
+	</div>
+</div>

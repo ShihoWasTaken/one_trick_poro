@@ -1,0 +1,162 @@
+{% extends 'AppBundle::layout.html.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    {% stylesheets 'bundles/app/css/Summoner/chests.css' %}
+    <link rel="stylesheet" href="{{ asset_url }}" />
+    {% endstylesheets %}
+{% endblock stylesheets %}
+
+{% block javascripts_body %}
+    {{ parent() }}
+    <script src="{{ asset('bundles/fosjsrouting/js/router.js') }}"></script>
+    <script src="{{ path('fos_js_routing_js', {"callback": "fos.Router.setData"}) }}"></script>
+    <script src="{{ asset('bundles/app/js/jquery.filterizr.min.js') }}"></script>
+{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <div class="row">
+            <div class="col-xs-12 col-md-12 white-bg">
+                <div class="row">
+                    <div class="col-md-2">
+                        <img src="http://ddragon.leagueoflegends.com/cdn/6.12.1/img/profileicon/{{ summoner.profileIconId }}.png" />
+                        {#
+                        <img src="http://ddragon.leagueoflegends.com/cdn/img/champion/splash/{{ topChampionsMastery.0.championKey }}_0.jpg" />
+                        #}
+                    </div>
+                    <div class="col-md-4">
+                        <h1>{{ summoner.name }}<span class="badge"> {{ summoner.region }}</span></h1>
+                    </div>
+                    <div class="col-md-3">
+                        <img src="{{ asset('bundles/app/images/leagues/' ~ soloqimg ~ '.png') }}" />
+                    </div>
+                    <div class="col-md-3">
+                        {% if soloq is not null %}
+                            <div>{{ soloq.name }}</div>
+                            <div>{{ soloq.tier }} {{ soloq.entries.0.division }}</div>
+                            <div>{{ soloq.entries.0.leaguePoints }} points</div>
+                            <div>{{ soloq.entries.0.wins }} wins</div>
+                            <div>{{ soloq.entries.0.losses }} losses</div>
+                        {% endif %}
+                    </div>
+                </div>
+                <ul class="nav nav-tabs">
+                    <li class="active"><a data-toggle="tab" href="#home">Résumé</a></li>
+                    <li><a data-toggle="tab" href="#liveGame">Live game</a></li>
+                    <li><a data-toggle="tab" href="#rankedStats">Ranked stats</a></li>
+                    <li><a data-toggle="tab" href="#history">Historique</a></li>
+                    <li><a data-toggle="tab" href="#runes">Runes</a></li>
+                    <li><a data-toggle="tab" href="#masteries">Maitrises</a></li>
+                    <li><a data-toggle="tab" href="#championMasteries">Maitrises de champion</a></li>
+                    <li><a data-toggle="tab" href="#chests">Coffres</a></li>
+                </ul>
+                <div class="col-md-12">
+                    <h2>Maitrises de champions</h2>
+                    {% for mastery in topChampionsMastery %}
+                        <div class="col-md-4 text-center">
+                            <h4>{{ mastery.championKey }}</h4>
+                            <img src="http://ddragon.leagueoflegends.com/cdn/6.9.1/img/champion/{{ mastery.championKey }}.png">
+                            {% if mastery.highestGrade is defined %}
+                                <div>Meilleure note {{ mastery.highestGrade }} </div>
+                            {% endif %}
+                            {% if mastery.lastPlayTime is defined %}
+                                <br>Joué la dernière fois le {{ (mastery.lastPlayTime/1000)|date('d/m/Y à H:m') }}
+                            {% endif %}
+                            <br>Niveau de maitrise : {{ mastery.championLevel }}
+                            <br>Points : {{ mastery.championPoints }}
+                        </div>
+                    {% endfor %}
+
+                </div>
+                <div id="loadingDiv" class="col-md-12 text-center hidden">
+                    <img src="{{ asset('bundles/app/images/loader.gif' ) }}" />
+                    <h1>Opération en cours</h1>
+                </div>
+                {#
+
+                <a class="btn btn-primary btn-lg" role="button" href="">Update summoner</a>
+                <a class="btn btn-primary btn-lg" role="button" href="{{	path('app_summoner_chests', {'region': summoner.region, 'summonerId': summoner.summonerId}) }}">Maitrises / coffres</a>
+                #}
+                <div class="tab-content">
+                    <div id="home" class="tab-pane fade in active">
+                        <h3>HOME</h3>
+                        <p>Some content.</p>
+                    </div>
+                    <div id="liveGame" class="tab-pane fade">
+                        <h3>liveGame</h3>
+                        <p>Some content in menu 1.</p>
+                    </div>
+                    <div id="rankedStats" class="tab-pane fade">
+                        <h3>rankedStats</h3>
+                        <p>Some content in menu 1.</p>
+                    </div>
+                    <div id="history" class="tab-pane fade">
+                        <h3>history</h3>
+                        <p>Some content in menu 1.</p>
+                    </div>
+                    <div id="runes" class="tab-pane fade">
+                        <h3>runes</h3>
+                        <p>Some content in menu 1.</p>
+                    </div>
+                    <div id="masteries" class="tab-pane fade">
+                        <h3>masteries</h3>
+                        <p>Some content in menu 1.</p>
+                    </div>
+                    <div id="championMasteries" class="tab-pane fade">
+                        <h3>championMasteries</h3>
+                        <p>Some content in menu 1.</p>
+                    </div>
+                    <div id="chests" class="tab-pane fade">
+                        <h3>chests</h3>
+                        <p>Some content in menu 2.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.3/jquery.min.js"></script>
+    <script>
+        $( document ).ready(function() {
+            var isChestsAndMasteriesLoaded = false;
+            $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+                var target = $(e.target).attr("href") // activated tab
+                //alert(target);
+                switch(target)
+                {
+                    //case "#championMasteries":
+                    case "#chests":
+                            if(!isChestsAndMasteriesLoaded)
+                            {
+                                $('#loadingDiv').removeClass('hidden');
+                                var summonerId = {{ summoner.summonerId }};
+                                var region = '{{ summoner.region }}';
+                                $.ajax({
+                                    url: '{{	path('app_summoner_chests_ajax', {'region': summoner.region, 'summonerId': summoner.summonerId}) }}',
+                                    type: 'POST',
+                                    data: {'summonerId': summonerId, 'region': region},
+                                    dataType: 'html',
+                                    success: function(data) {
+                                        $('#loadingDiv').addClass('hidden');
+                                        $('#chests').html(data);
+                                        $( "#nav-filter li a" ).click(function() {
+                                            $('#nav-filter > li').each(function () {
+                                                $(this).removeClass("active")
+                                            });
+                                            $(this).parent().addClass("active");
+                                        });
+                                        var filterizd = $('.filtr-container').filterizr({
+                                            //options object
+                                        });
+                                    }
+                                });
+                                isChestsAndMasteriesLoaded = true;
+                            }
+                        break;
+                    default:
+                        break;
+                }
+            });
+        });
+    </script>
+{% endblock content %}

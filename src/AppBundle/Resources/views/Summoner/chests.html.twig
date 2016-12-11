@@ -1,0 +1,65 @@
+{% block body %}
+    <div class="col-xs-12 col-md-12 white-bg">
+        <div class="col-md-12">
+            <h2>Coffres</h2>
+            <div class="row">
+                <div class="col-md-9">
+                    <ul id="nav-filter" class="nav nav-pills">
+                           <!-- For filtering controls add -->
+                            {% set owned = 0 %}
+                            {% set remaining = 0 %}
+                            {% for key, champion in champions %}
+                                {% if champion.chestGranted is defined and champion.chestGranted %}
+                                    {% set owned = owned + 1 %}
+                                {% else %}
+                                    {% set remaining = remaining + 1 %}
+                                {% endif %}
+                            {% endfor %}
+                           <li data-filter="all" class="active"><a href="#"> Tous les champions <span class="badge">{{ champions|length }}</span></a></li>
+                           <li data-filter="1"><a href="#">Coffre(s) obtenu(s) <span class="badge">{{ owned }}</span></a></li>
+                           <li data-filter="2"><a href="#">Coffre(s) disponible(s) <span class="badge">{{ remaining }}</span></a></li>
+                    </ul>
+                </div>
+                <div class="col-md-3">
+                    <input type="text" name="filtr-search" class="filtr-search form-control" value="" placeholder="Your search" data-search="">
+                </div>
+            </div>
+
+            <div class="filtr-container">
+                {% for key, champion in champions %}
+                    <div class="col-md-3 text-center champion filtr-item"
+                        {% if champion.chestGranted is defined and champion.chestGranted %}
+                            data-category="1"
+                        {% else %}
+                            data-category="2"
+                        {% endif %}
+                         data-sort="value">
+                        <h4>{{ champion.key }}</h4>
+                        <img src="http://ddragon.leagueoflegends.com/cdn/6.12.1/img/champion/{{ champion.key }}.png">
+                        {% if champion.chestGranted is defined and champion.chestGranted %}
+                            <div>
+                                <img src="{{ asset('bundles/app/images/champion-masteries/chest_champion_mastery_over.png' ) }}" />
+                            </div>
+                        {% else %}
+                            <div>
+                                <img src="{{ asset('bundles/app/images/champion-masteries/chest_champion_mastery_disabled.png' ) }}" />
+                            </div>
+                        {% endif %}
+                        {% if champion.championLevel is defined %}
+                            <div>
+                                <img src="{{ asset('bundles/app/images/champion-masteries/' ~ champion.championLevel ~ '.png' ) }}" />
+                            </div>
+                        {% else %}
+                            <div>
+                                <img src="{{ asset('bundles/app/images/champion-masteries/chest_champion_mastery_disabled.png' ) }}" />
+                            </div>
+                        {% endif %}
+                        {% if champion.lastPlayTime is defined %}
+                            Joué la dernière fois le {{ (champion.lastPlayTime/1000)|date('d/m/Y à H:m') }}
+                        {% endif %}
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+{% endblock body %}

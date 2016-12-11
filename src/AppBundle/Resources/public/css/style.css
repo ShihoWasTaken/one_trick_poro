@@ -1,0 +1,68 @@
+body
+{
+    padding-top: 70px;
+    background-color: #eee;
+    background-image: url('../images/backgrounds/teambuilder-wallpaper.jpg');
+    background-attachment: fixed;
+    background-size: cover;
+}
+
+.white-bg
+{
+    background-color: white;
+}
+
+.modal-content
+{
+    border-radius: 0;
+}
+
+.btn
+{
+    border-radius: 0
+}
+
+.btn-primary
+{
+    background-color: red;
+}
+
+.navbar-form .form-control
+{
+    border-radius: 0;
+}
+
+.navbar-default
+{
+    background-color: #008cba;
+    border-color: #006687;
+    background-image: none;
+}
+
+.navbar-default .navbar-nav>li>a, .navbar-default .navbar-brand, .navbar-default .navbar-text
+{
+    color: white;
+}
+
+.navbar-default .navbar-nav > li > a:hover, .navbar-default .navbar-nav > li > a:focus {
+    color: #ffffff;
+    background-color: #006687;
+}
+
+.navbar-default .navbar-brand:focus, .navbar-default .navbar-brand:hover
+{
+    color: #ffffff;
+    background-color: #006687;
+}
+
+.navbar-default .navbar-text a
+{
+    color: darkseagreen;
+    font-weight: bold;
+}
+
+
+.navbar-default .navbar-text a:hover, .navbar-default .navbar-text a:active, .navbar-default .navbar-text a:focus
+{
+    text-decoration: none;
+}

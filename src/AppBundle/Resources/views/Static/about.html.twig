@@ -1,0 +1,12 @@
+{% extends 'AppBundle::layout.html.twig' %}
+
+{% block title %}{{ 'sitename' | trans }} | {{ 'about_page.title'|trans }}{% endblock %}
+
+{% block content %}
+	<div class="jumbotron">
+		<div class="container">
+		<h1>{{ 'about_page.title'|trans }}</h1>
+			<p>{{ 'about_page.content'|trans }}</p>
+		</div>
+	</div>
+{% endblock content %}

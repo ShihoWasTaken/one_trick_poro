@@ -1,0 +1,14 @@
+{% extends 'AppBundle::layout.html.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    {% stylesheets 'bundles/app/css/*' filter='cssrewrite, uglifycss' %}
+    <link rel="stylesheet" href="{{ asset_url }}" />
+    {% endstylesheets %}
+{% endblock stylesheets %}
+
+{% block content %}
+<div class="container">
+{% block fos_user_content %}{% endblock %}
+</div>
+{% endblock %}

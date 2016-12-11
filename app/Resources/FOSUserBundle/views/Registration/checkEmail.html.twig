@@ -1,0 +1,17 @@
+{% extends "FOSUserBundle::layout.html.twig" %}
+
+{% trans_default_domain 'FOSUserBundle' %}
+
+{% block fos_user_content %}
+    <div class="row">
+        <div class="col-md-12">
+            <div class="alert alert-success" role="alert">{{ 'registration.check_email'|trans({'%email%': user.email}) }}</div>
+        </div>
+        <div class="col-md-12 white-bg">
+            Vous êtes inscrit avec le pseudo suivant: {{ user.username }}
+            <br>Vous êtes inscrit avec le mail suivant: {{ user.email }}
+            <br>Cliquez ici pour vous connecter
+            <br><a class="btn btn-default" href="#">Connexion</a>
+        </div>
+    </div>
+{% endblock %}

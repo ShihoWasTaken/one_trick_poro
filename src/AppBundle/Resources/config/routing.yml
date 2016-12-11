@@ -1,0 +1,79 @@
+app_homepage:
+    path:     /
+    defaults: { _controller: AppBundle:Static:homepage }
+    methods:  [GET]
+
+app_searchbar:
+    path:     /search
+    defaults: { _controller: AppBundle:Static:searchbar }
+    methods:  [POST]
+
+app_champion_mastery_summoner:
+    path:     /championmastery/{region}/{summonerId}
+    defaults: { _controller: AppBundle:ChampionMastery:summoner }
+    methods:  [GET]
+
+app_about:
+    path:     /about
+    defaults: { _controller: AppBundle:Static:about }
+    methods:  [GET]
+
+app_users:
+    path:     /users
+    defaults: { _controller: AppBundle:Static:about }
+    methods:  [GET]
+
+app_profile:
+    path:     /profile/{userId}
+    defaults: { _controller: AppBundle:LoLAPI:profile }
+    methods:  [GET]
+
+app_profile_edit:
+    path:     /profile/{userId}/edit
+    defaults: { _controller: AppBundle:LoLAPI:editProfile }
+    methods:  [GET]
+
+app_link_summoner_to_user_blank:
+    path:     /link-account
+    defaults: { _controller: AppBundle:SummonerAjax:linkSummonerToUserBlank }
+    methods:  [POST]
+    requirements: { method: POST }
+
+app_link_summoner_to_user:
+    path:     /link-account/{summonerName}
+    defaults: { _controller: AppBundle:SummonerAjax:linkSummonerToUser }
+    methods:  [POST]
+    requirements: { method: POST }
+
+app_update_summoner_infos:
+    path:     /summoner/{region}/{summonerId}/update
+    defaults: { _controller: AppBundle:SummonerAjax:updateInfos }
+    methods:  [POST]
+    requirements: { method: POST }
+
+app_summoner:
+    path:     /summoner/{region}/{summonerId}
+    defaults: { _controller: AppBundle:Summoner:index }
+    methods:  [GET]
+
+app_summoner_chests:
+    path:     /summoner/{region}/{summonerId}/chests
+    defaults: { _controller: AppBundle:Summoner:chests }
+    methods:  [POST]
+    requirements: { method: POST }
+
+app_summoner_chests_ajax:
+    path:     /summoner/{region}/{summonerId}/chestsAjax
+    defaults: { _controller: AppBundle:SummonerAjax:chests }
+    methods:  [POST]
+    requirements: { method: POST }
+
+app_dev_test:
+    path:     /test
+    defaults: { _controller: AppBundle:StaticData:updateChampions }
+    methods:  [GET]
+
+app_admin_update:
+    path:     /update
+    defaults: { _controller: AppBundle:Admin:updateChampions }
+    methods:  [GET]

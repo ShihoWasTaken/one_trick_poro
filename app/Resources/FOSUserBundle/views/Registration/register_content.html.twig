@@ -1,0 +1,36 @@
+{% trans_default_domain 'FOSUserBundle' %}
+
+{% block fos_user_content %}
+
+    <div class="row">
+        <div id="form-register" class="col-xs-12 col-md-4 col-md-offset-4 white-bg">
+            <h2 class="titre"><span>{{ 'layout.register'|trans }}</span></h2>
+            <hr>
+            <form role="form" class="fos_user_registration_register" action="{{ path("fos_user_registration_register") }}" method="post">
+                {{ form_row(form._token) }}
+                <div class="form-group">
+                    <label for="fos_user_registration_form_username">{{ 'form.username'|trans }}</label>
+                    {{ form_errors(form.username) }}
+                    {{ form_widget(form.username, { 'attr': {'class': 'form-control'} }) }}
+                </div>
+                <div class="form-group">
+                    <label for="fos_user_registration_form_email">{{ 'form.email'|trans }}</label>
+                    {{ form_errors(form.email) }}
+                    {{ form_widget(form.email, { 'attr': {'class': 'form-control'} }) }}
+                </div>
+                <div class="form-group">
+                    <label for="fos_user_registration_form_plainPassword_first">{{ 'form.password'|trans }}</label>
+                    {{ form_errors(form.plainPassword.first) }}
+                    {{ form_widget(form.plainPassword.first, { 'attr': {'class': 'form-control'} }) }}
+                </div>
+                <div class="form-group">
+                    <label for="fos_user_registration_form_plainPassword_second">{{ 'form.password_confirmation'|trans }}</label>
+                    {{ form_errors(form.plainPassword.second) }}
+                    {{ form_widget(form.plainPassword.second, { 'attr': {'class': 'form-control'} }) }}
+                </div>
+                <input class="btn btn-primary btn-block" type="submit" id="_submit" name="_submit" value="{{ 'registration.submit'|trans }}" />
+            </form>
+        </div>
+    </div>
+
+{% endblock fos_user_content %}

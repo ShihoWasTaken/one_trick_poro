@@ -1,0 +1,14 @@
+{% extends "FOSUserBundle::layout.html.twig" %}
+
+{% trans_default_domain 'FOSUserBundle' %}
+
+{% block fos_user_content %}
+    {{ form_start(form, { 'action': path('fos_user_resetting_reset', {'token': token}), 'attr': { 'class': 'fos_user_resetting_reset' } }) }}
+    {{ form_widget(form) }}
+    <div class="form-group">
+        <label for="username">{{ 'security.login.username'|trans }}</label>
+        <input class="form-control" type="text" id="username" name="_username" value="{{ last_username }}" required="required" />
+    </div>
+    <input class="btn btn-primary" type="submit" value="{{ 'resetting.reset.submit'|trans }}" />
+    {{ form_end(form) }}
+{% endblock %}

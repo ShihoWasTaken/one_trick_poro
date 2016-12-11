@@ -1,0 +1,30 @@
+{% extends 'AppBundle::layout.html.twig' %}
+
+
+{% block content %}
+    <div class="container">
+        <div class="row">
+            <div class="col-xs-10 col-md-offset-2 col-md-8 white-bg">
+                <h1>Entrez le nom de l'invocateur dont vous voulez voir les maitrises</h1>
+                <form role="form">
+                    <div class="input-group">
+                        <div class="input-group-btn">
+                            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Action <span class="caret"></span></button>
+                            <ul class="dropdown-menu">
+                                <li><a href="#">Action</a></li>
+                                <li><a href="#">Another action</a></li>
+                                <li><a href="#">Something else here</a></li>
+                                <li role="separator" class="divider"></li>
+                                <li><a href="#">Separated link</a></li>
+                            </ul>
+                        </div>
+                        <input type="text" class="form-control" placeholder="Search for...">
+                        <span class="input-group-btn">
+                            <input class="btn btn-primary" type="submit" value="chercher">
+                        </span>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock content %}

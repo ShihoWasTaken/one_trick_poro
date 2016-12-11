@@ -1,0 +1,11 @@
+{% extends "AppBundle::layout.html.twig" %}
+
+{% block body %}
+    <div class="jumbotron">
+        <div class="container">
+            <h1>{{ 'error500.title'|trans }}</h1>
+            <p>{{ 'error500.content'|trans }}</p>
+            <a href="{{ url('app_homepage') }}">Retourner à l'accueil</a>
+        </div>
+    </div>
+{% endblock body %}

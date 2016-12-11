@@ -1,0 +1,14 @@
+<ul>
+	{% if user.summoners is defined %}
+		{% for summoner in user.summoners %}
+			<a href="{{path('app_summoner',{'region': summoner.region, 'summonerId': summoner.summonerId}) }}">
+				<div class="col-md-3 summoner">
+					<h3>{{ summoner.name }}</h3>
+					<div>niveau {{ summoner.level }}</div>
+					<img src="http://ddragon.leagueoflegends.com/cdn/6.9.1/img/profileicon/{{ summoner.profileIconId }}.png" />
+				</div>
+			</a>
+		{% endfor %}
+	{% else %}
+	{% endif %}
+</ul>

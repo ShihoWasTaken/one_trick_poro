@@ -1,0 +1,82 @@
+{% extends 'AppBundle::layout.html.twig' %}
+
+{% block javascripts_body %}
+	{{ parent() }}
+	<script src="{{ asset('bundles/fosjsrouting/js/router.js') }}"></script>
+	<script src="{{ path('fos_js_routing_js', {"callback": "fos.Router.setData"}) }}"></script>
+	<script src="{{ asset ('bundles/app/js/external/clipboard.min.js') }}" type="text/javascript"></script>
+	<script src="{{ asset ('bundles/app/js/link-summoner-to-user.js') }}" type="text/javascript"></script>
+{% endblock %}
+
+{% block content %}
+	<div class="container">
+		<div class="col-xs-10 col-md-10 white-bg">
+			<h1>Profil de {{ app.user.username }}</h1>
+			<p><a class="btn btn-primary btn-lg" role="button" href="{{	path('app_profile_edit', {'userId':app.user.id}) }}">Modifier mes infos</a></p>
+
+			<p><a class="btn btn-primary btn-lg" role="button" href="{{	url('app_about') }}">Delier un compte LoL</a></p>
+			<p><a class="btn btn-primary btn-lg" role="button" href="{{	url('app_about') }}">Update summoner</a></p>
+
+			<!-- Trigger the modal with a button -->
+			<button id="btn-link-account" type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#modalLinkSummoner" data-backdrop="static">Lier un compte LoL</button>
+
+			<!-- Modal -->
+			<div id="modalLinkSummoner" class="modal fade" role="dialog">
+				<div class="modal-dialog">
+
+					<!-- Modal content-->
+					<div class="modal-content">
+						<div class="modal-header">
+							<button type="button" class="close" data-dismiss="modal">&times;</button>
+							<h4 class="modal-title">Modal Header</h4>
+						</div>
+						<div class="modal-body">
+							<div id="responseDiv" class="col-md-12 text-center">
+							</div>
+							<div id="loadingDiv" class="col-md-12 text-center hidden">
+								<img src="{{ asset('bundles/app/images/loader.gif' ) }}" />
+								<h1>Opération en cours</h1>
+							</div>
+							<p>Pour lier votre compte, renommez une page de runes avec le nom suivant:</p>
+							<div class="input-group">
+								<span class="input-group-addon" id="foo">LeagueOfTools-{{ app.user.id }}</span>
+								<span class="input-group-btn">
+									<button class="btn btn-default" data-clipboard-target="#foo"><i class="fa fa-clipboard" aria-hidden="true"></i> Copier</button>
+								</span>
+							</div>
+							<form role="form" id="formLinkSummonerToUser">
+								<div class="form-group">
+									<label for="summonerToLink">Invocateur à lier:</label>
+									<input type="text" id="summonerToLink" class="form-control" required>
+								</div>
+							<button class="btn btn-primary" type="submit" disabled>Lier ce summoner</button>
+						</div>
+						<div class="modal-footer">
+							<button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+						</div>
+					</div>
+
+				</div>
+			</div>
+
+			<ul>
+				{% if data.shiho is defined %}
+					<img src="http://ddragon.leagueoflegends.com/cdn/6.9.1/img/profileicon/{{ data.shiho.profileIconId }}.png" />
+					{% for key, info in data.shiho %}
+						<li>{{ key }}: {{ info|e }}</li>
+					{% endfor %}
+					Dernière game le {{ (data.shiho.revisionDate/1000)|date('d/m/Y à H:m') }}
+				{% else %}
+					{% for key, info in data %}
+						<li>{{ key }}: {{ info|e }}</li>
+					{% endfor %}
+				{% endif %}
+			</ul>
+			<ul>
+				{% if pages is defined %}
+					<li>{{ pages }}</li>
+				{% endif %}
+			</ul>
+		</div>
+	</div>
+{% endblock content %}
