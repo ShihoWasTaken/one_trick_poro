@@ -1,9 +1,14 @@
 # Load DSL and set up stages
-require "capistrano/setup"
+require 'capistrano/setup'
 
 # Include default deployment tasks
-require "capistrano/deploy"
+require 'capistrano/deploy'
 
+# Include composer plugin
+require 'capistrano/composer'
+
+# Include symfony plugin
+require 'capistrano/symfony'
 # Load the SCM plugin appropriate to your project:
 #
 # require "capistrano/scm/hg"

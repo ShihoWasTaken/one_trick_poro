@@ -27,7 +27,6 @@ class StaticController extends Controller
         // On doit traiter le nom du summoner
         $summonerName =  str_replace(' ', '', mb_strtolower($request->request->get('searchbar-summonerName', 'UTF-8')));
         $summoner = $api->getSummonerByNames(array($summonerName));
-        var_dump($summoner);exit();
         if(isset($summoner['errorCode']))
         {
             throw new NotFoundHttpException('Sorry not existing!');
