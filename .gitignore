@@ -16,3 +16,7 @@
 /web/bundles/
 /app/config/parameters_prod.yml
 /app/config/deploy.rb
+Gemfile
+Gemfile.lock
+config/
+log/
