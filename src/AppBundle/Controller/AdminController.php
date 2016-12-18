@@ -12,6 +12,8 @@ class AdminController extends Controller
 
     public function updateChampionsAction()
     {
+        $staticDataUpdateService = $this->container->get('app.staticdataupdate');
+        $staticDataUpdateService->updateChampions();
         return new Response();
     }
 }

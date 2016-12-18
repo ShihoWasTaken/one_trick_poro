@@ -63,6 +63,7 @@
                             {% if mastery.lastPlayTime is defined %}
                                 <br>Joué la dernière fois le {{ (mastery.lastPlayTime/1000)|date('d/m/Y à H:m') }}
                             {% endif %}
+                            <img src="{{ asset('bundles/app/images/champion-masteries/' ~ mastery.championLevel ~ '.png') }}" />
                             <br>Niveau de maitrise : {{ mastery.championLevel }}
                             <br>Points : {{ mastery.championPoints }}
                         </div>
@@ -85,7 +86,7 @@
                     </div>
                     <div id="liveGame" class="tab-pane fade">
                         <h3>liveGame</h3>
-                        <p>Some content in menu 1.</p>
+                        {% include 'AppBundle:Summoner:live_game.html.twig' %}
                     </div>
                     <div id="rankedStats" class="tab-pane fade">
                         <h3>rankedStats</h3>

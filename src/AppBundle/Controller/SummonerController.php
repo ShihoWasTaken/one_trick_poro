@@ -16,6 +16,15 @@ class SummonerController extends Controller
         $topChampionsMastery = $api->getMasteryTopChampions($summonerId);
         $static_data_version = $this->container->getParameter('static_data_version');
 
+
+        $currentGame = $api->getCurrentGame($summonerId);
+        $sumonnerSpellsData = $api->getStaticSummonerSpells();
+        $summonerSpells = array();
+        foreach($sumonnerSpellsData["data"] as $sumonnerSpell)
+        {
+            $summonerSpells[$sumonnerSpell["id"]] = $sumonnerSpell["key"];
+        }
+
         $soloq = $sum->getSummonerRank($summonerId);
         if(!isset($soloq))
         {
@@ -54,6 +63,9 @@ class SummonerController extends Controller
                 'soloq' => $soloq,
                 'soloqimg' => $soloqimg,
                 'static_data_version' => $static_data_version,
+                'currentGame' => $currentGame,
+                'summonerSpells' => $summonerSpells,
+                'champions' => $temp,
             ));
     }
 

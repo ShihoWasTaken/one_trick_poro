@@ -99,10 +99,10 @@ class LoLAPIService extends RequestService
      * Only 1 entry
      */
 
-	public function getCurrentGame($sumonnerId)
+	public function getCurrentGame($summonerId)
 	{
 		$region = $this->getPlatformIdByRegion($this->region);
-		$url = HTTPS . $this->region . '.api.pvp.net/observer-mode/rest/consumer/getSpectatorGameInfo/' . $region . '/' . $sumonnerId . '?api_key=' . $this->api_key;
+		$url = HTTPS . $this->region . '.api.pvp.net/observer-mode/rest/consumer/getSpectatorGameInfo/' . $region . '/' . $summonerId . '?api_key=' . $this->api_key;
 		return $this->request($url);
 	}
 
