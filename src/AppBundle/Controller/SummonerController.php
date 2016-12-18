@@ -46,6 +46,10 @@ class SummonerController extends Controller
             $arr = array('championKey' => $temp[$topChampionsMastery[$i]['championId']]['key']);
             $topChampionsMastery[$i] = array_merge($topChampionsMastery[$i], $arr);
         }
+        // Switch du 1er et 2eme
+        $tempChampMastery = $topChampionsMastery[0];
+        $topChampionsMastery[0] = $topChampionsMastery[1];
+        $topChampionsMastery[1] = $tempChampMastery;
 
         $summoner =  $em->getRepository('AppBundle:Summoner')->findOneByRegionAndSummonerIdSafe($region, $summonerId);
         if(empty($summoner))
