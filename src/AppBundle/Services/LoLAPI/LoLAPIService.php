@@ -19,6 +19,13 @@ class LoLAPIService extends RequestService
 {
 	private $region = 'euw';
 
+	public function toSafeLowerCase($string)
+	{
+		return mb_strtolower($string, 'UTF-8');
+	}
+
+
+
 	/* Champion v1.2
      * Only 1 entry
      */
@@ -134,20 +141,7 @@ class LoLAPIService extends RequestService
 		$url = HTTPS . $this->region . '.api.pvp.net/api/lol/' . $this->region . LEAGUE_API_VERSION . '/league/by-summoner/' . join(',', $summonersIds) .'/entry?api_key=' . $this->api_key;
 		return $this->request($url);
 	}
-
-	public function getLeaguesByTeamIds(Array $teamIds)
-	{
-		$url = HTTPS . $this->region . '.api.pvp.net/api/lol/' . $this->region . LEAGUE_API_VERSION . '/league/by-team/' . join(',', $teamIds) .'?api_key=' . $this->api_key;
-		return $this->request($url);
-	}
-
-	public function getLeaguesByTeamIdsEntry(Array $teamIds)
-	{
-		$url = HTTPS . $this->region . '.api.pvp.net/api/lol/' . $this->region . LEAGUE_API_VERSION . '/league/by-team/' . join(',', $teamIds) .'/entry?api_key=' . $this->api_key;
-		return $this->request($url);
-	}
-
-
+	
 	private function getLeagueChallenger($queue)
 	{
 		$url = HTTPS . $this->region . '.api.pvp.net/api/lol/' . $this->region . LEAGUE_API_VERSION . '/league/challenger?type=' . $queue .'&api_key='. $this->api_key;
@@ -417,7 +411,7 @@ class LoLAPIService extends RequestService
 		return $this->request($url);
 	}
 
-	public function getStaticSpells($locale = null, $version = null, $spellData = null)
+	public function getStaticSummonerSpells($locale = null, $version = null, $spellData = null)
 	{
 		$optional_parameters = array();
 		$optional_parameters[] = 'api_key=' . $this->api_key;
@@ -438,7 +432,7 @@ class LoLAPIService extends RequestService
 		return $this->request($url);
 	}
 
-	public function getStaticSpellById($id, $locale = null, $version = null, $spellData = null)
+	public function getStaticSummonerSpellById($id, $locale = null, $version = null, $spellData = null)
 	{
 		$optional_parameters = array();
 		$optional_parameters[] = 'api_key=' . $this->api_key;
@@ -495,8 +489,7 @@ class LoLAPIService extends RequestService
 		{
 			$optional_parameters[] = 'includeTimeline=true';
 		}
-
-		$url = HTTPS . $this->region. '.api.pvp.net/api/lol/' . $this->region. '/v2.2/matchlist/by-summoner/' . $id . '?' . implode('&', $optional_parameters);
+		$url = HTTPS . $this->region. '.api.pvp.net/api/lol/' . $this->region. '/v2.2/match/' . $id . '?' . implode('&', $optional_parameters);
 		return $this->request($url);
 	}
 
@@ -547,7 +540,7 @@ class LoLAPIService extends RequestService
      * Only 1 entry
      */
 
-	private function getSeasonCode($season)
+	public function getSeasonCode($season = 7)
 	{
 		switch($season)
 		{
@@ -571,17 +564,31 @@ class LoLAPIService extends RequestService
 		return $season;
 	}
 
-	public function getRankedStatsBySummonerId($id, $season = 6)
+	public function getRankedStatsBySummonerId($id, $season = null)
 	{
-		$season = getSeasonCode($season);
+		if(isset($season))
+		{
+			$season = $this->getSeasonCode($season);
+		}
+		else
+		{
+			$season = $this->getSeasonCode();
+		}
 		$url = HTTPS . $this->region. '.api.pvp.net/api/lol/' . $this->region. '/v1.3/stats/by-summoner/' . $id.  '?season=' . $season . '&api_key=' . $this->api_key;
 		return $this->request($url);
 	}
 
-	public function getSummaryStatsBySummonerId($id, $season = 6)
+	public function getSummaryStatsBySummonerId($id, $season = null)
 	{
-		$season = getSeasonCode($season);
-		$url = HTTPS . $this->region. '.api.pvp.net/api/lol/' . $this->region. '/v1.3/stats/by-summoner/' . $id.  '?season=' . $season . '&api_key=' . $this->api_key;
+		if(isset($season))
+		{
+			$season = $this->getSeasonCode($season);
+		}
+		else
+		{
+			$season = $this->getSeasonCode();
+		}
+		$url = HTTPS . $this->region. '.api.pvp.net/api/lol/' . $this->region. '/v1.3/stats/by-summoner/' . $id.  '/summary?season=' . $season . '&api_key=' . $this->api_key;
 		return $this->request($url);
 	}
 
@@ -621,21 +628,6 @@ class LoLAPIService extends RequestService
 	public function getRunesBySummonerIds(Array $ids)
 	{
 		$url = HTTPS . $this->region. '.api.pvp.net/api/lol/' . $this->region. '/v1.4/summoner/' . join(',', $ids) . '/runes?api_key=' . $this->api_key;
-		return $this->request($url);
-	}
-
-	/* Team v2.4
-     * Array of max 10 entries
-     */
-	public function getTeamsByNames(Array $names)
-	{
-		$url = HTTPS . $this->region. '.api.pvp.net/api/lol/' . $this->region. '/v2.4/team/by-sumonner/' . join(',', $names) .  '?api_key=' . $this->api_key;
-		return $this->request($url);
-	}
-
-	public function getTeamByTeamIds(Array $ids)
-	{
-		$url = HTTPS . $this->region. '.api.pvp.net/api/lol/' . $this->region. '/v2.4/team/' . join(',', $ids) .  '?api_key=' . $this->api_key;
 		return $this->request($url);
 	}
 }
