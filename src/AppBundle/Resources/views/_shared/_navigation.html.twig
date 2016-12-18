@@ -38,50 +38,5 @@
 		</div>
 	</div>
 </nav>
-
-<!-- Modal -->
-<div id="modalChooseRegion" class="modal" role="dialog">
-	<div class="modal-dialog">
-
-		<!-- Modal content-->
-		<div class="modal-content">
-			<div class="modal-header">
-				<button type="button" class="close" data-dismiss="modal">&times;</button>
-				<h4 class="modal-title">Change region</h4>
-			</div>
-			<div class="modal-body">
-				<p>Some text in the modal.</p>
-			</div>
-			<div class="modal-footer">
-				<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-			</div>
-		</div>
-
-	</div>
-</div>
-
-{# Modal link summoner #}
-<div id="modalChooseLanguage" class="modal" role="dialog">
-	<div class="modal-dialog">
-
-		<!-- Modal content-->
-		<div class="modal-content">
-			<div class="modal-header">
-				<button type="button" class="close" data-dismiss="modal">&times;</button>
-				<h4 class="modal-title">Choix langue</h4>
-			</div>
-			<div class="modal-body">
-				<div class="row">
-					<a href="{{ path(app.request.attributes.get('_route'), app.request.attributes.get('_route_params')|merge({'_locale':'en'}) ) }}"><div class="col-md-6"><img class='flag' src='{{ asset('bundles/app/images/flags/EN.png' ) }}' /> English</div></a>
-					<a href="{{ path(app.request.attributes.get('_route'), app.request.attributes.get('_route_params')|merge({'_locale':'fr'}) ) }}"><div class="col-md-6"><img class='flag' src='{{ asset('bundles/app/images/flags/FR.png' ) }}' /> Français</div></a>
-					{#
-					<a href="{{ path(app.request.attributes.get('_route'), app.request.attributes.get('_route_params')|merge({'_locale':'es'}) ) }}"><div class="col-md-6"><img class='flag' src='{{ asset('bundles/app/images/flags/ES.png' ) }}' /> Español</div></a>
-					<a href="{{ path(app.request.attributes.get('_route'), app.request.attributes.get('_route_params')|merge({'_locale':'de'}) ) }}"><div class="col-md-6"><img class='flag' src='{{ asset('bundles/app/images/flags/DE.png' ) }}' /> Deutsch</div></a>
-					<a href="{{ path(app.request.attributes.get('_route'), app.request.attributes.get('_route_params')|merge({'_locale':'it'}) ) }}"><div class="col-md-6"><img class='flag' src='{{ asset('bundles/app/images/flags/IT.png' ) }}' /> Italiano</div></a>
-					#}
-				</div>
-			</div>
-		</div>
-
-	</div>
-</div>
+{% include 'AppBundle:_shared:_language_modal.html.twig' %}
+{% include 'AppBundle:_shared:_region_modal.html.twig' %}

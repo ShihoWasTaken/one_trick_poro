@@ -1,0 +1,32 @@
+{# Modal choix region #}
+<div id="modalChooseRegion" class="modal" role="dialog">
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Change region</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <a href="{{ path(app.request.attributes.get('_route'), app.request.attributes.get('_route_params')|merge({'_locale':'en'}) ) }}"><div class="col-md-6"><img class='flag' src='{{ asset('bundles/app/images/flags/EN.png' ) }}' /> Europe West</div></a>
+                    <a href="{{ path(app.request.attributes.get('_route'), app.request.attributes.get('_route_params')|merge({'_locale':'fr'}) ) }}"><div class="col-md-6"><img class='flag' src='{{ asset('bundles/app/images/flags/FR.png' ) }}' /> Korea</div></a>
+                    <a href="{{ path(app.request.attributes.get('_route'), app.request.attributes.get('_route_params')|merge({'_locale':'en'}) ) }}"><div class="col-md-6"><img class='flag' src='{{ asset('bundles/app/images/flags/EN.png' ) }}' /> North America</div></a>
+                    <a href="{{ path(app.request.attributes.get('_route'), app.request.attributes.get('_route_params')|merge({'_locale':'fr'}) ) }}"><div class="col-md-6"><img class='flag' src='{{ asset('bundles/app/images/flags/FR.png' ) }}' /> Japan</div></a>
+                    <a href="{{ path(app.request.attributes.get('_route'), app.request.attributes.get('_route_params')|merge({'_locale':'en'}) ) }}"><div class="col-md-6"><img class='flag' src='{{ asset('bundles/app/images/flags/EN.png' ) }}' /> Europe Nordic & East</div></a>
+                    <a href="{{ path(app.request.attributes.get('_route'), app.request.attributes.get('_route_params')|merge({'_locale':'fr'}) ) }}"><div class="col-md-6"><img class='flag' src='{{ asset('bundles/app/images/flags/FR.png' ) }}' /> Oceania</div></a>
+                    <a href="{{ path(app.request.attributes.get('_route'), app.request.attributes.get('_route_params')|merge({'_locale':'en'}) ) }}"><div class="col-md-6"><img class='flag' src='{{ asset('bundles/app/images/flags/EN.png' ) }}' /> Brazil</div></a>
+                    <a href="{{ path(app.request.attributes.get('_route'), app.request.attributes.get('_route_params')|merge({'_locale':'fr'}) ) }}"><div class="col-md-6"><img class='flag' src='{{ asset('bundles/app/images/flags/FR.png' ) }}' /> Latin America South</div></a>
+                    <a href="{{ path(app.request.attributes.get('_route'), app.request.attributes.get('_route_params')|merge({'_locale':'en'}) ) }}"><div class="col-md-6"><img class='flag' src='{{ asset('bundles/app/images/flags/EN.png' ) }}' /> Latin America North</div></a>
+                    <a href="{{ path(app.request.attributes.get('_route'), app.request.attributes.get('_route_params')|merge({'_locale':'fr'}) ) }}"><div class="col-md-6"><img class='flag' src='{{ asset('bundles/app/images/flags/FR.png' ) }}' /> Russia</div></a>
+                    <a href="{{ path(app.request.attributes.get('_route'), app.request.attributes.get('_route_params')|merge({'_locale':'fr'}) ) }}"><div class="col-md-6"><img class='flag' src='{{ asset('bundles/app/images/flags/FR.png' ) }}' /> Turkey</div></a>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+
+    </div>
+</div>
