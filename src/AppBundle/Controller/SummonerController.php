@@ -82,14 +82,4 @@ class SummonerController extends Controller
                 'summoner' => $summoner,
             ));
     }
-
-    public function editProfileAction($userId)
-    {
-        $api = $this->container->get('app.lolapi');
-        $data = $api->getSummonerByNames(array('Shiho', 'Mikami Teru'));
-        return $this->render('AppBundle:Account:profile_edit.html.twig',
-            array(
-                'data' => $data,
-            ));
-    }
 }

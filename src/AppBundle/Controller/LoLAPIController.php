@@ -32,8 +32,10 @@ class LoLAPIController extends Controller
             ));
     }
 
+
     public function editProfileAction($userId)
     {
+        $static_data_version = $this->container->getParameter('static_data_version');
         $user = $this->get('security.token_storage')->getToken()->getUser();
         $api = $this->container->get('app.lolapi');
         $data = $api->getSummonerByNames(array('Shiho', 'Mikami Teru'));
@@ -41,6 +43,7 @@ class LoLAPIController extends Controller
         return $this->render('AppBundle:Account:profile_edit.html.twig',
             array(
                 'data' => $data,
+                'static_data_version' => $static_data_version,
             ));
     }
 }

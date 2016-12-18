@@ -61,7 +61,7 @@
 
 			<ul>
 				{% if data.shiho is defined %}
-					<img src="http://ddragon.leagueoflegends.com/cdn/6.9.1/img/profileicon/{{ data.shiho.profileIconId }}.png" />
+					<img src="http://ddragon.leagueoflegends.com/cdn/{{ static_data_version }}/img/profileicon/{{ data.shiho.profileIconId }}.png" />
 					{% for key, info in data.shiho %}
 						<li>{{ key }}: {{ info|e }}</li>
 					{% endfor %}
