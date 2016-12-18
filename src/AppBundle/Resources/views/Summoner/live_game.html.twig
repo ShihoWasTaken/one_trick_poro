@@ -1,40 +1,44 @@
-<table>
-    <h1> bleu</h1>
-    <tr>
-        {% for bannedChampion in currentGame.bannedChampions %}
-            {% if bannedChampion.teamId == 100 %}
-                <img src="http://ddragon.leagueoflegends.com/cdn/{{ static_data_version }}/img/champion/{{ champions[bannedChampion.championId]['key'] }}.png">
+{% if currentGame.error is defined %}
+    <h1>Pas en game</h1>
+{% else %}
+    <table>
+        <h1> bleu</h1>
+        <tr>
+            {% for bannedChampion in currentGame.bannedChampions %}
+                {% if bannedChampion.teamId == 100 %}
+                    <img src="http://ddragon.leagueoflegends.com/cdn/{{ static_data_version }}/img/champion/{{ champions[bannedChampion.championId]['key'] }}.png">
+                {% endif %}
+            {% endfor %}
+        </tr>
+        {% for player in currentGame.participants %}
+            {% if player.teamId == 100 %}
+                <tr>
+                    <td>{{ player.summonerName }}</td>
+                    <td><img src="http://ddragon.leagueoflegends.com/cdn/{{ static_data_version }}/img/champion/{{ champions[player.championId]['key'] }}.png"></td>
+                    <td><img src="http://ddragon.leagueoflegends.com/cdn/{{ static_data_version }}/img/spell/{{ summonerSpells[player.spell1Id] }}.png"></td>
+                    <td><img src="http://ddragon.leagueoflegends.com/cdn/{{ static_data_version }}/img/spell/{{ summonerSpells[player.spell2Id] }}.png"></td>
+                </tr>
             {% endif %}
         {% endfor %}
-    </tr>
-    {% for player in currentGame.participants %}
-        {% if player.teamId == 100 %}
-            <tr>
-                <td>{{ player.summonerName }}</td>
-                <td><img src="http://ddragon.leagueoflegends.com/cdn/{{ static_data_version }}/img/champion/{{ champions[player.championId]['key'] }}.png"></td>
-                <td><img src="http://ddragon.leagueoflegends.com/cdn/{{ static_data_version }}/img/spell/{{ summonerSpells[player.spell1Id] }}.png"></td>
-                <td><img src="http://ddragon.leagueoflegends.com/cdn/{{ static_data_version }}/img/spell/{{ summonerSpells[player.spell2Id] }}.png"></td>
-            </tr>
-        {% endif %}
-    {% endfor %}
-</table>
-<table>
-    <h1> violet</h1>
-    <tr>
-        {% for bannedChampion in currentGame.bannedChampions %}
-            {% if bannedChampion.teamId == 200 %}
-                <img src="http://ddragon.leagueoflegends.com/cdn/{{ static_data_version }}/img/champion/{{ champions[bannedChampion.championId]['key'] }}.png">
+    </table>
+    <table>
+        <h1> violet</h1>
+        <tr>
+            {% for bannedChampion in currentGame.bannedChampions %}
+                {% if bannedChampion.teamId == 200 %}
+                    <img src="http://ddragon.leagueoflegends.com/cdn/{{ static_data_version }}/img/champion/{{ champions[bannedChampion.championId]['key'] }}.png">
+                {% endif %}
+            {% endfor %}
+        </tr>
+        {% for player in currentGame.participants %}
+            {% if player.teamId == 200 %}
+                <tr>
+                    <td>{{ player.summonerName }}</td>
+                    <td><img src="http://ddragon.leagueoflegends.com/cdn/{{ static_data_version }}/img/champion/{{ champions[player.championId]['key'] }}.png"></td>
+                    <td><img src="http://ddragon.leagueoflegends.com/cdn/{{ static_data_version }}/img/spell/{{ summonerSpells[player.spell1Id] }}.png"></td>
+                    <td><img src="http://ddragon.leagueoflegends.com/cdn/{{ static_data_version }}/img/spell/{{ summonerSpells[player.spell2Id] }}.png"></td>
+                </tr>
             {% endif %}
         {% endfor %}
-    </tr>
-    {% for player in currentGame.participants %}
-        {% if player.teamId == 200 %}
-            <tr>
-                <td>{{ player.summonerName }}</td>
-                <td><img src="http://ddragon.leagueoflegends.com/cdn/{{ static_data_version }}/img/champion/{{ champions[player.championId]['key'] }}.png"></td>
-                <td><img src="http://ddragon.leagueoflegends.com/cdn/{{ static_data_version }}/img/spell/{{ summonerSpells[player.spell1Id] }}.png"></td>
-                <td><img src="http://ddragon.leagueoflegends.com/cdn/{{ static_data_version }}/img/spell/{{ summonerSpells[player.spell2Id] }}.png"></td>
-            </tr>
-        {% endif %}
-    {% endfor %}
-</table>
+    </table>
+{% endif %}
