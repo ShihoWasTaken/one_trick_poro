@@ -35,7 +35,7 @@
                         {% endif %}
                          data-sort="value">
                         <h4>{{ champion.key }}</h4>
-                        <img src="http://ddragon.leagueoflegends.com/cdn/6.12.1/img/champion/{{ champion.key }}.png">
+                        <img src="http://ddragon.leagueoflegends.com/cdn/{{ static_data_version }}/img/champion/{{ champion.key }}.png">
                         {% if champion.chestGranted is defined and champion.chestGranted %}
                             <div>
                                 <img src="{{ asset('bundles/app/images/champion-masteries/chest_champion_mastery_over.png' ) }}" />

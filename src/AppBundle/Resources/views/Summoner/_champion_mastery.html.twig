@@ -3,7 +3,7 @@
     {% for mastery in topChampionsMastery %}
         <div class="col-md-4 text-center">
             <h4>{{ mastery.championKey }}</h4>
-            <img src="http://ddragon.leagueoflegends.com/cdn/6.9.1/img/champion/{{ mastery.championKey }}.png">
+            <img src="http://ddragon.leagueoflegends.com/cdn/{{ static_data_version }}/img/champion/{{ mastery.championKey }}.png">
             {% if mastery.highestGrade is defined %}
                 <div>Meilleure note {{ mastery.highestGrade }} </div>
             {% endif %}
