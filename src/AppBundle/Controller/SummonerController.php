@@ -5,6 +5,8 @@ namespace AppBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
+use AppBundle\Repository\Summoner;
+use AppBundle\Repository\Summoner\SummonerRepository;
 
 class SummonerController extends Controller
 {
@@ -51,7 +53,7 @@ class SummonerController extends Controller
         $topChampionsMastery[0] = $topChampionsMastery[1];
         $topChampionsMastery[1] = $tempChampMastery;
 
-        $summoner =  $em->getRepository('AppBundle:Summoner')->findOneByRegionAndSummonerIdSafe($region, $summonerId);
+        $summoner =  $em->getRepository('AppBundle:Summoner\Summoner')->findOneByRegionAndSummonerIdSafe($region, $summonerId);
         if(empty($summoner))
         {
             $summoner = $sum->createSummoner($region, $summonerId);
@@ -97,7 +99,7 @@ class SummonerController extends Controller
             $temp[$chests[$i]['championId']] = array_merge($temp[$chests[$i]['championId']], $chests[$i]);
         }
         $champions = $temp;
-        $summoner =  $em->getRepository('AppBundle:Summoner')->findOneByRegionAndSummonerId($region, $summonerId);
+        $summoner =  $em->getRepository('AppBundle:Summoner\Summoner')->findOneByRegionAndSummonerId($region, $summonerId);
 
         return $this->render('AppBundle:Summoner:chests.html.twig',
             array(

@@ -142,11 +142,11 @@ class User extends BaseUser {
     /**
      * Add summoner
      *
-     * @param \AppBundle\Entity\Summoner $summoner
+     * @param \AppBundle\Entity\Summoner\Summoner $summoner
      *
      * @return User
      */
-    public function addSummoner(\AppBundle\Entity\Summoner $summoner)
+    public function addSummoner(\AppBundle\Entity\Summoner\Summoner $summoner)
     {
         $this->summoners[] = $summoner;
 
@@ -156,9 +156,9 @@ class User extends BaseUser {
     /**
      * Remove summoner
      *
-     * @param \AppBundle\Entity\Summoner $summoner
+     * @param \AppBundle\Entity\Summoner\Summoner $summoner
      */
-    public function removeSummoner(\AppBundle\Entity\Summoner $summoner)
+    public function removeSummoner(\AppBundle\Entity\Summoner\Summoner $summoner)
     {
         $this->summoners->removeElement($summoner);
     }

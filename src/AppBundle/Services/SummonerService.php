@@ -3,7 +3,7 @@
 namespace AppBundle\Services;
 
 use AppBundle\Entity\User;
-use AppBundle\Entity\Summoner;
+use AppBundle\Entity\Summoner\Summoner;
 use Symfony\Component\Config\Definition\Exception\Exception;
 use AppBundle\Services\CurlHttpException;
 use AppBundle\Services\LoLAPI\LoLAPIService;

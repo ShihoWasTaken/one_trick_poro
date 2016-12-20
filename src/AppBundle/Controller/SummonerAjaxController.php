@@ -68,7 +68,7 @@ class SummonerAjaxController extends Controller
             //var_dump($champions[103]);
             //exit();
 
-            $summoner =  $em->getRepository('AppBundle:Summoner')->findOneByRegionAndSummonerId($region, $summonerId);
+            $summoner =  $em->getRepository('AppBundle:Summoner\Summoner')->findOneByRegionAndSummonerId($region, $summonerId);
             $template =  $this->render('AppBundle:Summoner:_chests.html.twig',
                 array(
                     'champions' => $champions,

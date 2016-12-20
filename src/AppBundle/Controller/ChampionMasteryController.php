@@ -23,7 +23,7 @@ class ChampionMasteryController extends Controller
         $api = $this->container->get('app.lolapi');
         $topChampionsMastery = $api->getMasteryTopChampions($summonerId);
 
-        $summoner =  $em->getRepository('AppBundle:Summoner')->findOneByRegionAndSummonerId($region, $summonerId);
+        $summoner =  $em->getRepository('AppBundle:Summoner\Summoner')->findOneByRegionAndSummonerId($region, $summonerId);
         return $this->render('AppBundle:ChampionMastery:index.html.twig',
             array(
                 'topChampionsMastery' => $topChampionsMastery,

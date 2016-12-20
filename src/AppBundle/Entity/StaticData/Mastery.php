@@ -148,4 +148,28 @@ class Mastery
     {
         return $this->masteryTree;
     }
+
+    /**
+     * Set maxRank
+     *
+     * @param integer $maxRank
+     *
+     * @return Mastery
+     */
+    public function setMaxRank($maxRank)
+    {
+        $this->maxRank = $maxRank;
+
+        return $this;
+    }
+
+    /**
+     * Get maxRank
+     *
+     * @return integer
+     */
+    public function getMaxRank()
+    {
+        return $this->maxRank;
+    }
 }

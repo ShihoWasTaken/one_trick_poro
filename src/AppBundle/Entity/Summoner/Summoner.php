@@ -10,7 +10,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Doctrine\ORM\Events;
 
 /**
- * @ORM\Entity(repositoryClass="AppBundle\Repository\SummonerRepository")
+ * @ORM\Entity(repositoryClass="AppBundle\Repository\Summoner\SummonerRepository")
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="summoner",uniqueConstraints={@ORM\UniqueConstraint(name="idPerRegion", columns={"SummonerId", "Region"})})
  */

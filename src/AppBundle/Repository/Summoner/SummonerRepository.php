@@ -1,6 +1,6 @@
 <?php
 
-namespace AppBundle\Repository;
+namespace AppBundle\Repository\Summoner;
 
 use Doctrine\ORM\EntityRepository;
 
@@ -15,7 +15,7 @@ class SummonerRepository extends EntityRepository
 	{
 		return $this->_em->createQuery("
 		select s
-		from AppBundle:Summoner s
+		from AppBundle:Summoner\Summoner s
 		WHERE s.user_id = :userId
 		")
 		->setParameter('userId', $userId)
@@ -27,7 +27,7 @@ class SummonerRepository extends EntityRepository
 	{
 		return $this->_em->createQuery("
 		select s
-		from AppBundle:Summoner s
+		from AppBundle:Summoner\Summoner s
 		WHERE s.region = :region
 		AND s.summonerId = :summonerId
 		")
@@ -41,7 +41,7 @@ class SummonerRepository extends EntityRepository
 	{
 		return $this->_em->createQuery("
 		select s
-		from AppBundle:Summoner s
+		from AppBundle:Summoner\Summoner s
 		WHERE s.region = :region
 		AND s.summonerId = :summonerId
 		")

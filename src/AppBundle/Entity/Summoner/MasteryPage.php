@@ -40,4 +40,76 @@ class MasteryPage
      */
     private $masteryId;
 
+
+    /**
+     * Set summonerId
+     *
+     * @param integer $summonerId
+     *
+     * @return MasteryPage
+     */
+    public function setSummonerId($summonerId)
+    {
+        $this->summonerId = $summonerId;
+
+        return $this;
+    }
+
+    /**
+     * Get summonerId
+     *
+     * @return integer
+     */
+    public function getSummonerId()
+    {
+        return $this->summonerId;
+    }
+
+    /**
+     * Set pageId
+     *
+     * @param integer $pageId
+     *
+     * @return MasteryPage
+     */
+    public function setPageId($pageId)
+    {
+        $this->pageId = $pageId;
+
+        return $this;
+    }
+
+    /**
+     * Get pageId
+     *
+     * @return integer
+     */
+    public function getPageId()
+    {
+        return $this->pageId;
+    }
+
+    /**
+     * Set masteryId
+     *
+     * @param integer $masteryId
+     *
+     * @return MasteryPage
+     */
+    public function setMasteryId($masteryId)
+    {
+        $this->masteryId = $masteryId;
+
+        return $this;
+    }
+
+    /**
+     * Get masteryId
+     *
+     * @return integer
+     */
+    public function getMasteryId()
+    {
+        return $this->masteryId;
+    }
 }
