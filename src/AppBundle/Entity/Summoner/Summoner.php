@@ -1,9 +1,10 @@
 <?php
 
-namespace AppBundle\Entity;
+namespace AppBundle\Entity\Summoner;
 
 use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\ORM\Mapping as ORM;
+use  AppBundle\Entity\User;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Doctrine\ORM\Events;
@@ -28,7 +29,7 @@ class Summoner
     private $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity="User", inversedBy="summoners")
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\User", inversedBy="summoners")
      * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
      */
     private $user;
@@ -67,7 +68,7 @@ class Summoner
     private $level;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Tier", inversedBy="sumonners")
+     * @ORM\ManyToOne(targetEntity="Tier", inversedBy="summoners")
      * @ORM\JoinColumn(name="tier_id", referencedColumnName="id")
      */
     protected $tier;

@@ -73,7 +73,17 @@ app_dev_test:
     defaults: { _controller: AppBundle:StaticData:updateChampions }
     methods:  [GET]
 
-app_admin_update:
-    path:     /update
+app_admin_update_champions:
+    path:     /update/champions
     defaults: { _controller: AppBundle:Admin:updateChampions }
+    methods:  [GET]
+
+app_admin_update_runes:
+    path:     /update/runes
+    defaults: { _controller: AppBundle:Admin:updateRunes }
+    methods:  [GET]
+
+app_admin_update_masteries:
+    path:     /update/masteries
+    defaults: { _controller: AppBundle:Admin:updateMasteries }
     methods:  [GET]

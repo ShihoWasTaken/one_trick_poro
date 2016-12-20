@@ -574,7 +574,7 @@ class LoLAPIService extends RequestService
 		{
 			$season = $this->getSeasonCode();
 		}
-		$url = HTTPS . $this->region. '.api.pvp.net/api/lol/' . $this->region. '/v1.3/stats/by-summoner/' . $id.  '?season=' . $season . '&api_key=' . $this->api_key;
+		$url = HTTPS . $this->region. '.api.pvp.net/api/lol/' . $this->region. '/v1.3/stats/by-summoner/' . $id.  '/ranked?season=' . $season . '&api_key=' . $this->api_key;
 		return $this->request($url);
 	}
 

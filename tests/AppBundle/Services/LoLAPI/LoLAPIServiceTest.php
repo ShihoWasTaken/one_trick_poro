@@ -425,7 +425,7 @@ class LoLAPIServiceTest extends KernelTestCase
         $this->assertEquals('SEASON3', $season, 'La saison retournée doit être SEASON3');
     }
 
-    public function tesGetRankedStatsBySummonerId()
+    public function testGetRankedStatsBySummonerId()
     {
         $data = $this->LoLAPIService->getRankedStatsBySummonerId(SUMMONER_ID_RANKED);
         $responseCode = $this->LoLAPIService->getResponseCode();

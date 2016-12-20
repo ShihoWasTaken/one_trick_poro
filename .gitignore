@@ -20,3 +20,4 @@ Gemfile
 Gemfile.lock
 config/
 log/
+*.php~

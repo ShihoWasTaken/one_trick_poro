@@ -51,25 +51,6 @@
                     <li><a data-toggle="tab" href="#championMasteries">Maitrises de champion</a></li>
                     <li><a data-toggle="tab" href="#chests">Coffres</a></li>
                 </ul>
-                <div class="col-md-12">
-                    <h2>Maitrises de champions</h2>
-                    {% for mastery in topChampionsMastery %}
-                        <div class="col-md-4 text-center">
-                            <h4>{{ mastery.championKey }}</h4>
-                            <img src="http://ddragon.leagueoflegends.com/cdn/6.9.1/img/champion/{{ mastery.championKey }}.png">
-                            {% if mastery.highestGrade is defined %}
-                                <div>Meilleure note {{ mastery.highestGrade }} </div>
-                            {% endif %}
-                            {% if mastery.lastPlayTime is defined %}
-                                <br>Joué la dernière fois le {{ (mastery.lastPlayTime/1000)|date('d/m/Y à H:m') }}
-                            {% endif %}
-                            <img src="{{ asset('bundles/app/images/champion-masteries/' ~ mastery.championLevel ~ '.png') }}" />
-                            <br>Niveau de maitrise : {{ mastery.championLevel }}
-                            <br>Points : {{ mastery.championPoints }}
-                        </div>
-                    {% endfor %}
-
-                </div>
                 <div id="loadingDiv" class="col-md-12 text-center hidden">
                     <img src="{{ asset('bundles/app/images/loader.gif' ) }}" />
                     <h1>Opération en cours</h1>
@@ -81,36 +62,28 @@
                 #}
                 <div class="tab-content">
                     <div id="home" class="tab-pane fade in active">
-                        <h3>HOME</h3>
-                        <p>Some content.</p>
+                        {% include 'AppBundle:Summoner:_summary.html.twig' %}
                     </div>
                     <div id="liveGame" class="tab-pane fade">
-                        <h3>liveGame</h3>
-                        {% include 'AppBundle:Summoner:live_game.html.twig' %}
+                        {% include 'AppBundle:Summoner:_live_game.html.twig' %}
                     </div>
                     <div id="rankedStats" class="tab-pane fade">
-                        <h3>rankedStats</h3>
-                        <p>Some content in menu 1.</p>
+                        {% include 'AppBundle:Summoner:_ranked_stats.html.twig' %}
                     </div>
                     <div id="history" class="tab-pane fade">
-                        <h3>history</h3>
-                        <p>Some content in menu 1.</p>
+                        {% include 'AppBundle:Summoner:_history.html.twig' %}
                     </div>
                     <div id="runes" class="tab-pane fade">
-                        <h3>runes</h3>
-                        <p>Some content in menu 1.</p>
+                        {% include 'AppBundle:Summoner:_runes.html.twig' %}
                     </div>
                     <div id="masteries" class="tab-pane fade">
-                        <h3>masteries</h3>
-                        <p>Some content in menu 1.</p>
+                        {% include 'AppBundle:Summoner:_masteries.html.twig' %}
                     </div>
                     <div id="championMasteries" class="tab-pane fade">
-                        <h3>championMasteries</h3>
-                        <p>Some content in menu 1.</p>
+                        {% include 'AppBundle:Summoner:_champion_mastery.html.twig' %}
                     </div>
                     <div id="chests" class="tab-pane fade">
-                        <h3>chests</h3>
-                        <p>Some content in menu 2.</p>
+                        {% include 'AppBundle:Summoner:_chests.html.twig' %}
                     </div>
                 </div>
             </div>

@@ -16,4 +16,18 @@ class AdminController extends Controller
         $staticDataUpdateService->updateChampions();
         return new Response();
     }
+
+    public function updateRunesAction()
+    {
+        $staticDataUpdateService = $this->container->get('app.staticdataupdate');
+        $staticDataUpdateService->updateRunes();
+        return new Response();
+    }
+
+    public function updateMasteriesAction()
+    {
+        $staticDataUpdateService = $this->container->get('app.staticdataupdate');
+        $staticDataUpdateService->updateMasteries();
+        return new Response();
+    }
 }

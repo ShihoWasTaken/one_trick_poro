@@ -1,0 +1,31 @@
+<table class="table table-bordered table-responsive table-striped">
+    <thead>
+        <tr>
+            <th>Champion</th>
+            <th>Winrate</th>
+            <th>Wins</th>
+            <th>Loses</th>
+            <th>Kills</th>
+            <th>Deaths</th>
+            <th>Assists</th>
+            <th>Creeps</th>
+        </tr>
+    </thead>
+    <tbody>
+        {# ID 0 = total #}
+        {% for champion in rankedStats.champions %}
+            {% if champion.id != 0 %}
+                <tr>
+                    <td><img src="http://ddragon.leagueoflegends.com/cdn/{{ static_data_version }}/img/champion/{{ champions[champion.id]['key'] }}.png"></td>
+                    <td>{{ (champion['stats']['totalSessionsWon'] / champion['stats']['totalSessionsPlayed'] * 100 )|round(2, 'common') }}</td>
+                    <td>{{ champion['stats']['totalSessionsWon'] }}</td>
+                    <td>{{ champion['stats']['totalSessionsLost'] }}</td>
+                    <td>{{ (champion['stats']['totalChampionKills'] / champion['stats']['totalSessionsPlayed'] )|round(1, 'common') }}</td>
+                    <td>{{ (champion['stats']['totalDeathsPerSession'] / champion['stats']['totalSessionsPlayed'])|round(1, 'common') }}</td>
+                    <td>{{ (champion['stats']['totalAssists']  / champion['stats']['totalSessionsPlayed'])|round(1, 'common') }}</td>
+                    <td>{{ (champion['stats']['totalMinionKills'] / champion['stats']['totalSessionsPlayed'])|round(1, 'common') }}</td>
+                </tr>
+            {% endif %}
+        {% endfor %}
+    </tbody>
+</table>

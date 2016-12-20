@@ -60,6 +60,12 @@ class SummonerController extends Controller
         {
             $summoner = $summoner[0];
         }
+
+        /* Ranked stats*/
+        //TODO: il faut prévoir le cas où il n'y a pas de données renvoyées pour la saison en cours
+        $rankedStats = $api->getRankedStatsBySummonerId($summonerId, 6);
+
+
         return $this->render('AppBundle:Summoner:index.html.twig',
             array(
                 'topChampionsMastery' => $topChampionsMastery,
@@ -70,6 +76,7 @@ class SummonerController extends Controller
                 'currentGame' => $currentGame,
                 'summonerSpells' => $summonerSpells,
                 'champions' => $temp,
+                'rankedStats' => $rankedStats,
             ));
     }
 

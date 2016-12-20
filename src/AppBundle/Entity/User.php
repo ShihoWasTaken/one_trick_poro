@@ -45,7 +45,7 @@ class User extends BaseUser {
     private $friendsWithMe;
 
     /**
-     * @ORM\OneToMany(targetEntity="Summoner", mappedBy="user")
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Summoner\Summoner", mappedBy="user")
      */
     private $summoners;
 
