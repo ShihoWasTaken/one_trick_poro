@@ -270,11 +270,11 @@ class Summoner
     /**
      * Set tier
      *
-     * @param \AppBundle\Entity\Tier $tier
+     * @param \AppBundle\Entity\Summoner\Tier $tier
      *
      * @return Summoner
      */
-    public function setTier(\AppBundle\Entity\Tier $tier = null)
+    public function setTier(\AppBundle\Entity\Summoner\Tier $tier = null)
     {
         $this->tier = $tier;
 
@@ -284,7 +284,7 @@ class Summoner
     /**
      * Get tier
      *
-     * @return \AppBundle\Entity\Tier
+     * @return \AppBundle\Entity\Summoner\Tier
      */
     public function getTier()
     {

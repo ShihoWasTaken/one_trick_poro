@@ -132,11 +132,11 @@ class Tier
     /**
      * Add summoner
      *
-     * @param \AppBundle\Entity\Summoner $summoner
+     * @param \AppBundle\Entity\Summoner\Summoner $summoner
      *
      * @return Tier
      */
-    public function addSummoner(\AppBundle\Entity\Summoner $summoner)
+    public function addSummoner(\AppBundle\Entity\Summoner\Summoner $summoner)
     {
         $this->summoners[] = $summoner;
 
@@ -146,9 +146,9 @@ class Tier
     /**
      * Remove summoner
      *
-     * @param \AppBundle\Entity\Summoner $summoner
+     * @param \AppBundle\Entity\Summoner\Summoner $summoner
      */
-    public function removeSummoner(\AppBundle\Entity\Summoner $summoner)
+    public function removeSummoner(\AppBundle\Entity\Summoner\Summoner $summoner)
     {
         $this->summoners->removeElement($summoner);
     }
