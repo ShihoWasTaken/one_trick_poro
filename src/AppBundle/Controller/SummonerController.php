@@ -10,6 +10,34 @@ use AppBundle\Repository\Summoner\SummonerRepository;
 
 class SummonerController extends Controller
 {
+   /* public function indexAction($region, $summonerId)
+    {
+        $em = $this->get('doctrine')->getManager();
+
+        // On récupère le summoner en BDD
+        $summoner = $em->getRepository('AppBundle:Summoner\Summoner')->findOneBy([
+            'id' => $summonerId
+        ]);
+
+        // Si le summoner n'existe pas encore en BDD, on le crée
+        if ($summoner == null)
+        {
+            $championRankedStats = new rankedStats($summonerId, $season, $championData['id']);
+        }
+        return $this->render('AppBundle:Summoner:index.html.twig',
+            array(
+                'topChampionsMastery' => $topChampionsMastery,
+                'summoner' => $summoner,
+                'soloq' => $soloq,
+                'soloqimg' => $soloqimg,
+                'static_data_version' => $static_data_version,
+                'currentGame' => $currentGame,
+                'summonerSpells' => $summonerSpells,
+                'champions' => $temp,
+                'rankedStats' => $rankedStats,
+            ));
+    }*/
+    
     public function indexAction($region, $summonerId)
     {
         $em = $this->get('doctrine')->getManager();
@@ -63,10 +91,18 @@ class SummonerController extends Controller
             $summoner = $summoner[0];
         }
 
+        // Chests
+        $chests = $api->getChampionsMastery($summonerId);
+
+        for($i = 0; $i < count($chests); $i++)
+        {
+            $temp[$chests[$i]['championId']] = array_merge($temp[$chests[$i]['championId']], $chests[$i]);
+        }
+
         /* Ranked stats*/
         //TODO: il faut prévoir le cas où il n'y a pas de données renvoyées pour la saison en cours
-        $rankedStats = $api->getRankedStatsBySummonerId($summonerId, 6);
-
+        //$rankedStats = $api->getRankedStatsBySummonerId($summonerId, 6);
+        $rankedStats = $sum->updateRankedStats($summonerId);
 
         return $this->render('AppBundle:Summoner:index.html.twig',
             array(

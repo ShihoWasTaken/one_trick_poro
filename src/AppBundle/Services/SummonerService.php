@@ -4,20 +4,26 @@ namespace AppBundle\Services;
 
 use AppBundle\Entity\User;
 use AppBundle\Entity\Summoner\Summoner;
+use AppBundle\Entity\Summoner\RankedStats;
 use Symfony\Component\Config\Definition\Exception\Exception;
 use AppBundle\Services\CurlHttpException;
 use AppBundle\Services\LoLAPI\LoLAPIService;
 use Symfony\Component\DependencyInjection\ContainerInterface as Container;
 
+define('OLDER_SEASON_AVAILABLE', 3);
+define('ACTUAL_SEASON', 7);
+
 class SummonerService
 {
     private $container;
     private $api;
+    private $em;
 
     public function __construct(Container $container, LoLAPIService $api)
     {
         $this->container = $container;
         $this->api = $api;
+        $this->em = $this->container->get('doctrine')->getManager();
     }
 
     public function linkSummonerToUser(User $user, $summonerName)
@@ -130,4 +136,51 @@ class SummonerService
         }
     }
 
+    public function updateRankedStats($summonerId)
+    {
+        for($season = OLDER_SEASON_AVAILABLE; $season < ACTUAL_SEASON; $season++)
+        {
+            $rankedStatsData = $this->api->getRankedStatsBySummonerId($summonerId, $season);
+            if($this->api->getResponseCode() !== 404)
+            {
+                foreach($rankedStatsData['champions'] as $championData)
+                {
+                    $championRankedStats = $this->em->getRepository('AppBundle:Summoner\RankedStats')->findOneBy([
+                        'summonerId' => $summonerId,
+                        'season' => $season,
+                        'championId' => $championData['id']
+                    ]);
+                    if ($championRankedStats == null)
+                    {
+                        $championRankedStats = new rankedStats($summonerId, $season, $championData['id']);
+                    }
+                    $championRankedStats->setPlayedGames($championData['stats']['totalSessionsPlayed']);
+                    $championRankedStats->setKills($championData['stats']['totalChampionKills']);
+                    $championRankedStats->setDeaths($championData['stats']['totalDeathsPerSession']);
+                    $championRankedStats->setAssists($championData['stats']['totalAssists']);
+                    $championRankedStats->setWins($championData['stats']['totalSessionsWon']);
+                    $championRankedStats->setLoses($championData['stats']['totalSessionsLost']);
+                    $championRankedStats->setWinrate(round(($championData['stats']['totalSessionsWon'] / $championData['stats']['totalSessionsPlayed'] * 100 ), 2));
+                    $championRankedStats->setCreeps($championData['stats']['totalMinionKills']);
+                    $this->em->persist($championRankedStats);
+                }
+            }
+        }
+        $this->em->flush();
+        return $this->getRankedStats($summonerId);
+    }
+
+    public function getRankedStats($summonerId)
+    {
+        $data = array();
+        for($season = OLDER_SEASON_AVAILABLE; $season < ACTUAL_SEASON; $season++)
+        {
+            $rankedStatsData = $this->em->getRepository('AppBundle:Summoner\RankedStats')->findBy([
+                'summonerId' => $summonerId,
+                'season' => $season
+            ]);
+            $data[$season] = $rankedStatsData;
+        }
+        return $data;
+    }
 }

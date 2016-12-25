@@ -1,5 +1,9 @@
 {% extends '::base.html.twig' %}
 
+{% block title %}
+	{{ parent() }}
+{% endblock title %}
+
 {% block stylesheets %}
 	{{ parent() }}
 	{% stylesheets '@bootstrap_css' output='css/bootstrap.css' %}

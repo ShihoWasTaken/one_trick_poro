@@ -1,0 +1,10 @@
+.rankedStatsTable img
+{
+    width: 64px;
+}
+
+.table > tbody > tr.champion_stats_line > td
+{
+    vertical-align: middle;
+    text-align: center;
+}

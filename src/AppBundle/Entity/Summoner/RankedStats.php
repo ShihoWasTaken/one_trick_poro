@@ -42,7 +42,7 @@ class RankedStats
     private $championId;
 
     /**
-     * @ORM\Column(name="winrate", type="smallint")
+     * @ORM\Column(name="winrate", type="decimal", precision=4, scale=2)
      */
     private $winrate;
 

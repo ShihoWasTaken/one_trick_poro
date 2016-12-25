@@ -1,10 +1,22 @@
 {% extends 'AppBundle::layout.html.twig' %}
 
+{% block title %}
+    {{ parent() }} | {{ 'title.summoner.profile' | trans({'%summonerName%': summoner.name}) }}
+{% endblock title %}
+
 {% block stylesheets %}
     {{ parent() }}
     {% stylesheets 'bundles/app/css/Summoner/chests.css' %}
-    <link rel="stylesheet" href="{{ asset_url }}" />
+        <link rel="stylesheet" href="{{ asset_url }}" />
     {% endstylesheets %}
+    {% stylesheets 'bundles/app/css/Summoner/ranked_stats.css' %}
+        <link rel="stylesheet" href="{{ asset_url }}" />
+    {% endstylesheets %}
+    {% stylesheets 'bundles/app/css/Summoner/live_game.css' %}
+        <link rel="stylesheet" href="{{ asset_url }}" />
+    {% endstylesheets %}
+    <link rel="stylesheet" src="https://cdn.datatables.net/1.10.13/css/jquery.dataTables.min.css" />
+    <link rel="stylesheet" src="https://cdn.datatables.net/plug-ins/1.10.13/integration/font-awesome/dataTables.fontAwesome.css" />
 {% endblock stylesheets %}
 
 {% block javascripts_body %}
@@ -12,6 +24,54 @@
     <script src="{{ asset('bundles/fosjsrouting/js/router.js') }}"></script>
     <script src="{{ path('fos_js_routing_js', {"callback": "fos.Router.setData"}) }}"></script>
     <script src="{{ asset('bundles/app/js/jquery.filterizr.min.js') }}"></script>
+    <script src="https://cdn.datatables.net/1.10.13/js/jquery.dataTables.min.js"></script>
+    <script>
+        $(document).ready(function(){
+            // Ranked stats datatable
+            $('.rankedStatsTable').DataTable({
+                "paging": false,
+                "order": [[ 0, 'asc' ]]
+            });
+
+            var isChestsAndMasteriesLoaded = false;
+            $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+                var target = $(e.target).attr("href") // activated tab
+                //alert(target);
+                switch(target)
+                {
+                        //case "#championMasteries":
+                    case "#chests":
+                        if(!isChestsAndMasteriesLoaded)
+                        {
+                            // Chests
+                            $( "#nav-filter li a" ).click(function() {
+                                $('#nav-filter > li').each(function () {
+                                    $(this).removeClass("active")
+                                });
+                                $(this).parent().addClass("active");
+                            });
+                            var filterizd = $('.filtr-container').filterizr({
+                                //options object
+                            });
+                            // On met les champions avec les coffres en valeur
+                            //$( "li[data-filter='1']" ).click();
+                            isChestsAndMasteriesLoaded = true;
+                        }
+                        break;
+                    default:
+                        break;
+                }
+            });
+
+            $('#update-summoner-btn').click(function() {
+                $(this).attr("disabled","disabled");
+                $(this).text('updating');
+                //$(this).addClass("disabled");
+                //alert( "Handler for .click() called." );
+            });
+
+        });
+    </script>
 {% endblock %}
 
 {% block content %}
@@ -25,19 +85,33 @@
                         <img src="http://ddragon.leagueoflegends.com/cdn/img/champion/splash/{{ topChampionsMastery.0.championKey }}_0.jpg" />
                         #}
                     </div>
-                    <div class="col-md-4">
+                    <div class="col-md-5">
                         <h1>{{ summoner.name }}<span class="badge"> {{ summoner.region }}</span></h1>
+                        <button class="btn btn-default btn-lg" id="update-summoner-btn">{{ 'summoner.update'|trans }}</button>
                     </div>
-                    <div class="col-md-3">
+                    <div class="col-md-5">
                         <img src="{{ asset('bundles/app/images/leagues/' ~ soloqimg ~ '.png') }}" />
-                    </div>
-                    <div class="col-md-3">
                         {% if soloq is not null %}
-                            <div>{{ soloq.name }}</div>
-                            <div>{{ soloq.tier }} {{ soloq.entries.0.division }}</div>
-                            <div>{{ soloq.entries.0.leaguePoints }} points</div>
-                            <div>{{ soloq.entries.0.wins }} wins</div>
-                            <div>{{ soloq.entries.0.losses }} losses</div>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    {{ soloq.tier }} {{ soloq.entries.0.division }}
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    {{ soloq.entries.0.leaguePoints }} {{ 'league.points'|trans }}
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 positive-color">
+                                    {{ soloq.entries.0.wins }} W
+                                </div>
+                                <div class="col-md-6 negative-color">
+                                    {{ soloq.entries.0.losses }} L
+                                </div>
+                            </div>
+                        {% else %}
+                            {{ 'unranked'|trans }}
                         {% endif %}
                     </div>
                 </div>
@@ -89,8 +163,38 @@
             </div>
         </div>
     </div>
+    <style>
+        table.dataTable thead th {
+            position: relative;
+            background-image: none !important;
+        }
+
+        table.dataTable thead th.sorting:after,
+        table.dataTable thead th.sorting_asc:after,
+        table.dataTable thead th.sorting_desc:after {
+            position: absolute;
+            top: 12px;
+            right: 8px;
+            display: block;
+            font-family: FontAwesome;
+        }
+
+        table.dataTable thead th.sorting:after {
+            content: "\f0dc";
+            color: #ddd;
+            font-size: 0.8em;
+            padding-top: 0.12em;
+        }
+        table.dataTable thead th.sorting_asc:after {
+            content: "\f0de";
+        }
+        table.dataTable thead th.sorting_desc:after {
+            content: "\f0dd";
+        }
+    </style>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.3/jquery.min.js"></script>
     <script>
+        /*
         $( document ).ready(function() {
             var isChestsAndMasteriesLoaded = false;
             $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
@@ -132,5 +236,6 @@
                 }
             });
         });
+        */
     </script>
 {% endblock content %}

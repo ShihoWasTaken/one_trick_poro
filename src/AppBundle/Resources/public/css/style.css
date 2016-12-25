@@ -66,3 +66,13 @@ body
 {
     text-decoration: none;
 }
+
+.positive-color
+{
+    color: #34ba1c;
+}
+
+.negative-color
+{
+    color: #ff0000;
+}

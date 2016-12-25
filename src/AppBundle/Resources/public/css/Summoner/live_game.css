@@ -1,0 +1,27 @@
+#blue_team
+{
+    background-color: #0381bb;
+    color: white;
+    font-weight: normal;
+    text-transform: uppercase;
+    line-height: 50px;
+}
+
+#team-purple
+{
+    background-color: #814092;
+    color: white;
+    font-weight: normal;
+    text-transform: uppercase;
+    line-height: 50px;
+}
+
+img.live-game-champion
+{
+    width: 30%;
+}
+
+img.live-game-summoner
+{
+    width: 30%;
+}
