@@ -17,6 +17,33 @@
             <div class="tab-content">
                 {% for key,value in rankedStats|reverse(true) %}
                     <div class="tab-pane {% if loop.first  %} active{% endif %}" id="season-{{ key }}" role="tabpanel">
+                        <table class="table table-bordered table-responsive table-striped">
+                            <thead>
+                            <tr>
+                                <th>Champion</th>
+                                <th>Winrate</th>
+                                <th>Wins</th>
+                                <th>Loses</th>
+                                <th>Kills</th>
+                                <th>Deaths</th>
+                                <th>Assists</th>
+                                <th>Creeps</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr class="champion_stats_line">
+                                <td>Total</td>
+                                <td>{{ value.average.winrate }} %</td>
+                                <td class="positive-color">{{ value.average.wins }}</td>
+                                <td class="negative-color">{{ value.average.loses }}</td>
+                                <td>{{ value.average.kills }}</td>
+                                <td>{{ value.average.deaths }}</td>
+                                <td>{{ value.average.assists }}</td>
+                                <td>{{ value.average.creeps }}</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                        <br>
                         <table class="rankedStatsTable table table-bordered table-responsive table-striped">
                             <thead>
                             <tr>
@@ -31,31 +58,17 @@
                             </tr>
                             </thead>
                             <tbody>
-                            {# ID 0 = total #}
-                            {% for line in value %}
-                                {% if line.championId != 0 %}
-                                    <tr class="champion_stats_line">
-                                        <td><span class="hidden">{{ champions[line.championId]['key'] }}</span> <img src="http://ddragon.leagueoflegends.com/cdn/{{ static_data_version }}/img/champion/{{ champions[line.championId]['key'] }}.png"></td>
-                                        <td>{{ (line.winrate)|round(2, 'common') }} %</td>
-                                        <td>{{ line.wins }}</td>
-                                        <td>{{ line.loses }}</td>
-                                        <td>{{ (line.kills / line.playedGames)|round(1, 'common') }}</td>
-                                        <td>{{ (line.deaths / line.playedGames)|round(1, 'common') }}</td>
-                                        <td>{{ (line.assists / line.playedGames)|round(1, 'common') }}</td>
-                                        <td>{{ (line.creeps / line.playedGames)|round(1, 'common') }}</td>
-                                    </tr>
-                                {% else %}
-                                    <tr class="champion_stats_line">
-                                        <td>General</td>
-                                        <td>{{ (line.winrate)|round(2, 'common') }} %</td>
-                                        <td>{{ line.wins }}</td>
-                                        <td>{{ line.loses }}</td>
-                                        <td>{{ (line.kills / line.playedGames)|round(1, 'common') }}</td>
-                                        <td>{{ (line.deaths / line.playedGames)|round(1, 'common') }}</td>
-                                        <td>{{ (line.assists / line.playedGames)|round(1, 'common') }}</td>
-                                        <td>{{ (line.creeps / line.playedGames)|round(1, 'common') }}</td>
-                                    </tr>
-                                {% endif %}
+                            {% for line in value.champions %}
+                                <tr class="champion_stats_line">
+                                    <td><span class="hidden">{{ champions[line.championId]['key'] }}</span> <img src="http://ddragon.leagueoflegends.com/cdn/{{ static_data_version }}/img/champion/{{ champions[line.championId]['key'] }}.png"></td>
+                                    <td>{{ line.winrate }} %</td>
+                                    <td class="positive-color">{{ line.wins }}</td>
+                                    <td class="negative-color">{{ line.loses }}</td>
+                                    <td>{{ line.kills }}</td>
+                                    <td>{{ line.deaths }}</td>
+                                    <td>{{ line.assists }}</td>
+                                    <td>{{ line.creeps }}</td>
+                                </tr>
                             {% endfor %}
                             </tbody>
                         </table>

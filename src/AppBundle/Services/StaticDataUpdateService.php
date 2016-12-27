@@ -5,6 +5,7 @@ namespace AppBundle\Services;
 use AppBundle\Entity\StaticData\Champion;
 use AppBundle\Entity\StaticData\Rune;
 use AppBundle\Entity\StaticData\Mastery;
+use AppBundle\Entity\StaticData\Region;
 use Symfony\Component\Config\Definition\Exception\Exception;
 use AppBundle\Services\LoLAPI\LoLAPIService;
 use Symfony\Component\DependencyInjection\ContainerInterface as Container;
@@ -14,11 +15,48 @@ class StaticDataUpdateService
 {
 	private $container;
 	private $api;
+	private $em;
 
 	public function __construct(Container $container, LoLAPIService $api)
 	{
 		$this->container = $container;
 		$this->api = $api;
+		$this->em = $this->container->get('doctrine')->getManager();
+	}
+
+	private function endline()
+	{
+		if (PHP_SAPI === 'cli')
+		{
+			return PHP_EOL;
+		}
+		else
+		{
+			return '<br/>';
+		}
+	}
+
+	public function updateRegions()
+	{
+		$updated = false;
+		$regions = $this->api->getShards();
+		foreach($regions as $region)
+		{
+			$newRegion = $this->container->get('doctrine')->getRepository('AppBundle:StaticData\Region')->findBy([
+				'tag' => $region['region_tag']
+			]);
+			if($newRegion == null)
+			{
+				$newRegion = new Region($region['region_tag'], $region['name'], $region['slug']);
+				$this->em->persist($newRegion);
+				$updated = true;
+				echo 'Région ' . $region['name'] . ' ajoutée' . $this->endline();
+			}
+		}
+		if($updated)
+			$this->em->flush();
+		else
+			echo 'Aucune nouvelle région n\'a été trouvée';
 	}
 
 	public function updateChampions()
@@ -42,7 +80,7 @@ class StaticDataUpdateService
 				$newChampion = new Champion($champion['id']);
 				$newChampion->setKey($champion['key']);
 				$em->persist($newChampion);
-				echo('Champion ' . $champion['key'] . ' ajoute avec l\'id ' . $champion['id'] . '<br>');
+				echo('Champion ' . $champion['key'] . ' ajoute avec l\'id ' . $champion['id'] . $this->endline());
 			}
 		}
 		if($updated)
@@ -72,7 +110,7 @@ class StaticDataUpdateService
 				$newRune = new Rune($rune['id']);
 				$newRune->setImage($rune['image']['full']);
 				$em->persist($newRune);
-				echo('Rune ' . '<img src=\'http://ddragon.leagueoflegends.com/cdn/6.24.1/img/rune/' . $rune['image']['full'] . '\' />' . ' ajoute avec l\'id ' . $rune['id'] . '<br>');
+				echo('Rune ' . '<img src=\'http://ddragon.leagueoflegends.com/cdn/6.24.1/img/rune/' . $rune['image']['full'] . '\' />' . ' ajoute avec l\'id ' . $rune['id'] . $this->endline());
 			}
 		}
 		if($updated)
@@ -104,7 +142,7 @@ class StaticDataUpdateService
 				$newMastery->setMasteryTree($mastery['masteryTree']);
 				$newMastery->setImage($mastery['image']['full']);
 				$em->persist($newMastery);
-				echo('Mastery ' . '<img src=\'http://ddragon.leagueoflegends.com/cdn/6.24.1/img/mastery/' . $mastery['image']['full'] . '\' />' . ' ajoute avec l\'id ' . $mastery['id'] . '<br>');
+				echo('Mastery ' . '<img src=\'http://ddragon.leagueoflegends.com/cdn/6.24.1/img/mastery/' . $mastery['image']['full'] . '\' />' . ' ajoute avec l\'id ' . $mastery['id'] . $this->endline());
 			}
 		}
 		if($updated)

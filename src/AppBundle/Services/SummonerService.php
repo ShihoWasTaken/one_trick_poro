@@ -136,51 +136,56 @@ class SummonerService
         }
     }
 
-    public function updateRankedStats($summonerId)
-    {
+    public function updateRankedStats($summoner)
+    {/*
         for($season = OLDER_SEASON_AVAILABLE; $season < ACTUAL_SEASON; $season++)
         {
-            $rankedStatsData = $this->api->getRankedStatsBySummonerId($summonerId, $season);
+            $rankedStatsData = $this->api->getRankedStatsBySummonerId($summoner->getId(), $season);
             if($this->api->getResponseCode() !== 404)
             {
                 foreach($rankedStatsData['champions'] as $championData)
                 {
                     $championRankedStats = $this->em->getRepository('AppBundle:Summoner\RankedStats')->findOneBy([
-                        'summonerId' => $summonerId,
+                        'summonerId' => $summoner->getId(),
+                        'regionId' => $summoner->getRegion()->getId(),
                         'season' => $season,
                         'championId' => $championData['id']
                     ]);
                     if ($championRankedStats == null)
                     {
-                        $championRankedStats = new rankedStats($summonerId, $season, $championData['id']);
+                        $championRankedStats = new rankedStats($summoner->getId(), $summoner->getRegion()->getId(), $season, $championData['id']);
                     }
-                    $championRankedStats->setPlayedGames($championData['stats']['totalSessionsPlayed']);
-                    $championRankedStats->setKills($championData['stats']['totalChampionKills']);
-                    $championRankedStats->setDeaths($championData['stats']['totalDeathsPerSession']);
-                    $championRankedStats->setAssists($championData['stats']['totalAssists']);
+                    $playedGames = $championData['stats']['totalSessionsPlayed'];
+                    $championRankedStats->setPlayedGames($playedGames);
+                    $championRankedStats->setKills(round(($championData['stats']['totalChampionKills'] / $playedGames), 1));
+                    $championRankedStats->setDeaths(round(($championData['stats']['totalDeathsPerSession'] / $playedGames), 1));
+                    $championRankedStats->setAssists(round(($championData['stats']['totalAssists'] / $playedGames), 1));
                     $championRankedStats->setWins($championData['stats']['totalSessionsWon']);
                     $championRankedStats->setLoses($championData['stats']['totalSessionsLost']);
                     $championRankedStats->setWinrate(round(($championData['stats']['totalSessionsWon'] / $championData['stats']['totalSessionsPlayed'] * 100 ), 2));
-                    $championRankedStats->setCreeps($championData['stats']['totalMinionKills']);
+                    $championRankedStats->setCreeps(round(($championData['stats']['totalMinionKills'] / $playedGames), 1));
                     $this->em->persist($championRankedStats);
                 }
             }
         }
-        $this->em->flush();
-        return $this->getRankedStats($summonerId);
+        $this->em->flush();*/
+        return $this->getRankedStats($summoner);
     }
 
-    public function getRankedStats($summonerId)
+    public function getRankedStats($summoner)
     {
-        $data = array();
+        $merged = array();
         for($season = OLDER_SEASON_AVAILABLE; $season < ACTUAL_SEASON; $season++)
         {
             $rankedStatsData = $this->em->getRepository('AppBundle:Summoner\RankedStats')->findBy([
-                'summonerId' => $summonerId,
+                'summonerId' => $summoner->getId(),
+                'regionId' => $summoner->getRegion()->getId(),
                 'season' => $season
             ]);
-            $data[$season] = $rankedStatsData;
+            $merged[$season]['average'] = $rankedStatsData[0];
+            unset($rankedStatsData[0]);
+            $merged[$season]['champions'] = $rankedStatsData;
         }
-        return $data;
+        return $merged;
     }
 }

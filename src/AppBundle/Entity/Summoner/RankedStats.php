@@ -11,9 +11,10 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class RankedStats
 {
-    public function __construct($summonerId, $season, $championId)
+    public function __construct($summonerId, $regionId, $season, $championId)
     {
         $this->summonerId = $summonerId;
+        $this->regionId = $regionId;
         $this->season = $season;
         $this->championId = $championId;
     }
@@ -22,9 +23,15 @@ class RankedStats
      * @ORM\Id
      * @ORM\Column(type="integer")
      * @ORM\GeneratedValue(strategy="NONE")
-     * @ORM\OneToOne(targetEntity="Summoner")
      */
     private $summonerId;
+
+    /**
+     * @ORM\Id
+     * @ORM\Column(type="integer")
+     * @ORM\GeneratedValue(strategy="NONE")
+     */
+    private $regionId;
 
     /**
      * @ORM\Id
@@ -37,12 +44,11 @@ class RankedStats
      * @ORM\Id
      * @ORM\Column(type="integer")
      * @ORM\GeneratedValue(strategy="NONE")
-     * @ORM\OneToOne(targetEntity="Champion")
      */
     private $championId;
 
     /**
-     * @ORM\Column(name="winrate", type="decimal", precision=4, scale=2)
+     * @ORM\Column(name="winrate", type="decimal", precision=5, scale=2)
      */
     private $winrate;
 
@@ -62,22 +68,22 @@ class RankedStats
     private $loses;
 
     /**
-     * @ORM\Column(name="kills", type="integer")
+     * @ORM\Column(name="kills", type="decimal", precision=3, scale=1)
      */
     private $kills;
 
     /**
-     * @ORM\Column(name="deaths", type="integer")
+     * @ORM\Column(name="deaths", type="decimal", precision=3, scale=1)
      */
     private $deaths;
 
     /**
-     * @ORM\Column(name="assists", type="integer")
+     * @ORM\Column(name="assists", type="decimal", precision=3, scale=1)
      */
     private $assists;
 
     /**
-     * @ORM\Column(name="creeps", type="smallint")
+     * @ORM\Column(name="creeps", type="decimal", precision=4, scale=1)
      */
     private $creeps;
 
@@ -103,6 +109,30 @@ class RankedStats
     public function getSummonerId()
     {
         return $this->summonerId;
+    }
+
+    /**
+     * Set regionId
+     *
+     * @param integer $regionId
+     *
+     * @return RankedStats
+     */
+    public function setRegionId($regionId)
+    {
+        $this->regionId = $regionId;
+
+        return $this;
+    }
+
+    /**
+     * Get regionId
+     *
+     * @return integer
+     */
+    public function getRegionId()
+    {
+        return $this->regionId;
     }
 
     /**
@@ -156,7 +186,7 @@ class RankedStats
     /**
      * Set winrate
      *
-     * @param integer $winrate
+     * @param string $winrate
      *
      * @return RankedStats
      */
@@ -170,7 +200,7 @@ class RankedStats
     /**
      * Get winrate
      *
-     * @return integer
+     * @return string
      */
     public function getWinrate()
     {
