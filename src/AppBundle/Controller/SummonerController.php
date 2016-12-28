@@ -57,7 +57,7 @@ class SummonerController extends Controller
             $em->flush();
             $summoner = $newSummoner;
         }
-        $rankedStats = $sum->getRankedStats($summoner);
+        $rankedStats = $sum->updateRankedStats($summoner);
 
         $soloq = $sum->getSummonerRank($summonerId);
         if(!isset($soloq))

@@ -48,11 +48,6 @@ class RankedStats
     private $championId;
 
     /**
-     * @ORM\Column(name="winrate", type="decimal", precision=5, scale=2)
-     */
-    private $winrate;
-
-    /**
      * @ORM\Column(name="playedGames", type="smallint")
      */
     private $playedGames;
@@ -68,24 +63,84 @@ class RankedStats
     private $loses;
 
     /**
-     * @ORM\Column(name="kills", type="decimal", precision=3, scale=1)
+     * @ORM\Column(name="kills", type="smallint")
      */
     private $kills;
 
     /**
-     * @ORM\Column(name="deaths", type="decimal", precision=3, scale=1)
+     * @ORM\Column(name="deaths", type="smallint")
      */
     private $deaths;
 
     /**
-     * @ORM\Column(name="assists", type="decimal", precision=3, scale=1)
+     * @ORM\Column(name="assists", type="smallint")
      */
     private $assists;
 
     /**
-     * @ORM\Column(name="creeps", type="decimal", precision=4, scale=1)
+     * @ORM\Column(name="creeps", type="smallint")
      */
     private $creeps;
+
+    /**
+     * Get winrate
+     *
+     * @return float
+     */
+    public function getWinrate()
+    {
+        return round(($this->wins / $this->playedGames * 100), 2);
+    }
+
+    /**
+     * Get KDA
+     *
+     * @return float
+     */
+    public function getKDA()
+    {
+        return round((($this->kills +  $this->assists) / $this->deaths) , 2);
+    }
+
+    /**
+     * Get KDA
+     *
+     * @return float
+     */
+    public function getKillsAVG()
+    {
+        return round(($this->kills / $this->playedGames), 1);
+    }
+
+    /**
+     * Get KDA
+     *
+     * @return float
+     */
+    public function getDeathsAVG()
+    {
+        return round(($this->deaths / $this->playedGames), 1);
+    }
+
+    /**
+     * Get KDA
+     *
+     * @return float
+     */
+    public function getAssistsAVG()
+    {
+        return round(($this->assists / $this->playedGames), 1);
+    }
+
+    /**
+     * Get KDA
+     *
+     * @return float
+     */
+    public function getCreepsAVG()
+    {
+        return round(($this->creeps / $this->playedGames), 1);
+    }
 
     /**
      * Set summonerId
@@ -181,30 +236,6 @@ class RankedStats
     public function getChampionId()
     {
         return $this->championId;
-    }
-
-    /**
-     * Set winrate
-     *
-     * @param string $winrate
-     *
-     * @return RankedStats
-     */
-    public function setWinrate($winrate)
-    {
-        $this->winrate = $winrate;
-
-        return $this;
-    }
-
-    /**
-     * Get winrate
-     *
-     * @return string
-     */
-    public function getWinrate()
-    {
-        return $this->winrate;
     }
 
     /**

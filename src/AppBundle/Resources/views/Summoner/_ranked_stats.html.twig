@@ -1,9 +1,9 @@
 <div class="row">
     <div class="col-md-1">
-        {% if rankedStats is not empty  %}
+        {% if rankedStats is not empty %}
             <ul class="nav nav-pills nav-stacked" role="tablist">
                 {% for key,value in rankedStats|reverse(true) %}
-                    <li  {% if loop.first  %} class="active" {% endif %}>
+                    <li {% if loop.first  %} class="active" {% endif %}>
                         <a href="#season-{{ key }}" data-toggle="pill" class="navbar-link">
                             {{ 'season'|trans }} {{ key }}
                         </a>
@@ -13,7 +13,7 @@
         {% endif %}
     </div>
     <div class="col-md-11">
-        {% if rankedStats is not empty  %}
+        {% if rankedStats is not empty %}
             <div class="tab-content">
                 {% for key,value in rankedStats|reverse(true) %}
                     <div class="tab-pane {% if loop.first  %} active{% endif %}" id="season-{{ key }}" role="tabpanel">
@@ -36,10 +36,10 @@
                                 <td>{{ value.average.winrate }} %</td>
                                 <td class="positive-color">{{ value.average.wins }}</td>
                                 <td class="negative-color">{{ value.average.loses }}</td>
-                                <td>{{ value.average.kills }}</td>
-                                <td>{{ value.average.deaths }}</td>
-                                <td>{{ value.average.assists }}</td>
-                                <td>{{ value.average.creeps }}</td>
+                                <td>{{ value.average.killsAVG }}</td>
+                                <td>{{ value.average.deathsAVG }}</td>
+                                <td>{{ value.average.assistsAVG }}</td>
+                                <td>{{ value.average.creepsAVG }}</td>
                             </tr>
                             </tbody>
                         </table>
@@ -64,10 +64,10 @@
                                     <td>{{ line.winrate }} %</td>
                                     <td class="positive-color">{{ line.wins }}</td>
                                     <td class="negative-color">{{ line.loses }}</td>
-                                    <td>{{ line.kills }}</td>
-                                    <td>{{ line.deaths }}</td>
-                                    <td>{{ line.assists }}</td>
-                                    <td>{{ line.creeps }}</td>
+                                    <td>{{ line.killsAVG }}</td>
+                                    <td>{{ line.deathsAVG }}</td>
+                                    <td>{{ line.assistsAVG }}</td>
+                                    <td>{{ line.creepsAVG }}</td>
                                 </tr>
                             {% endfor %}
                             </tbody>
