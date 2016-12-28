@@ -75,17 +75,9 @@ class SummonerController extends Controller
         {
             $temp[$champion->getId()] = array('key' => $champion->getKey());
         }
-        $topChampionsMastery = $api->getMasteryTopChampions($summonerId);
-        for($i = 0; $i < count($topChampionsMastery); $i++)
-        {
-            $arr = array('championKey' => $temp[$topChampionsMastery[$i]['championId']]['key']);
-            $topChampionsMastery[$i] = array_merge($topChampionsMastery[$i], $arr);
-        }
-        // Switch du 1er et 2eme
-        $tempChampMastery = $topChampionsMastery[0];
-        $topChampionsMastery[0] = $topChampionsMastery[1];
-        $topChampionsMastery[1] = $tempChampMastery;
-
+        
+        $championsMastery = $sum->updateChampionsMastery($summonerId, $safeRegion);
+        
         $currentGame = $api->getCurrentGame($summonerId);
 
         $sumonnerSpellsData = $api->getStaticSummonerSpells();
@@ -97,7 +89,7 @@ class SummonerController extends Controller
 
         return $this->render('AppBundle:Summoner:index.html.twig',
             array(
-                'topChampionsMastery' => $topChampionsMastery,
+                'championsMastery' => $championsMastery,
                 'summoner' => $summoner,
                 'soloq' => $soloq,
                 'soloqimg' => $soloqimg,

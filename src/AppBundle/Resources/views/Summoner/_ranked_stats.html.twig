@@ -22,6 +22,7 @@
                             <tr>
                                 <th>Champion</th>
                                 <th>Winrate</th>
+                                <th>KDA</th>
                                 <th>Wins</th>
                                 <th>Loses</th>
                                 <th>Kills</th>
@@ -34,6 +35,7 @@
                             <tr class="champion_stats_line">
                                 <td>Total</td>
                                 <td>{{ value.average.winrate }} %</td>
+                                <td>{{ value.average.KDA }}</td>
                                 <td class="positive-color">{{ value.average.wins }}</td>
                                 <td class="negative-color">{{ value.average.loses }}</td>
                                 <td>{{ value.average.killsAVG }}</td>
@@ -49,6 +51,7 @@
                             <tr>
                                 <th>Champion</th>
                                 <th>Winrate</th>
+                                <th>KDA</th>
                                 <th>Wins</th>
                                 <th>Loses</th>
                                 <th>Kills</th>
@@ -62,6 +65,7 @@
                                 <tr class="champion_stats_line">
                                     <td><span class="hidden">{{ champions[line.championId]['key'] }}</span> <img src="http://ddragon.leagueoflegends.com/cdn/{{ static_data_version }}/img/champion/{{ champions[line.championId]['key'] }}.png"></td>
                                     <td>{{ line.winrate }} %</td>
+                                    <td>{{ line.KDA }}</td>
                                     <td class="positive-color">{{ line.wins }}</td>
                                     <td class="negative-color">{{ line.loses }}</td>
                                     <td>{{ line.killsAVG }}</td>

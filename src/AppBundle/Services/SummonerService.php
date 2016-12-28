@@ -5,6 +5,7 @@ namespace AppBundle\Services;
 use AppBundle\Entity\User;
 use AppBundle\Entity\Summoner\Summoner;
 use AppBundle\Entity\Summoner\RankedStats;
+use AppBundle\Entity\Summoner\ChampionMastery;
 use Symfony\Component\Config\Definition\Exception\Exception;
 use AppBundle\Services\CurlHttpException;
 use AppBundle\Services\LoLAPI\LoLAPIService;
@@ -186,6 +187,77 @@ class SummonerService
                 $merged[$season]['champions'] = $rankedStatsData;
             }
         }
+        return $merged;
+    }
+
+    public function updateChampionsMastery($summonerId, $region)
+    {
+        $championsMasteryData = $this->api->getChampionsMastery($summonerId);
+        if($this->api->getResponseCode() !== 404)
+        {
+            foreach($championsMasteryData as $championData)
+            {
+                $championMastery = $this->em->getRepository('AppBundle:Summoner\ChampionMastery')->findOneBy([
+                    'summonerId' => $summonerId,
+                    'regionId' => $region->getId(),
+                    'championId' => $championData['championId']
+                ]);
+                if (empty($championMastery))
+                {
+                    $championMastery = new ChampionMastery($summonerId, $region->getId(), $championData['championId']);
+                }
+                $championMastery->setLevel($championData['championLevel']);
+                $championMastery->setPoints($championData['championPoints']);
+                $championMastery->setChestGranted(boolval($championData['chestGranted']));
+                $championMastery->setPointsUntilNextLevel($championData['championPointsUntilNextLevel']);
+                $championMastery->setTokensEarned($championData['tokensEarned']);
+                $date = date_create();
+                date_timestamp_set($date, ($championData['lastPlayTime']/1000));
+                $championMastery->setLastPlayTime($date);
+                $this->em->persist($championMastery);
+            }
+            $this->em->flush();
+        }
+        return $this->getChampionsMastery($summonerId, $region);
+        /*
+        $topChampionsMastery = $api->getMasteryTopChampions($summonerId);
+        for($i = 0; $i < count($topChampionsMastery); $i++)
+        {
+            $arr = array('championKey' => $temp[$topChampionsMastery[$i]['championId']]['key']);
+            $topChampionsMastery[$i] = array_merge($topChampionsMastery[$i], $arr);
+        }
+        // Switch du 1er et 2eme
+        $tempChampMastery = $topChampionsMastery[0];
+        $topChampionsMastery[0] = $topChampionsMastery[1];
+        $topChampionsMastery[1] = $tempChampMastery;*/
+    }
+
+    public function getChampionsMastery($summonerId, $region)
+    {
+        $merged = array();
+
+        $championsMasteryData = $this->em->getRepository('AppBundle:Summoner\ChampionMastery')->findBy([
+            'summonerId' => $summonerId,
+            'regionId' => $region->getId()
+        ],
+        [
+            //TODO: il faut classer par level ensuite points ensuite nom
+            'level' => 'DESC',
+            'points' => 'DESC'
+        ]);
+
+        // Switch du 1er et 2eme
+        $topChampionsMastery = array($championsMasteryData[0], $championsMasteryData[1], $championsMasteryData[2]);
+        $tempChampMastery = $topChampionsMastery[0];
+        $topChampionsMastery[0] = $topChampionsMastery[1];
+        $topChampionsMastery[1] = $tempChampMastery;
+
+        $merged['top'] = $topChampionsMastery;
+        unset($championsMasteryData[2]);
+        unset($championsMasteryData[1]);
+        unset($championsMasteryData[0]);
+        $merged['remaining'] = $championsMasteryData;
+
         return $merged;
     }
 }
