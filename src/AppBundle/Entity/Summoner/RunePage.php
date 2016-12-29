@@ -41,13 +41,6 @@ class RunePage
     private $pageId;
 
     /**
-     * @ORM\Id
-     * @ORM\Column(type="smallint")
-     * @ORM\GeneratedValue(strategy="NONE")
-     */
-    private $slotId;
-
-    /**
      * @ORM\Column(name="rune_id", type="smallint")
      * @ORM\OneToOne(targetEntity="Rune")
      */

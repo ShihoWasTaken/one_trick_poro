@@ -317,4 +317,28 @@ class SummonerService
 
         return $masteryPagesData;
     }
+
+    public function getRunePages($summonerId, \AppBundle\Entity\StaticData\Region $region)
+    {
+        $runePagesData = $this->api->getRunesBySummonerIds(array($summonerId));
+        $images = array();
+        $runeData = array();
+        foreach($runePagesData[$summonerId]['pages'] as $page)
+        {
+            if(isset($page['slots']))
+            {
+                foreach($page['slots'] as $rune)
+                {
+                    $runeData['runeId'] = $this->em->getRepository('AppBundle:StaticData\Rune')->findOneBy([
+                        'id' => $rune['runeId']
+                    ]);
+                    $images[$rune['runeId']] = $runeData['runeId']->getImage();
+                }
+            }
+        }
+        return array(
+            'images' => $images,
+            'data' => $runePagesData[$summonerId]
+        );
+    }
 }

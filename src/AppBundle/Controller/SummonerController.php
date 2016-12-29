@@ -87,7 +87,7 @@ class SummonerController extends Controller
             $summonerSpells[$sumonnerSpell["id"]] = $sumonnerSpell["key"];
         }
 
-        $masteryPages = $sum->updateMasteryPages($summonerId, $safeRegion);
+        $runesPages = $sum->getRunePages($summonerId, $safeRegion);
 
         /* LIVE GAME */
 
@@ -122,6 +122,8 @@ class SummonerController extends Controller
                 'summonerSpells' => $summonerSpells,
                 'champions' => $temp,
                 'rankedStats' => $rankedStats,
+                'runePages' => $runesPages['data'],
+                'runes' => $runesPages['images'],
                 'live_game_data' => $lg_data
             ));
     }

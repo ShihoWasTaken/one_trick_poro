@@ -1,0 +1,10 @@
+{% for page in runePages.pages %}
+    <div>
+        <h1>Page {{ page.name }}</h1>
+        {% if page.slots is defined %}
+            {% for rune in page.slots %}
+                <img src="http://ddragon.leagueoflegends.com/cdn/{{ static_data_version }}/img/rune/{{ runes[rune.runeId] }}" />
+            {% endfor %}
+        {% endif %}
+    </div>
+{% endfor %}
