@@ -11,6 +11,11 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Mastery
 {
+    const ERROR = 0;
+    const FEROCITY = 1;
+    const CUNNING = 2;
+    const RESOLVE = 3;
+
     public function __construct($id)
     {
         $this->id = $id;
@@ -87,30 +92,6 @@ class Mastery
     }
 
     /**
-     * Set ranks
-     *
-     * @param integer $ranks
-     *
-     * @return Mastery
-     */
-    public function setRanks($ranks)
-    {
-        $this->ranks = $ranks;
-
-        return $this;
-    }
-
-    /**
-     * Get ranks
-     *
-     * @return integer
-     */
-    public function getRanks()
-    {
-        return $this->ranks;
-    }
-
-    /**
      * Set masteryTree
      *
      * @param integer $masteryTree
@@ -121,18 +102,21 @@ class Mastery
     {
         switch($masteryTree)
         {
+            // En cas d'erreur
             default:
+                $this->masteryTree = self::ERROR;
+                break;
             // Férocité - Rouge
             case 'Ferocity':
-                $this->masteryTree = 1;
+                $this->masteryTree = self::FEROCITY;
                 break;
             // Ingéniosité - Bleu
             case 'Cunning':
-                $this->masteryTree = 2;
+                $this->masteryTree = self::CUNNING;
                 break;
             // Volonté - Vert
             case 'Resolve':
-                $this->masteryTree = 3;
+                $this->masteryTree = self::RESOLVE;
                 break;
         }
 

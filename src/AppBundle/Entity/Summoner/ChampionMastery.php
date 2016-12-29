@@ -261,4 +261,38 @@ class ChampionMastery
     {
         return $this->lastPlayTime;
     }
+
+    /**
+     * Set regionId
+     *
+     * @param integer $regionId
+     *
+     * @return ChampionMastery
+     */
+    public function setRegionId($regionId)
+    {
+        $this->regionId = $regionId;
+
+        return $this;
+    }
+
+    /**
+     * Get regionId
+     *
+     * @return integer
+     */
+    public function getRegionId()
+    {
+        return $this->regionId;
+    }
+
+    /**
+     * Get chestGranted
+     *
+     * @return boolean
+     */
+    public function getChestGranted()
+    {
+        return $this->chestGranted;
+    }
 }

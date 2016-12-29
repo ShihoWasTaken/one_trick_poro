@@ -1,7 +1,19 @@
 {% if currentGame.error is defined %}
     <h1>Pas en game</h1>
 {% else %}
-    <table id="blue_team">
+    <table id="blue_team" class="table table-bordered table-responsive">
+        <thead>
+        <tr>
+            <th>{{ 'live.game.name'|trans }}</th>
+            <th>{{ 'live.game.tier'|trans }}</th>
+            <th>{{ 'live.game.last.tier'|trans }}</th>
+            <th>{{ 'live.game.stats'|trans }}</th>
+            <th>{{ 'live.game.champion'|trans }}</th>
+            <th>{{ 'live.game.champion.stats'|trans }}</th>
+            <th>{{ 'live.game.champion.kda'|trans }}</th>
+            <th>{{ 'live.game.champion.runes'|trans }}</th>
+        </tr>
+        </thead>
         <h1> bleu</h1>
         <tr>
             {% for bannedChampion in currentGame.bannedChampions %}
@@ -13,10 +25,18 @@
         {% for player in currentGame.participants %}
             {% if player.teamId == 100 %}
                 <tr>
-                    <td>{{ player.summonerName }}</td>
-                    <td><img src="http://ddragon.leagueoflegends.com/cdn/{{ static_data_version }}/img/champion/{{ champions[player.championId]['key'] }}.png"></td>
-                    <td><img src="http://ddragon.leagueoflegends.com/cdn/{{ static_data_version }}/img/spell/{{ summonerSpells[player.spell1Id] }}.png"></td>
-                    <td><img src="http://ddragon.leagueoflegends.com/cdn/{{ static_data_version }}/img/spell/{{ summonerSpells[player.spell2Id] }}.png"></td>
+                    <td><a target="_blank" href="{{ url('app_summoner', {'summonerId': player.summonerId,'region': summoner.region.slug}) }}">{{ player.summonerName }}</a></td>
+                    <td>{% if live_game_data is not empty %}{{ live_game_data[player.summonerId].rank }}{% endif %}</td>
+                    <td></td>
+                    <td></td>
+                    <td>
+                        <img class="live-game-champion" src="http://ddragon.leagueoflegends.com/cdn/{{ static_data_version }}/img/champion/{{ champions[player.championId]['key'] }}.png">
+                        <img class="live-game-summoner" src="http://ddragon.leagueoflegends.com/cdn/{{ static_data_version }}/img/spell/{{ summonerSpells[player.spell1Id] }}.png">
+                        <img class="live-game-summoner" src="http://ddragon.leagueoflegends.com/cdn/{{ static_data_version }}/img/spell/{{ summonerSpells[player.spell2Id] }}.png">
+                    </td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
                 </tr>
             {% endif %}
         {% endfor %}
@@ -45,8 +65,8 @@
         {% for player in currentGame.participants %}
             {% if player.teamId == 200 %}
                 <tr>
-                    <td>{{ player.summonerName }}</td>
-                    <td></td>
+                    <td><a target="_blank" href="{{ url('app_summoner', {'summonerId': player.summonerId,'region': summoner.region.slug}) }}">{{ player.summonerName }}</a></td>
+                    <td>{% if live_game_data is not empty  %}{{ live_game_data[player.summonerId].rank }}{% endif %}</td>
                     <td></td>
                     <td></td>
                     <td>

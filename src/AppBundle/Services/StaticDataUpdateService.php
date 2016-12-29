@@ -36,6 +36,14 @@ class StaticDataUpdateService
 		}
 	}
 
+	private function img($src)
+	{
+		if (PHP_SAPI !== 'cli')
+		{
+			return '<img src="' . $src . '" />"';
+		}
+	}
+
 	public function updateRegions()
 	{
 		$updated = false;
@@ -109,14 +117,16 @@ class StaticDataUpdateService
 				$updated = true;
 				$newRune = new Rune($rune['id']);
 				$newRune->setImage($rune['image']['full']);
+				$newRune->setType($rune['rune']['type']);
+				$newRune->setTier($rune['rune']['tier']);
 				$em->persist($newRune);
-				echo('Rune ' . '<img src=\'http://ddragon.leagueoflegends.com/cdn/6.24.1/img/rune/' . $rune['image']['full'] . '\' />' . ' ajoute avec l\'id ' . $rune['id'] . $this->endline());
+				echo('Rune ' . $this->img('http://ddragon.leagueoflegends.com/cdn/6.24.1/img/rune/' . $rune['image']['full']) . ' ajoutée avec l\'id ' . $rune['id'] . $this->endline());
 			}
 		}
 		if($updated)
 			$em->flush();
 		else
-			echo 'Aucune nouvelle runes n\'a été trouvé';
+			echo 'Aucune nouvelle rune n\'a été trouvée';
 	}
 
 	public function updateMasteries()
@@ -138,16 +148,16 @@ class StaticDataUpdateService
 			{
 				$updated = true;
 				$newMastery = new Mastery($mastery['id']);
-				$newMastery->setRanks($mastery['ranks']);
+				$newMastery->setMaxRank($mastery['ranks']);
 				$newMastery->setMasteryTree($mastery['masteryTree']);
 				$newMastery->setImage($mastery['image']['full']);
 				$em->persist($newMastery);
-				echo('Mastery ' . '<img src=\'http://ddragon.leagueoflegends.com/cdn/6.24.1/img/mastery/' . $mastery['image']['full'] . '\' />' . ' ajoute avec l\'id ' . $mastery['id'] . $this->endline());
+				echo('Mastery ' . $this->img('http://ddragon.leagueoflegends.com/cdn/6.24.1/img/mastery/' . $mastery['image']['full']) . ' ajoutée avec l\'id ' . $mastery['id'] . $this->endline());
 			}
 		}
 		if($updated)
 			$em->flush();
 		else
-			echo 'Aucune nouvelle runes n\'a été trouvé';
+			echo 'Aucune nouvelle maitrise n\'a été trouvée';
 	}
 }

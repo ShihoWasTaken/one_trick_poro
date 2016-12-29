@@ -104,9 +104,8 @@ class SummonerService
     {
         $soloq = null;
         $summoner = $this->api->getLeaguesBySumonnerIdsEntry(array($summonerId));
-        if(!isset($summoner['errorCode']) && ($summoner['errorCode'] != 404))
+        if(!isset($summoner['errorCode']))
         {
-
             foreach($summoner[$summonerId] as $queue)
             {
                 switch($queue['queue'])
@@ -190,7 +189,7 @@ class SummonerService
         return $merged;
     }
 
-    public function updateChampionsMastery($summonerId, $region)
+    public function updateChampionsMastery($summonerId, \AppBundle\Entity\StaticData\Region $region)
     {
         $championsMasteryData = $this->api->getChampionsMastery($summonerId);
         if($this->api->getResponseCode() !== 404)
@@ -232,7 +231,7 @@ class SummonerService
         $topChampionsMastery[1] = $tempChampMastery;*/
     }
 
-    public function getChampionsMastery($summonerId, $region)
+    public function getChampionsMastery($summonerId, \AppBundle\Entity\StaticData\Region $region)
     {
         $merged = array();
 
@@ -259,5 +258,63 @@ class SummonerService
         $merged['remaining'] = $championsMasteryData;
 
         return $merged;
+    }
+
+    public function updateMasteryPages($summonerId, \AppBundle\Entity\StaticData\Region $region)
+    {
+        $masteryPagesData = $this->api->getMasteriesBySummonerIds(array($summonerId));
+        if($this->api->getResponseCode() !== 404)
+        {
+            $pageNum = 1;
+            foreach($masteryPagesData as $pageData)
+            {
+                $championMastery = $this->em->getRepository('AppBundle:Summoner\MasteryPage')->findOneBy([
+                    'summonerId' => $summonerId,
+                    'regionId' => $region->getId(),
+                    'pageId' => $pageNum,
+                    'pageId' => $pageNum,
+                ]);
+                if (empty($championMastery))
+                {
+                    $championMastery = new ChampionMastery($summonerId, $region->getId(), $pageData['championId']);
+                }
+                $championMastery->setLevel($pageData['championLevel']);
+                $championMastery->setPoints($pageData['championPoints']);
+                $championMastery->setChestGranted(boolval($pageData['chestGranted']));
+                $championMastery->setPointsUntilNextLevel($pageData['championPointsUntilNextLevel']);
+                $championMastery->setTokensEarned($pageData['tokensEarned']);
+                $date = date_create();
+                date_timestamp_set($date, ($pageData['lastPlayTime']/1000));
+                $championMastery->setLastPlayTime($date);
+                $this->em->persist($championMastery);
+                $pageNum++;
+            }
+            $this->em->flush();
+        }
+        return $this->getChampionsMastery($summonerId, $region);
+        /*
+        $topChampionsMastery = $api->getMasteryTopChampions($summonerId);
+        for($i = 0; $i < count($topChampionsMastery); $i++)
+        {
+            $arr = array('championKey' => $temp[$topChampionsMastery[$i]['championId']]['key']);
+            $topChampionsMastery[$i] = array_merge($topChampionsMastery[$i], $arr);
+        }
+        // Switch du 1er et 2eme
+        $tempChampMastery = $topChampionsMastery[0];
+        $topChampionsMastery[0] = $topChampionsMastery[1];
+        $topChampionsMastery[1] = $tempChampMastery;*/
+    }
+
+    public function getMasteryPages($summonerId, \AppBundle\Entity\StaticData\Region $region)
+    {
+        $masteryPagesData = $this->em->getRepository('AppBundle:Summoner\MasteryPage')->findBy([
+            'summonerId' => $summonerId,
+            'regionId' => $region->getId()
+        ],
+            [
+                'pageId' => 'ASC'
+            ]);
+
+        return $masteryPagesData;
     }
 }

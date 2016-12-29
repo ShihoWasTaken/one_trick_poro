@@ -11,9 +11,10 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class RunePage
 {
-    public function __construct($summonerId, $pageId, $slotId)
+    public function __construct($summonerId, $regionId, $pageId, $slotId)
     {
         $this->summonerId = $summonerId;
+        $this->regionId = $regionId;
         $this->pageId = $pageId;
         $this->slotId = $slotId;
     }
@@ -22,9 +23,15 @@ class RunePage
      * @ORM\Id
      * @ORM\Column(type="integer")
      * @ORM\GeneratedValue(strategy="NONE")
-     * @ORM\OneToOne(targetEntity="Summoner")
      */
     private $summonerId;
+
+    /**
+     * @ORM\Id
+     * @ORM\Column(type="smallint")
+     * @ORM\GeneratedValue(strategy="NONE")
+     */
+    private $regionId;
 
     /**
      * @ORM\Id
@@ -45,6 +52,12 @@ class RunePage
      * @ORM\OneToOne(targetEntity="Rune")
      */
     private $runeId;
+
+    //TODO: la longueur maximale du nom
+    /**
+     * @ORM\Column(type="string")
+     */
+    private $name;
 
     /**
      * Set summonerId
@@ -140,5 +153,53 @@ class RunePage
     public function getRuneId()
     {
         return $this->runeId;
+    }
+
+    /**
+     * Set regionId
+     *
+     * @param integer $regionId
+     *
+     * @return RunePage
+     */
+    public function setRegionId($regionId)
+    {
+        $this->regionId = $regionId;
+
+        return $this;
+    }
+
+    /**
+     * Get regionId
+     *
+     * @return integer
+     */
+    public function getRegionId()
+    {
+        return $this->regionId;
+    }
+
+    /**
+     * Set name
+     *
+     * @param string $name
+     *
+     * @return RunePage
+     */
+    public function setName($name)
+    {
+        $this->name = $name;
+
+        return $this;
+    }
+
+    /**
+     * Get name
+     *
+     * @return string
+     */
+    public function getName()
+    {
+        return $this->name;
     }
 }

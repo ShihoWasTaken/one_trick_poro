@@ -11,9 +11,10 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class MasteryPage
 {
-    public function __construct($summonerId, $pageId, $masteryId)
+    public function __construct($summonerId, $regionId, $pageId, $masteryId)
     {
         $this->summonerId = $summonerId;
+        $this->regionId = $regionId;
         $this->pageId = $pageId;
         $this->masteryId = $masteryId;
     }
@@ -22,9 +23,15 @@ class MasteryPage
      * @ORM\Id
      * @ORM\Column(type="integer")
      * @ORM\GeneratedValue(strategy="NONE")
-     * @ORM\OneToOne(targetEntity="Summoner")
      */
     private $summonerId;
+
+    /**
+     * @ORM\Id
+     * @ORM\Column(type="smallint")
+     * @ORM\GeneratedValue(strategy="NONE")
+     */
+    private $regionId;
 
     /**
      * @ORM\Id
@@ -111,5 +118,29 @@ class MasteryPage
     public function getMasteryId()
     {
         return $this->masteryId;
+    }
+
+    /**
+     * Set regionId
+     *
+     * @param integer $regionId
+     *
+     * @return MasteryPage
+     */
+    public function setRegionId($regionId)
+    {
+        $this->regionId = $regionId;
+
+        return $this;
+    }
+
+    /**
+     * Get regionId
+     *
+     * @return integer
+     */
+    public function getRegionId()
+    {
+        return $this->regionId;
     }
 }

@@ -28,7 +28,7 @@ class RankedStats
 
     /**
      * @ORM\Id
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="smallint")
      * @ORM\GeneratedValue(strategy="NONE")
      */
     private $regionId;
@@ -99,7 +99,7 @@ class RankedStats
      */
     public function getKDA()
     {
-        return round((($this->kills +  $this->assists) / $this->deaths) , 2);
+         return round((($this->kills +  $this->assists) / max(1, $this->deaths)) , 2);
     }
 
     /**

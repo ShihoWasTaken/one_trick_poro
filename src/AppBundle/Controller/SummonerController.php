@@ -87,6 +87,30 @@ class SummonerController extends Controller
             $summonerSpells[$sumonnerSpell["id"]] = $sumonnerSpell["key"];
         }
 
+        $masteryPages = $sum->updateMasteryPages($summonerId, $safeRegion);
+
+        /* LIVE GAME */
+
+        $lg_data = array();
+        /*if(isset($currentGame['participants']))
+        {
+            //var_dump($currentGame['participants'] );exit();
+            foreach($currentGame['participants'] as $participant)
+            {
+                $lg_soloq = $sum->getSummonerRank($participant['summonerId']);
+                if(!isset($lg_soloq))
+                {
+                    $lg_soloqimg = "unranked_";
+                }
+                else
+                {
+                    $lg_soloqimg = strtolower($lg_soloq['tier']) . '_' . $lg_soloq['entries'][0]['division'];
+                }
+                $lg_data[$participant['summonerId']]['rank'] = $lg_soloq;
+                $lg_data[$participant['summonerId']]['img'] = $lg_soloqimg;
+            }
+        }*/
+
         return $this->render('AppBundle:Summoner:index.html.twig',
             array(
                 'championsMastery' => $championsMastery,
@@ -97,7 +121,8 @@ class SummonerController extends Controller
                 'currentGame' => $currentGame,
                 'summonerSpells' => $summonerSpells,
                 'champions' => $temp,
-                'rankedStats' => $rankedStats
+                'rankedStats' => $rankedStats,
+                'live_game_data' => $lg_data
             ));
     }
     
