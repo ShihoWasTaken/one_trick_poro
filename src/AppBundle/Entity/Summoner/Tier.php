@@ -13,6 +13,44 @@ use Doctrine\Common\Collections\ArrayCollection;
 class Tier
 {
 
+    const UNRANKED = 0;
+    const BRONZE = 1;
+    const SILVER = 2;
+    const GOLD = 3;
+    const PLATINUM = 4;
+    const DIAMOND = 5;
+    const MASTER = 6;
+    const CHALLENGER = 7;
+
+    const ID_UNRANKED = 1;
+    const ID_BRONZE_5 = 2;
+    const ID_BRONZE_4 = 3;
+    const ID_BRONZE_3 = 4;
+    const ID_BRONZE_2 = 5;
+    const ID_BRONZE_1 = 6;
+    const ID_SILVER_5 = 7;
+    const ID_SILVER_4 = 8;
+    const ID_SILVER_3 = 9;
+    const ID_SILVER_2 = 10;
+    const ID_SILVER_1 = 11;
+    const ID_GOLD_5 = 12;
+    const ID_GOLD_4 = 13;
+    const ID_GOLD_3 = 14;
+    const ID_GOLD_2 = 15;
+    const ID_GOLD_1 = 16;
+    const ID_PLATINUM_5 = 17;
+    const ID_PLATINUM_4 = 18;
+    const ID_PLATINUM_3 = 19;
+    const ID_PLATINUM_2 = 20;
+    const ID_PLATINUM_1 = 21;
+    const ID_DIAMOND_5 = 22;
+    const ID_DIAMOND_4 = 23;
+    const ID_DIAMOND_3 = 24;
+    const ID_DIAMOND_2 = 25;
+    const ID_DIAMOND_1 = 26;
+    const ID_MASTER = 27;
+    const ID_CHALLENGER = 28;
+    
     public function __construct() 
     {
         $this->sumonners = new ArrayCollection();
@@ -21,7 +59,7 @@ class Tier
     /**
      * @ORM\Id
      * @ORM\Column(type="integer")
-     * @ORM\GeneratedValue(strategy="AUTO")
+     * @ORM\GeneratedValue(strategy="NONE")
      */
     private $id;
 
@@ -161,5 +199,19 @@ class Tier
     public function getSummoners()
     {
         return $this->summoners;
+    }
+
+    /**
+     * Set id
+     *
+     * @param integer $id
+     *
+     * @return Tier
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
+
+        return $this;
     }
 }
