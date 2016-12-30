@@ -10,8 +10,88 @@ use AppBundle\Repository\Summoner\SummonerRepository;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class SummonerController extends Controller
-{   
+{
+    public function ajaxCreateAction($region, $summonerId)
+    {
+        $sum = $this->container->get('app.lolsummoner');
+
+        $response = new Response();
+        $response->headers->set('Content-Type', 'application/json');
+
+        try
+        {
+            $region = $sum->getRegionBySlug($region);
+            $sum->firstUpdateSummoner($region, $summonerId);
+            $response->setContent(json_encode(array(
+                'status' => 'OK',
+            )));
+        }
+        catch(\Exception $e)
+        {
+            $response->setStatusCode(500);
+            $response->setContent(json_encode(array(
+                'error' => $e->getMessage(),
+            )));
+        }
+
+        return $response;
+    }
+
     public function indexAction($region, $summonerId)
+    {
+        $em = $this->get('doctrine')->getManager();
+        $api = $this->container->get('app.lolapi');
+        $sum = $this->container->get('app.lolsummoner');
+        $static_data_version = $this->container->getParameter('static_data_version');
+
+        $region = $sum->getRegionBySlug($region);
+
+        // On récupère le summoner en BDD
+        $summoner = $em->getRepository('AppBundle:Summoner\Summoner')->findOneBy([
+            'id' => $summonerId,
+            'region' => $region
+        ]);
+
+        // Si le summoner n'existe pas encore en BDD, on le crée
+        if (empty($summoner))
+        {
+            $summonerData = $api->getSummonerByIds(array($summonerId));
+            if($api->getResponseCode() == 404)
+            {
+                //TODO: exception summoner not found
+                throw new NotFoundHttpException('Summoner not existing');
+            }
+            $newSummoner = new Summoner($summonerId, $region);
+            $newSummoner->setUser(null);
+            $newSummoner->setName($summonerData[$summonerId]['name']);
+            $newSummoner->setLevel($summonerData[$summonerId]['summonerLevel']);
+            $newSummoner->setProfileIconId($summonerData[$summonerId]['profileIconId']);
+            $date = date_create();
+            date_timestamp_set($date, ($summonerData[$summonerId]['revisionDate']/1000));
+            $newSummoner->setRevisionDate($date);
+            $em->persist($newSummoner);
+            $em->flush();
+        }
+        else
+        {
+            $newSummoner = $summoner;
+        }
+        if (empty($summoner) ||(!empty($summoner) && !$summoner->isFirstUpdated()))
+        {
+            return $this->render('AppBundle:Summoner:creating_summoner.html.twig',
+                array(
+                    'static_data_version' => $static_data_version,
+                    'summoner' => $newSummoner
+                ));
+        }
+        //return new Response("ok");
+        return $this->indexAction3($region->getSlug(), $summonerId);
+        return $this->render('AppBundle:Summoner:index.html.twig',
+            array(
+            ));
+    }
+
+    public function indexAction3($region, $summonerId)
     {
         $em = $this->get('doctrine')->getManager();
         $api = $this->container->get('app.lolapi');
@@ -21,7 +101,7 @@ class SummonerController extends Controller
         $safeRegion = $em->getRepository('AppBundle:StaticData\Region')->findOneBy([
             'slug' => $region
         ]);
-        if($safeRegion == null)
+        if(empty($safeRegion))
         {
             //TODO: lancer exception
             throw new NotFoundHttpException('Region not existing');

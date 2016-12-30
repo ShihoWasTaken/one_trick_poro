@@ -29,11 +29,11 @@ class SummonerRepository extends EntityRepository
 		select s
 		from AppBundle:Summoner\Summoner s
 		WHERE s.region = :region
-		AND s.summonerId = :summonerId
+		AND s.id = :summonerId
 		")
 		->setParameter('region', $region)
 		->setParameter('summonerId', $summonerId)
-    	->getResult()[0]
+    	->getResult()
 		;
 	}
 

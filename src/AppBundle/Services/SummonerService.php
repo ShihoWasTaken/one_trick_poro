@@ -6,6 +6,7 @@ use AppBundle\Entity\User;
 use AppBundle\Entity\Summoner\Summoner;
 use AppBundle\Entity\Summoner\RankedStats;
 use AppBundle\Entity\Summoner\ChampionMastery;
+use AppBundle\Entity\Summoner\Tier;
 use Symfony\Component\Config\Definition\Exception\Exception;
 use AppBundle\Services\CurlHttpException;
 use AppBundle\Services\LoLAPI\LoLAPIService;
@@ -25,6 +26,47 @@ class SummonerService
         $this->container = $container;
         $this->api = $api;
         $this->em = $this->container->get('doctrine')->getManager();
+    }
+
+    public function getRegionBySlug($region)
+    {
+        $region = $this->em->getRepository('AppBundle:StaticData\Region')->findOneBy([
+            'slug' => $region
+        ]);
+        if($region == null)
+        {
+            throw new Exception('Region not existing');
+        }
+        return $region;
+    }
+
+    public function firstUpdateSummoner(\AppBundle\Entity\StaticData\Region $region, $summonerId)
+    {
+        $databaseSummoner = $this->em->getRepository('AppBundle:Summoner\Summoner')->findOneBy([
+            'id' => $summonerId,
+            'region' => $region
+        ]);
+        if (empty($databaseSummoner))
+        {
+            throw new Exception('Summoner not existing in database');
+        }
+        $summonerData = $this->api->getSummonerByIds(array($summonerId));
+        if($this->api->getResponseCode() == 404)
+        {
+            throw new Exception('Summoner not existing in Riot Games Database');
+        }
+        $databaseSummoner->setName($summonerData[$summonerId]['name']);
+        $databaseSummoner->setLevel($summonerData[$summonerId]['summonerLevel']);
+        $databaseSummoner->setProfileIconId($summonerData[$summonerId]['profileIconId']);
+        $date = date_create();
+        date_timestamp_set($date, ($summonerData[$summonerId]['revisionDate']/1000));
+        $databaseSummoner->setRevisionDate($date);
+
+        $this->updateRankedStats($databaseSummoner);
+        $this->updateSummonerRank($databaseSummoner);
+        $databaseSummoner->setFirstUpdated(true);
+        $this->em->persist($databaseSummoner);
+        $this->em->flush();
     }
 
     public function linkSummonerToUser(User $user, $summonerName)
@@ -80,10 +122,6 @@ class SummonerService
         }
         $summonerId = $summoner[$summonerId]['id'];
 
-        $em = $this->container->get('doctrine')->getManager();
-        // On ajoute au User
-        //$user->addSummoner($summoner);
-
         $newSummoner = new Summoner();
         $newSummoner->setUser(null);
         $newSummoner->setRegion($region);
@@ -95,10 +133,88 @@ class SummonerService
         date_timestamp_set($date, ($summoner[$summonerId]['revisionDate']/1000));
         $newSummoner->setRevisionDate($date);
 
-        $em->persist($newSummoner);
-        $em->flush();
+        $this->em->persist($newSummoner);
+        $this->em->flush();
         return $newSummoner;
     }
+    
+    public function updateSummonerRank(\AppBundle\Entity\Summoner\Summoner $summoner)
+    {
+        
+        $soloq = null;
+        $summonerAPIData = $this->api->getLeaguesBySumonnerIdsEntry(array($summoner->getId()));
+        if(!isset($summonerAPIData['errorCode']))
+        {
+            foreach($summonerAPIData[$summoner->getId()] as $queue)
+            {
+                switch($queue['queue'])
+                {
+                    case 'RANKED_SOLO_5x5':
+                        $soloq = $queue;
+                        break;
+                    case 'RANKED_TEAM_3x3':
+                        break;
+                    case 'RANKED_TEAM_5x5':
+                        break;
+                }
+            }
+        }
+        switch($soloq['tier'])
+        {
+            default:
+            case 'UNRANKED':
+                $leagueId = Tier::UNRANKED;
+                break;
+            case 'BRONZE':
+                $leagueId = Tier::BRONZE;
+                break;
+            case 'SILVER':
+                $leagueId = Tier::SILVER;
+                break;
+            case 'GOLD':
+                $leagueId = Tier::GOLD;
+                break;
+            case 'PLATINUM':
+                $leagueId = Tier::PLATINUM;
+                break;
+            case 'DIAMOND':
+                $leagueId = Tier::DIAMOND;
+                break;
+            case 'MASTER':
+                $leagueId = Tier::MASTER;
+                break;
+            case 'CHALLENGER':
+                $leagueId = Tier::CHALLENGER;
+                break;
+        }
+        switch($soloq['entries'][0]['division'])
+        {
+            default:
+            case 'I':
+                $divisionId = 1;
+                break;
+            case 'II':
+                $divisionId = 2;
+                break;
+            case 'III':
+                $divisionId = 3;
+                break;
+            case 'IV':
+                $divisionId = 4;
+                break;
+            case 'V':
+                $divisionId = 5;
+                break;
+        }
+
+        $databaseTier = $this->em->getRepository('AppBundle:Summoner\Tier')->findOneBy([
+            'league' => $leagueId,
+            'division' => $divisionId
+        ]);
+        $summoner->setTier($databaseTier);
+        $this->em->persist($summoner);
+        $this->em->flush();
+    }    
 
     public function getSummonerRank($summonerId)
     {
@@ -118,23 +234,12 @@ class SummonerService
                     case 'RANKED_TEAM_5x5':
                         break;
                 }
-                /*
-                echo $queue['queue'] . '<br>';
-                echo $queue['entries'][0]['wins'] . '<br>';
-                echo $queue['tier'] . '<br>';
-                echo $queue['name'] . '<br>';
-                echo $queue['entries'][0]['division'] . '<br>';
-                echo $queue['entries'][0]['leaguePoints'] . '<br>';
-                echo $queue['entries'][0]['losses'] . '<br>';
-                echo $queue['entries'][0]['playerOrTeamName'] . '<br>';
-                echo '<br>';
-                */
             }
         }
         return $soloq;
     }
 
-    public function updateRankedStats($summoner)
+    public function updateRankedStats(\AppBundle\Entity\Summoner\Summoner $summoner)
     {
         for($season = OLDER_SEASON_AVAILABLE; $season <= ACTUAL_SEASON; $season++)
         {

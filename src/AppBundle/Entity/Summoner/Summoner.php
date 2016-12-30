@@ -16,12 +16,14 @@ use Doctrine\ORM\Events;
  */
 class Summoner
 {
+    const UPDATE_INTERVAL = 60*60; // 1h
 
     public function __construct($summonerId, $region)
     {
         $this->id = $summonerId;
         $this->region = $region;
         $this->rankedStats = new ArrayCollection();
+        $this->firstUpdated = false;
 
     }
 
@@ -73,6 +75,11 @@ class Summoner
     private $tier;
 
     /**
+     * @ORM\Column(type="boolean")
+     * */
+    private $firstUpdated;
+
+    /**
      * @ORM\Column(name="LastUpdateDate", type="datetime")
      * */
     private $lastUpdateDate;
@@ -87,6 +94,15 @@ class Summoner
         date_timestamp_set($date, time());
         $this->lastUpdateDate = $date;
     }
+
+    public function isUpdatable()
+    {
+        $last_update = $this->lastUpdateDate + self::UPDATE_INTERVAL;
+        $now = date_create();
+        date_timestamp_set($now, time());
+        return ($last_update < $now);
+    }
+
 
     /**
      * Set id
@@ -302,5 +318,29 @@ class Summoner
     public function getTier()
     {
         return $this->tier;
+    }
+
+    /**
+     * Set firstUpdated
+     *
+     * @param boolean $firstUpdated
+     *
+     * @return Summoner
+     */
+    public function setFirstUpdated($firstUpdated)
+    {
+        $this->firstUpdated = $firstUpdated;
+
+        return $this;
+    }
+
+    /**
+     * Get firstUpdated
+     *
+     * @return boolean
+     */
+    public function isFirstUpdated()
+    {
+        return $this->firstUpdated;
     }
 }

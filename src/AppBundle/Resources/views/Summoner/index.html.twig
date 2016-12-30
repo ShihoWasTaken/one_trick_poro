@@ -92,7 +92,7 @@
                         #}
                     </div>
                     <div class="col-md-5">
-                        <h1>{{ summoner.name }}<span class="badge"> {{ summoner.region.slug }}</span></h1>
+                        <h1>{{ summoner.name }}<span class="badge region-badge"> {{ summoner.region.slug }}</span></h1>
                         <button class="btn btn-default btn-lg" id="update-summoner-btn">{{ 'summoner.update'|trans }}</button>
                     </div>
                     <div class="col-md-5">
@@ -198,50 +198,49 @@
             content: "\f0dd";
         }
     </style>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.3/jquery.min.js"></script>
     <script>
-        /*
-        $( document ).ready(function() {
-            var isChestsAndMasteriesLoaded = false;
-            $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
-                var target = $(e.target).attr("href") // activated tab
-                //alert(target);
-                switch(target)
-                {
-                    //case "#championMasteries":
-                    case "#chests":
-                            if(!isChestsAndMasteriesLoaded)
-                            {
-                                $('#loadingDiv').removeClass('hidden');
-                                var summonerId = {{ summoner.id }};
-                                var region = '{{ summoner.region.slug }}';
-                                $.ajax({
-                                    url: '{{	path('app_summoner_chests_ajax', {'region': summoner.region.slug, 'summonerId': summoner.id}) }}',
-                                    type: 'POST',
-                                    data: {'summonerId': summonerId, 'region': region},
-                                    dataType: 'html',
-                                    success: function(data) {
-                                        $('#loadingDiv').addClass('hidden');
-                                        $('#chests').html(data);
-                                        $( "#nav-filter li a" ).click(function() {
-                                            $('#nav-filter > li').each(function () {
-                                                $(this).removeClass("active")
-                                            });
-                                            $(this).parent().addClass("active");
-                                        });
-                                        var filterizd = $('.filtr-container').filterizr({
-                                            //options object
-                                        });
-                                    }
-                                });
-                                isChestsAndMasteriesLoaded = true;
-                            }
-                        break;
-                    default:
-                        break;
-                }
-            });
-        });
-        */
+
+         $( document ).ready(function() {
+         var isChestsAndMasteriesLoaded = false;
+         $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+         var target = $(e.target).attr("href") // activated tab
+         //alert(target);
+         switch(target)
+         {
+         //case "#championMasteries":
+         case "#chests":
+         if(!isChestsAndMasteriesLoaded)
+         {
+         $('#loadingDiv').removeClass('hidden');
+         var summonerId = {{ summoner.id }};
+         var region = '{{ summoner.region.slug }}';
+         $.ajax({
+         url: '{{	path('app_summoner_chests_ajax', {'region': summoner.region.slug, 'summonerId': summoner.id}) }}',
+         type: 'POST',
+         data: {'summonerId': summonerId, 'region': region},
+         dataType: 'html',
+         success: function(data) {
+         $('#loadingDiv').addClass('hidden');
+         $('#chests').html(data);
+         $( "#nav-filter li a" ).click(function() {
+         $('#nav-filter > li').each(function () {
+         $(this).removeClass("active")
+         });
+         $(this).parent().addClass("active");
+         });
+         var filterizd = $('.filtr-container').filterizr({
+         //options object
+         });
+         }
+         });
+         isChestsAndMasteriesLoaded = true;
+         }
+         break;
+         default:
+         break;
+         }
+         });
+         });
+
     </script>
 {% endblock content %}

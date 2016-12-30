@@ -64,18 +64,18 @@ class Tier
     private $id;
 
     /**
-     * @ORM\Column(name="Name", type="string", length=12)
+     * @ORM\Column(type="string", length=12)
      * @Assert\Length(max=12)
      * */
     private $name;
 
     /**
-     * @ORM\Column(name="League", type="smallint")
+     * @ORM\Column(type="smallint")
      */
     private $league;
 
     /**
-     * @ORM\Column(name="Division", type="smallint")
+     * @ORM\Column(type="smallint")
      */
     private $division;
 

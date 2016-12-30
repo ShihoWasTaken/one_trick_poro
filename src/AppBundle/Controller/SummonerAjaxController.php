@@ -43,7 +43,7 @@ class SummonerAjaxController extends Controller
 
     public function chestsAction(Request $request, $summonerId, $region)
     {
-        $authenticatedUser = $this->get('security.token_storage')->getToken()->getUser();
+        $static_data_version = $this->container->getParameter('static_data_version');
         if(!$request->isXmlHttpRequest())
         {
             return new JsonResponse(array('httpCode' => 400, 'error' => 'Requête non AJAX'));
@@ -73,6 +73,7 @@ class SummonerAjaxController extends Controller
                 array(
                     'champions' => $champions,
                     'summoner' => $summoner,
+                    'static_data_version' => $static_data_version
                 ))
             ->getContent();
             return new Response($template);
