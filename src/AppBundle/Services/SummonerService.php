@@ -220,20 +220,19 @@ class SummonerService
     {
         $soloq = null;
         $summoner = $this->api->getLeaguesBySumonnerIdsEntry(array($summonerId));
-        if(!isset($summoner['errorCode']))
+        if($this->api->getResponseCode() == 404)
+            return null;
+        foreach($summoner[$summonerId] as $queue)
         {
-            foreach($summoner[$summonerId] as $queue)
+            switch($queue['queue'])
             {
-                switch($queue['queue'])
-                {
-                    case 'RANKED_SOLO_5x5':
-                        $soloq = $queue;
-                        break;
-                    case 'RANKED_TEAM_3x3':
-                        break;
-                    case 'RANKED_TEAM_5x5':
-                        break;
-                }
+                case 'RANKED_SOLO_5x5':
+                    $soloq = $queue;
+                    break;
+                case 'RANKED_TEAM_3x3':
+                    break;
+                case 'RANKED_TEAM_5x5':
+                    break;
             }
         }
         return $soloq;
@@ -423,12 +422,12 @@ class SummonerService
         return $masteryPagesData;
     }
 
-    public function getRunePages($summonerId, \AppBundle\Entity\StaticData\Region $region)
+    public function getRunePages(\AppBundle\Entity\Summoner\Summoner $summoner)
     {
-        $runePagesData = $this->api->getRunesBySummonerIds(array($summonerId));
+        $runePagesData = $this->api->getRunesBySummonerIds(array($summoner->getId()));
         $images = array();
         $runeData = array();
-        foreach($runePagesData[$summonerId]['pages'] as $page)
+        foreach($runePagesData[$summoner->getId()]['pages'] as $page)
         {
             if(isset($page['slots']))
             {
@@ -443,7 +442,54 @@ class SummonerService
         }
         return array(
             'images' => $images,
-            'data' => $runePagesData[$summonerId]
+            'data' => $runePagesData[$summoner->getId()]
         );
+    }
+
+    public function getLiveGame(\AppBundle\Entity\Summoner\Summoner $summoner)
+    {
+        $currentGame = $this->api->getCurrentGame($summoner->getId());
+
+        $sumonnerSpellsData = $this->api->getStaticSummonerSpells();
+        $summonerSpells = array();
+        foreach($sumonnerSpellsData["data"] as $sumonnerSpell)
+        {
+            $summonerSpells[$sumonnerSpell["id"]] = $sumonnerSpell["key"];
+        }
+        $liveGame = array();
+        if(isset($currentGame['participants']))
+        {
+            //var_dump($currentGame['participants'] );exit();
+            foreach($currentGame['participants'] as $participant)
+            {
+                $lg_soloq = $this->getSummonerRank($participant['summonerId']);
+                if(!isset($lg_soloq))
+                {
+                    $lg_soloqimg = "unranked_";
+                    $liveGame[$participant['summonerId']]['rank'] = 'Unranked';
+                }
+                else
+                {
+                    $lg_soloqimg = strtolower($lg_soloq['tier']) . '_' . $lg_soloq['entries'][0]['division'];
+                    $liveGame[$participant['summonerId']]['rank'] = $lg_soloq['tier'] . ' ' . $lg_soloq['entries'][0]['division'];
+                }
+                $liveGame[$participant['summonerId']]['img'] = $lg_soloqimg;
+            }
+        }
+        $data['live_game'] = $liveGame;
+        $data['currentGame'] = $currentGame;
+        $data['summonerSpells'] = $summonerSpells;
+        return $data;
+    }
+
+    public function getChampionsSortedByIds()
+    {
+        $champions = $this->em->getRepository('AppBundle:StaticData\Champion')->findAll();
+        $temp = array();
+        foreach($champions as $champion)
+        {
+            $temp[$champion->getId()] = array('key' => $champion->getKey());
+        }
+        return $temp;
     }
 }

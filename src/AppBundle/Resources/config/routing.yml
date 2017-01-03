@@ -68,6 +68,24 @@ app_summoner_chests_ajax:
     methods:  [POST]
     requirements: { method: POST }
 
+app_summoner_champion_masteries_ajax:
+    path:     /summoner/{region}/{summonerId}/championMasteriesAjax
+    defaults: { _controller: AppBundle:SummonerAjax:championMasteries }
+    methods:  [POST]
+    requirements: { method: POST }
+
+app_summoner_runes_ajax:
+    path:     /summoner/{region}/{summonerId}/runesAjax
+    defaults: { _controller: AppBundle:SummonerAjax:runes }
+    methods:  [POST]
+    requirements: { method: POST }
+
+app_summoner_live_game_ajax:
+    path:     /summoner/{region}/{summonerId}/liveGameAjax
+    defaults: { _controller: AppBundle:SummonerAjax:liveGame }
+    methods:  [POST]
+    requirements: { method: POST }
+
 app_dev_test:
     path:     /test
     defaults: { _controller: AppBundle:StaticData:updateChampions }

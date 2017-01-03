@@ -14,7 +14,6 @@
             <th>{{ 'live.game.champion.runes'|trans }}</th>
         </tr>
         </thead>
-        <h1> bleu</h1>
         <tr>
             {% for bannedChampion in currentGame.bannedChampions %}
                 {% if bannedChampion.teamId == 100 %}
@@ -25,8 +24,13 @@
         {% for player in currentGame.participants %}
             {% if player.teamId == 100 %}
                 <tr>
-                    <td><a target="_blank" href="{{ url('app_summoner', {'summonerId': player.summonerId,'region': summoner.region.slug}) }}">{{ player.summonerName }}</a></td>
-                    <td>{% if live_game_data is not empty %}{{ live_game_data[player.summonerId].rank }}{% endif %}</td>
+                    <td><a target="_blank" href="{{ url('app_summoner', {'summonerId': player.summonerId,'region': summoner.region.slug}) }}"><span class="live-game-name">{{ player.summonerName }}</span></a></td>
+                    <td>
+                        {% if live_game_data is not empty %}
+                            <img class="live-game-rank" src="{{ asset('bundles/app/images/leagues/' ~ live_game_data[player.summonerId].img ~ '.png') }}" />
+                            <span class="live-game-rank" >{{ live_game_data[player.summonerId].rank }}</span>
+                        {% endif %}
+                    </td>
                     <td></td>
                     <td></td>
                     <td>
@@ -65,8 +69,13 @@
         {% for player in currentGame.participants %}
             {% if player.teamId == 200 %}
                 <tr>
-                    <td><a target="_blank" href="{{ url('app_summoner', {'summonerId': player.summonerId,'region': summoner.region.slug}) }}">{{ player.summonerName }}</a></td>
-                    <td>{% if live_game_data is not empty  %}{{ live_game_data[player.summonerId].rank }}{% endif %}</td>
+                    <td><a target="_blank" href="{{ url('app_summoner', {'summonerId': player.summonerId,'region': summoner.region.slug}) }}"><span class="live-game-name">{{ player.summonerName }}</span></a></td>
+                    <td>
+                        {% if live_game_data is not empty %}
+                            <img class="live-game-rank" src="{{ asset('bundles/app/images/leagues/' ~ live_game_data[player.summonerId].img ~ '.png') }}" />
+                            <span class="live-game-rank" >{{ live_game_data[player.summonerId].rank }}</span>
+                        {% endif %}
+                    </td>
                     <td></td>
                     <td></td>
                     <td>

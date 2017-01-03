@@ -1,6 +1,6 @@
 <div class="col-md-12">
     <h2>Maitrises de champions</h2>
-    {% for mastery in championsMastery.top %}
+    {% for mastery in topChampionsMastery %}
         <div class="col-md-4 text-center">
             <h4>{{ champions[mastery.championId].key }}</h4>
             <img src="http://ddragon.leagueoflegends.com/cdn/6.9.1/img/champion/{{ champions[mastery.championId].key  }}.png">
@@ -10,9 +10,9 @@
             {% if mastery.lastPlayTime is defined %}
                 <br>Joué la dernière fois le {{ (mastery.lastPlayTime)|date('d/m/Y à H:m') }}
             {% endif %}
-            <img src="{{ asset('bundles/app/images/champion-masteries/' ~ mastery.level ~ '.png') }}" />
-            <br>Niveau de maitrise : {{ mastery.level }}
-            <br>Points : {{ mastery.points }}
+            <img src="{{ asset('bundles/app/images/champion-masteries/' ~ mastery.championLevel ~ '.png') }}" />
+            <br>Niveau de maitrise : {{ mastery.championLevel }}
+            <br>Points : {{ mastery.championPoints }}
         </div>
     {% endfor %}
 

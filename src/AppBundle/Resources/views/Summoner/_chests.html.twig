@@ -24,7 +24,7 @@
             </div>
         </div>
 
-        <div class="filtr-container">
+        <div id="filtr-container-chests" class="filtr-container">
             {% for key, champion in champions %}
                 <div class="col-md-3 text-center champion filtr-item"
                     {% if champion.chestGranted is defined and champion.chestGranted %}

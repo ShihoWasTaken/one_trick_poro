@@ -25,3 +25,19 @@ img.live-game-summoner
 {
     width: 30%;
 }
+
+img.live-game-rank
+{
+    display: inline-block;
+    width: 48px;
+}
+
+span.live-game-rank
+{
+    display: inline-block;
+}
+
+span.live-game-name
+{
+    overflow: hidden;
+}

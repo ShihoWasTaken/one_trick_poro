@@ -137,7 +137,7 @@ class SummonerController extends Controller
             $em->flush();
             $summoner = $newSummoner;
         }
-        $rankedStats = $sum->updateRankedStats($summoner);
+        $rankedStats = $sum->getRankedStats($summoner);
 
         $soloq = $sum->getSummonerRank($summonerId);
         if(!isset($soloq))
@@ -156,8 +156,9 @@ class SummonerController extends Controller
             $temp[$champion->getId()] = array('key' => $champion->getKey());
         }
         
-        $championsMastery = $sum->updateChampionsMastery($summonerId, $safeRegion);
-        
+        //$championsMastery = $sum->updateChampionsMastery($summonerId, $safeRegion);
+
+        /*
         $currentGame = $api->getCurrentGame($summonerId);
 
         $sumonnerSpellsData = $api->getStaticSummonerSpells();
@@ -166,12 +167,10 @@ class SummonerController extends Controller
         {
             $summonerSpells[$sumonnerSpell["id"]] = $sumonnerSpell["key"];
         }
-
-        $runesPages = $sum->getRunePages($summonerId, $safeRegion);
-
+*/
         /* LIVE GAME */
 
-        $lg_data = array();
+        //$lg_data = array();
         /*if(isset($currentGame['participants']))
         {
             //var_dump($currentGame['participants'] );exit();
@@ -190,21 +189,30 @@ class SummonerController extends Controller
                 $lg_data[$participant['summonerId']]['img'] = $lg_soloqimg;
             }
         }*/
+        $topChampionsMastery = $api->getMasteryTopChampions($summonerId);
+        for($i = 0; $i < count($topChampionsMastery); $i++)
+        {
+            $arr = array('championKey' => $temp[$topChampionsMastery[$i]['championId']]['key']);
+            $topChampionsMastery[$i] = array_merge($topChampionsMastery[$i], $arr);
+        }
+        // Switch du 1er et 2eme
+        $tempChampMastery = $topChampionsMastery[0];
+        $topChampionsMastery[0] = $topChampionsMastery[1];
+        $topChampionsMastery[1] = $tempChampMastery;
 
         return $this->render('AppBundle:Summoner:index.html.twig',
             array(
-                'championsMastery' => $championsMastery,
+                //'championsMastery' => $championsMastery,
+                'topChampionsMastery' => $topChampionsMastery,
                 'summoner' => $summoner,
                 'soloq' => $soloq,
                 'soloqimg' => $soloqimg,
                 'static_data_version' => $static_data_version,
-                'currentGame' => $currentGame,
-                'summonerSpells' => $summonerSpells,
+                //'currentGame' => $currentGame,
+                //'summonerSpells' => $summonerSpells,
                 'champions' => $temp,
                 'rankedStats' => $rankedStats,
-                'runePages' => $runesPages['data'],
-                'runes' => $runesPages['images'],
-                'live_game_data' => $lg_data
+                //'live_game_data' => $lg_data
             ));
     }
     
