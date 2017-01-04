@@ -66,14 +66,30 @@ class SummonerAjaxController extends Controller
                 $temp[$chests[$i]['championId']] = array_merge($temp[$chests[$i]['championId']], $chests[$i]);
             }
             $champions = $temp;
-            //var_dump($champions[103]);
-            //exit();
+            $owned = 0;
+            $remaining = 0;
+            foreach($champions as $key => $champion)
+            {
+                if(isset($champion['chestGranted']) && ($champion['chestGranted']))
+                {
+                    $owned = $owned + 1;
+                    $dataCategory[$champion['key']] = 1;
+                }
+                else
+                {
+                    $remaining = $remaining + 1;
+                    $dataCategory[$champion['key']] = 2;
+                }
+            }
 
             $summoner =  $em->getRepository('AppBundle:Summoner\Summoner')->findOneByRegionAndSummonerId($region, $summonerId);
             $template =  $this->render('AppBundle:Summoner:_chests.html.twig',
                 array(
                     'champions' => $champions,
                     'summoner' => $summoner,
+                    'owned' => $owned,
+                    'remaining' => $remaining,
+                    'dataCategory' => $dataCategory,
                     'static_data_version' => $static_data_version
                 ))
             ->getContent();
