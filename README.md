@@ -3,7 +3,7 @@ One Trick Poro - League of Legends website
 
 [![SensioLabsInsight](https://insight.sensiolabs.com/projects/bffd0741-786b-4a3c-808d-23ffc51b95a3/big.png)](https://insight.sensiolabs.com/projects/bffd0741-786b-4a3c-808d-23ffc51b95a3)
 
-This website is a Symfony 3 project created in order to allow people all around the world to trade pokemons to fill their pokedex.
+This website is a Symfony 3 project created in order to allow League Of Legends players to met ranked partners.
 
 We are using Sensiolabs Insight to improve our code quality.
 
