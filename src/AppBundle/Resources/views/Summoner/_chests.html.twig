@@ -3,15 +3,14 @@
         <h2>Coffres</h2>
         <div class="row">
             <div class="col-md-9">
-                <ul id="nav-filter" class="nav nav-pills">
-                       {# For filtering controls add #}
-                       <li data-filter="all" class="active"><a href="#">{{ 'chests.all.champions'|trans }}<span class="badge">{{ champions|length }}</span></a></li>
-                       <li data-filter="1"><a href="#">{{ 'chests.owned'|trans }}<span class="badge">{{ owned }}</span></a></li>
-                       <li data-filter="2"><a href="#">{{ 'chests.remaining'|trans }}<span class="badge">{{ remaining }}</span></a></li>
-                </ul>
+                <div id="chests-choice" class="btn-group">
+                    <button data-filter="all" type="button" class="btn btn-primary btn-lg">{{ 'chests.all.champions'|trans }}<span class="badge">{{ champions|length }}</span></button>
+                    <button data-filter="1" type="button" class="btn btn-primary btn-lg">{{ 'chests.owned'|trans }}<span class="badge">{{ owned }}</span></button>
+                    <button data-filter="2" type="button" class="btn btn-primary btn-lg">{{ 'chests.remaining'|trans }}<span class="badge">{{ remaining }}</button>
+                </div>
             </div>
             <div class="col-md-3">
-                <input type="text" name="filtr-search" class="filtr-search form-control" value="" placeholder="Your search" data-search="">
+                <input type="text" name="filtr-search" class="filtr-search form-control" value="" placeholder="{{ 'search'|trans }}" data-search="">
             </div>
         </div>
 

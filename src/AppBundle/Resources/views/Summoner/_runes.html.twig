@@ -1,6 +1,15 @@
+<div class="form-group">
+    <label for="runesPageSelect">{{ 'runes.page.choice'|trans }}:</label>
+    <select class="form-control" id="runesPageSelect">
+        {% for page in runePages.pages %}
+            <option value="{{ loop.index }}">{{ page.name }}</option>
+        {% endfor %}
+    </select>
+</div>
 {% for page in runePages.pages %}
-    <div>
-        <h1>Page {{ page.name }}</h1>
+    <div class="hidden" id="rune-page-{{ loop.index }}">
+        <h1>{{ page.name }}</h1>
+        <div class="hidden rune-page-current-{{ page.current ? 'true':'false' }}">{{ loop.index }}</div>
         {% if page.slots is defined %}
             {% for rune in page.slots %}
                 <img src="http://ddragon.leagueoflegends.com/cdn/{{ static_data_version }}/img/rune/{{ runes[rune.runeId] }}" />
@@ -8,3 +17,22 @@
         {% endif %}
     </div>
 {% endfor %}
+<script>
+    $( document ).ready(function() {
+
+        var lastPageDisplayed = 1;
+
+        $('#runesPageSelect').change(function(){
+            var data = $(this).val();
+            $('#rune-page-' + lastPageDisplayed).addClass('hidden');
+            $('#rune-page-' + data).removeClass('hidden');
+            lastPageDisplayed = data;
+        });
+
+        var index =         $('.rune-page-current-true:first').text();
+
+        $('#runesPageSelect')
+                .val(index)
+                .trigger('change');
+    });
+</script>

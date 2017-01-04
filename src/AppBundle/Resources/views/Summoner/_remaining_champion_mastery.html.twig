@@ -8,7 +8,7 @@
                 <div>Meilleure note {{ mastery.highestGrade }} </div>
             {% endif %}
             {% if mastery.lastPlayTime is defined %}
-                <br>Joué la dernière fois le {{ (mastery.lastPlayTime)|date('d/m/Y à H:m') }}
+                <br>Joué la dernière fois le {{ (mastery.lastPlayTime/1000)|date('d/m/Y à H:m') }}
             {% endif %}
             <img src="{{ asset('bundles/app/images/champion-masteries/' ~ mastery.championLevel ~ '.png') }}" />
             <br>Niveau de maitrise : {{ mastery.championLevel }}
