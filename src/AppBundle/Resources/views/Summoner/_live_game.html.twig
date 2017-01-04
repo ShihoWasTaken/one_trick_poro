@@ -10,8 +10,7 @@
             <th>{{ 'live.game.stats'|trans }}</th>
             <th>{{ 'live.game.champion'|trans }}</th>
             <th>{{ 'live.game.champion.stats'|trans }}</th>
-            <th>{{ 'live.game.champion.kda'|trans }}</th>
-            <th>{{ 'live.game.champion.runes'|trans }}</th>
+            <th>{{ 'live.game.runes'|trans }}</th>
         </tr>
         </thead>
         <tr>
@@ -32,15 +31,59 @@
                         {% endif %}
                     </td>
                     <td></td>
-                    <td></td>
+                    <td>
+                        {% if playerStats[player.summonerId].general is not empty %}
+                        {{ playerStats[player.summonerId].general.winrate }} %<br>
+                            <span class="positive-color">{{ playerStats[player.summonerId].general.wins }}</span> - <span class="negative-color">{{ playerStats[player.summonerId].general.loses }}</span><br>
+                            {{ playerStats[player.summonerId].general.kda }}<br>
+                            {{ playerStats[player.summonerId].general.killsAVG }} / {{ playerStats[player.summonerId].general.deathsAVG }} / {{ playerStats[player.summonerId].general.assistsAVG }}
+                        {% endif %}
+                    </td>
                     <td>
                         <img class="live-game-champion" src="http://ddragon.leagueoflegends.com/cdn/{{ static_data_version }}/img/champion/{{ champions[player.championId]['key'] }}.png">
                         <img class="live-game-summoner" src="http://ddragon.leagueoflegends.com/cdn/{{ static_data_version }}/img/spell/{{ summonerSpells[player.spell1Id] }}.png">
                         <img class="live-game-summoner" src="http://ddragon.leagueoflegends.com/cdn/{{ static_data_version }}/img/spell/{{ summonerSpells[player.spell2Id] }}.png">
                     </td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
+                    <td>
+                        {% if playerStats[player.summonerId].champion is not empty %}
+                            {{ playerStats[player.summonerId].champion.winrate }} %<br>
+                            <span class="positive-color">{{ playerStats[player.summonerId].champion.wins }}</span> - <span class="negative-color">{{ playerStats[player.summonerId].champion.loses }}</span><br>
+                            {{ playerStats[player.summonerId].champion.kda }}<br>
+                            {{ playerStats[player.summonerId].champion.killsAVG }} / {{ playerStats[player.summonerId].champion.deathsAVG }} / {{ playerStats[player.summonerId].champion.assistsAVG }}
+                        {% endif %}
+                    </td>
+                    <td>
+                        <!-- Trigger the modal with a button -->
+                        <button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#runesModal-{{ player.summonerId }}">Runes</button>
+
+                        <!-- Modal -->
+                        <div id="runesModal-{{ player.summonerId }}" class="modal fade" role="dialog">
+                            <div class="modal-dialog">
+
+                                <!-- Modal content-->
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                        <h4 class="modal-title">{{ player.summonerName }}</h4>
+                                    </div>
+                                    <div class="modal-body">
+                                        {% for rune in player.runes %}
+                                            <img src="http://ddragon.leagueoflegends.com/cdn/{{ static_data_version }}/img/rune/{{ runesImg[rune.runeId] }}" /> X {{  rune.count }}<br>
+                                            {{ runesStats[rune.runeId].description }}<br>
+                                            {{ runesStats[rune.runeId].name }}<br>
+                                            {%  if not loop.last %}
+                                                <hr>
+                                            {%  endif %}
+                                        {% endfor %}
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </td>
                 </tr>
             {% endif %}
         {% endfor %}
@@ -54,8 +97,7 @@
                 <th>{{ 'live.game.stats'|trans }}</th>
                 <th>{{ 'live.game.champion'|trans }}</th>
                 <th>{{ 'live.game.champion.stats'|trans }}</th>
-                <th>{{ 'live.game.champion.kda'|trans }}</th>
-                <th>{{ 'live.game.champion.runes'|trans }}</th>
+                <th>{{ 'live.game.runes'|trans }}</th>
             </tr>
         </thead>
         <tbody>
@@ -77,15 +119,59 @@
                         {% endif %}
                     </td>
                     <td></td>
-                    <td></td>
+                    <td>
+                        {% if playerStats[player.summonerId].general is not empty %}
+                            {{ playerStats[player.summonerId].general.winrate }} %<br>
+                            <span class="positive-color">{{ playerStats[player.summonerId].general.wins }}</span> - <span class="negative-color">{{ playerStats[player.summonerId].general.loses }}</span><br>
+                            {{ playerStats[player.summonerId].general.kda }}<br>
+                            {{ playerStats[player.summonerId].general.killsAVG }} / {{ playerStats[player.summonerId].general.deathsAVG }} / {{ playerStats[player.summonerId].general.assistsAVG }}
+                        {% endif %}
+                    </td>
                     <td>
                         <img class="live-game-champion" src="http://ddragon.leagueoflegends.com/cdn/{{ static_data_version }}/img/champion/{{ champions[player.championId]['key'] }}.png">
                         <img class="live-game-summoner" src="http://ddragon.leagueoflegends.com/cdn/{{ static_data_version }}/img/spell/{{ summonerSpells[player.spell1Id] }}.png">
                         <img class="live-game-summoner" src="http://ddragon.leagueoflegends.com/cdn/{{ static_data_version }}/img/spell/{{ summonerSpells[player.spell2Id] }}.png">
                     </td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
+                    <td>
+                        {% if playerStats[player.summonerId].champion is not empty %}
+                            {{ playerStats[player.summonerId].champion.winrate }} %<br>
+                            <span class="positive-color">{{ playerStats[player.summonerId].champion.wins }}</span> - <span class="negative-color">{{ playerStats[player.summonerId].champion.loses }}</span><br>
+                            {{ playerStats[player.summonerId].champion.kda }}<br>
+                            {{ playerStats[player.summonerId].champion.killsAVG }} / {{ playerStats[player.summonerId].champion.deathsAVG }} / {{ playerStats[player.summonerId].champion.assistsAVG }}
+                        {% endif %}
+                    </td>
+                    <td>
+                        <!-- Trigger the modal with a button -->
+                        <button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#runesModal-{{ player.summonerId }}">Runes</button>
+
+                        <!-- Modal -->
+                        <div id="runesModal-{{ player.summonerId }}" class="modal fade" role="dialog">
+                            <div class="modal-dialog">
+
+                                <!-- Modal content-->
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                        <h4 class="modal-title">{{ player.summonerName }}</h4>
+                                    </div>
+                                    <div class="modal-body">
+                                        {% for rune in player.runes %}
+                                            <img src="http://ddragon.leagueoflegends.com/cdn/{{ static_data_version }}/img/rune/{{ runesImg[rune.runeId] }}" /> X {{  rune.count }}<br>
+                                            {{ runesStats[rune.runeId].description }}<br>
+                                            {{ runesStats[rune.runeId].name }}<br>
+                                            {%  if not loop.last %}
+                                                <hr>
+                                            {%  endif %}
+                                        {% endfor %}
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </td>
                 </tr>
             {% endif %}
         {% endfor %}

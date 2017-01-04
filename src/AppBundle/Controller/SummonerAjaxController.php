@@ -3,6 +3,7 @@
 
 namespace AppBundle\Controller;
 
+use AppBundle\Entity\Summoner\Summoner;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
@@ -162,26 +163,81 @@ class SummonerAjaxController extends Controller
         }
         else
         {
+            $api = $this->container->get('app.lolapi');
             $sum = $this->container->get('app.lolsummoner');
             $em = $this->get('doctrine')->getManager();
 
             $region = $sum->getRegionBySlug($region);
             // On récupère le summoner en BDD
-            $summoner = $em->getRepository('AppBundle:Summoner\Summoner')->findOneBy([
+            $mainSummoner = $em->getRepository('AppBundle:Summoner\Summoner')->findOneBy([
                 'id' => $summonerId,
                 'region' => $region
             ]);
 
-            $liveGame = $sum->getLiveGame($summoner);
+            $liveGame = $sum->getLiveGame($mainSummoner);
             $champions = $sum->getChampionsSortedByIds();
+            $runeData = null;
+            $playerStats = array();
+            if(isset($liveGame['currentGame']['participants']))
+            {
+                $runeData = $sum->getRunePageByData($liveGame['currentGame']['participants']);
+                foreach($liveGame['currentGame']['participants'] as $player)
+                {
+                    // On récupère le summoner en BDD
+                    $summoner = $em->getRepository('AppBundle:Summoner\Summoner')->findOneBy([
+                        'id' => $player['summonerId'],
+                        'region' => $region
+                    ]);
+
+                    // Si le summoner n'existe pas encore en BDD, on le crée
+                    if (empty($summoner))
+                    {
+                        $summonerData = $api->getSummonerByIds(array($player['summonerId']));
+                        if($api->getResponseCode() == 404)
+                        {
+                            //TODO: exception summoner not found
+                            throw new NotFoundHttpException('Summoner not existing');
+                        }
+                        $newSummoner = new Summoner($player['summonerId'], $region);
+                        $newSummoner->setUser(null);
+                        $newSummoner->setName($summonerData[$player['summonerId']]['name']);
+                        $newSummoner->setLevel($summonerData[$player['summonerId']]['summonerLevel']);
+                        $newSummoner->setProfileIconId($summonerData[$player['summonerId']]['profileIconId']);
+                        $date = date_create();
+                        date_timestamp_set($date, ($summonerData[$player['summonerId']]['revisionDate']/1000));
+                        $newSummoner->setRevisionDate($date);
+                        $em->persist($newSummoner);
+                        $em->flush();
+                        $sum->firstUpdateSummoner($region, $player['summonerId']);
+                    }
+
+                    $rankedStats = $em->getRepository('AppBundle:Summoner\RankedStats')->findOneBy([
+                        'summonerId' => $player['summonerId'],
+                        'regionId' => $region->getId(),
+                        'season' => 7,
+                        'championId' => 0
+                    ]);
+                    $rankedStats2 = $em->getRepository('AppBundle:Summoner\RankedStats')->findOneBy([
+                        'summonerId' => $player['summonerId'],
+                        'regionId' => $region->getId(),
+                        'season' => 7,
+                        'championId' => $player['championId']
+                    ]);
+                    $playerStats[$player['summonerId']]['general'] = $rankedStats;
+                    $playerStats[$player['summonerId']]['champion'] = $rankedStats2;
+                }
+            }
 
             $template =  $this->render('AppBundle:Summoner:_live_game.html.twig',
                 array(
                     'currentGame' => $liveGame['currentGame'],
                     'summonerSpells' => $liveGame['summonerSpells'],
                     'live_game_data' => $liveGame['live_game'],
-                    'summoner' => $summoner,
+                    'summoner' => $mainSummoner,
                     'champions' => $champions,
+                    'runesImg' => $runeData['images'],
+                    'runesStats' => $runeData['stats'],
+                    'playerStats' => $playerStats,
                     'static_data_version' => $static_data_version
                 ))
                 ->getContent();

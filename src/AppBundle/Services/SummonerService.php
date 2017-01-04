@@ -446,6 +446,33 @@ class SummonerService
         );
     }
 
+    public function getRunePageByData(array $runePagesData)
+    {
+        $images = array();
+        $ids = array();
+        $runeData = array();
+        $stats = array();
+        foreach($runePagesData as $participant)
+        {
+            foreach($participant['runes'] as $rune)
+            {
+                $ids[$rune['runeId']] = $rune['runeId'];
+            }
+        }
+        foreach($ids as $id)
+        {
+            $runeData['runeId'] = $this->em->getRepository('AppBundle:StaticData\Rune')->findOneBy([
+                'id' => $id
+            ]);
+            $images[$id] = $runeData['runeId']->getImage();
+            $stats[$id] = $this->api->getStaticRuneById($id,'fr_FR');
+        }
+        return array(
+            'images' => $images,
+            'stats' => $stats
+        );
+    }
+
     public function getLiveGame(\AppBundle\Entity\Summoner\Summoner $summoner)
     {
         $currentGame = $this->api->getCurrentGame($summoner->getId());
