@@ -158,11 +158,13 @@ class SummonerAjaxController extends Controller
             ]);
 
             $runesPages = $sum->getRunePages($summoner);
+            $runeData = $sum->getRunePagesInfo($runesPages['data']);
 
             $template =  $this->render('AppBundle:Summoner:_runes.html.twig',
                 array(
                     'runePages' => $runesPages['data'],
                     'runes' => $runesPages['images'],
+                    'runesData' => $runeData,
                     'static_data_version' => $static_data_version
                 ))
                 ->getContent();

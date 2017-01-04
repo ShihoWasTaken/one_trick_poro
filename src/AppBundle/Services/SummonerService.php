@@ -473,6 +473,28 @@ class SummonerService
         );
     }
 
+    public function getRunePagesInfo(array $data)
+    {
+        $ids = array();
+        $stats = array();
+        foreach($data['pages'] as $page)
+        {
+            if(isset($page['slots']))
+            {
+                foreach($page['slots'] as $rune)
+                {
+                    $ids[$rune['runeId']] = $rune['runeId'];
+                }
+            }
+        }
+        foreach($ids as $id)
+        {
+            //TODO: chercher les infos des runes directement depuis la BDD
+            $stats[$id] = $this->api->getStaticRuneById($id,'fr_FR');
+        }
+        return $stats;
+    }
+
     public function getLiveGame(\AppBundle\Entity\Summoner\Summoner $summoner)
     {
         $currentGame = $this->api->getCurrentGame($summoner->getId());

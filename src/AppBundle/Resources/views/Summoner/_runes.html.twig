@@ -10,11 +10,20 @@
     <div class="hidden" id="rune-page-{{ loop.index }}">
         <h1>{{ page.name }}</h1>
         <div class="hidden rune-page-current-{{ page.current ? 'true':'false' }}">{{ loop.index }}</div>
-        {% if page.slots is defined %}
-            {% for rune in page.slots %}
-                <img src="http://ddragon.leagueoflegends.com/cdn/{{ static_data_version }}/img/rune/{{ runes[rune.runeId] }}" />
-            {% endfor %}
-        {% endif %}
+        <div class="col-md-9">
+            {% if page.slots is defined %}
+                {% for rune in page.slots %}
+                    <div>
+                        {{ runesData[rune.runeId].name }}
+                        <img src="http://ddragon.leagueoflegends.com/cdn/{{ static_data_version }}/img/rune/{{ runes[rune.runeId] }}" />
+                        {{ runesData[rune.runeId].description }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+        </div>
+        <div class="col-md-3">
+            <h2>Total</h2>
+        </div>
     </div>
 {% endfor %}
 <script>
