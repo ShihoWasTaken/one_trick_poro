@@ -80,26 +80,23 @@ class RequestService
 
         //Get the resulting HTTP status code from the cURL handle.
         $this->responseCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-        if( ($this->responseCode != 200) && ($this->responseCode != 429) )
-        {
-            return array('errorCode' => $this->responseCode, 'error' => $this->errorMessage($this->responseCode));
-        }
+        $header_size = curl_getinfo($ch, CURLINFO_HEADER_SIZE);
+        $this->headers = substr($response, 0, $header_size);
 
         while($this->responseCode == 429)
         {
-            usleep(1000000);
+            $rateLimitInfos = $this->getRateLimitInfos();
+            sleep($rateLimitInfos['retry'] + 1);
             //Execute the cURL request.
             $response = curl_exec($ch);
 
             //Get the resulting HTTP status code from the cURL handle.
             $this->responseCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+            $header_size = curl_getinfo($ch, CURLINFO_HEADER_SIZE);
+            $this->headers = substr($response, 0, $header_size);
         }
 
-
-        $header_size = curl_getinfo($ch, CURLINFO_HEADER_SIZE);
-        $this->headers = substr($response, 0, $header_size);
         $this->response = substr($response, $header_size);
-
         $this->JSONResponseToArray = json_decode($this->response, true);
 
         //Close cURL handle
@@ -107,6 +104,42 @@ class RequestService
         return $this->JSONResponseToArray;
     }
 
+    private function getRateLimitInfos()
+    {
+        $retryAfter = '';
+        $limits = '';
+
+        $replaced = str_replace (array("\r\n", "\n", "\r"), '<br>', $this->headers);
+
+        $lines = explode('<br>', $replaced);
+        foreach($lines as $line)
+        {
+            $parts = explode(': ',$line, 2);
+            switch($parts[0])
+            {
+                default:
+                    break;
+                case 'X-Rate-Limit-Count':
+                    $limits = $parts[1];
+                    break;
+                case 'Retry-After':
+                    $retryAfter = $parts[1];
+                    break;
+            }
+        }
+
+        $limits = explode(',', $limits);
+        $seconds = explode(':', $limits[0]);
+        $minutes = explode(':', $limits[1]);
+
+        return array(
+            'retry' => $retryAfter,
+            'secondsNumber' => $seconds[0],
+            'secondsLimit' => $seconds[1],
+            'minutesNumber' => $minutes[0],
+            'minutesLimit' => $minutes[1]
+        );
+    }
 
     /**
      * @return Container

@@ -143,7 +143,7 @@ class SummonerService
         
         $soloq = null;
         $summonerAPIData = $this->api->getLeaguesBySumonnerIdsEntry(array($summoner->getId()));
-        if(!isset($summonerAPIData['errorCode']))
+        if($this->api->getResponseCode() != 404)
         {
             foreach($summonerAPIData[$summoner->getId()] as $queue)
             {
@@ -158,6 +158,10 @@ class SummonerService
                         break;
                 }
             }
+        }
+        else
+        {
+            return null;
         }
         switch($soloq['tier'])
         {
