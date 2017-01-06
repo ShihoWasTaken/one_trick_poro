@@ -13,25 +13,26 @@ use AppBundle\Services\LoLAPI\LoLAPIService;
 use Symfony\Component\DependencyInjection\ContainerInterface as Container;
 
 define('OLDER_SEASON_AVAILABLE', 3);
-define('ACTUAL_SEASON', 7);
 
 class SummonerService
 {
     private $container;
     private $api;
     private $em;
-
+    private $current_season;
+    
     public function __construct(Container $container, LoLAPIService $api)
     {
         $this->container = $container;
         $this->api = $api;
         $this->em = $this->container->get('doctrine')->getManager();
+        $this->current_season = $this->container->getParameter('current_season');
     }
 
-    public function getRegionBySlug($region)
+    public function getRegionBySlug($slug)
     {
         $region = $this->em->getRepository('AppBundle:StaticData\Region')->findOneBy([
-            'slug' => $region
+            'slug' => $slug
         ]);
         if($region == null)
         {
@@ -50,7 +51,7 @@ class SummonerService
         {
             throw new Exception('Summoner not existing in database');
         }
-        $summonerData = $this->api->getSummonerByIds(array($summonerId));
+        $summonerData = $this->api->getSummonerByIds($region, array($summonerId));
         if($this->api->getResponseCode() == 404)
         {
             throw new Exception('Summoner not existing in Riot Games Database');
@@ -75,12 +76,12 @@ class SummonerService
         //$code = 'LeagueOfTools-' . $user->getId();
         $code = 'Ahri';
 
-        $summoner = $this->api->getSummonerByNames(array($summonerName));
+        $summoner = $this->api->getSummonerByNames($region, array($summonerName));
         if(!isset($summoner[$summonerName]['id']))
             return 'summoner_not_found';
         $summonerId = $summoner[$summonerName]['id'];
 
-        $masteries = $this->api->getMasteriesBySummonerIds(array($summonerId));
+        $masteries = $this->api->getMasteriesBySummonerIds($region, array($summonerId));
         $pageNames = array();
         foreach($masteries[$summonerId]['pages'] as $page)
         {
@@ -88,6 +89,7 @@ class SummonerService
         }
         if (in_array($code, $pageNames))
         {
+            /*
             $em = $this->container->get('doctrine')->getManager();
             // On ajoute au User
             //$user->addSummoner($summoner);
@@ -106,43 +108,17 @@ class SummonerService
             $em->persist($newSummoner);
             $em->flush();
 
-            return 'success';
+            return 'success';*/
         }
         else
             return 'page_not_found';
     }
 
-    public function createSummoner($region, $summonerId)
-    {
-
-        $summoner = $this->api->getSummonerByIds(array($summonerId));
-        if(!isset($summoner[$summonerId]['id']))
-        {
-            return 'summoner_not_found';
-        }
-        $summonerId = $summoner[$summonerId]['id'];
-
-        $newSummoner = new Summoner();
-        $newSummoner->setUser(null);
-        $newSummoner->setRegion($region);
-        $newSummoner->setSummonerId($summonerId);
-        $newSummoner->setName($summoner[$summonerId]['name']);
-        $newSummoner->setLevel($summoner[$summonerId]['summonerLevel']);
-        $newSummoner->setProfileIconId($summoner[$summonerId]['profileIconId']);
-        $date = date_create();
-        date_timestamp_set($date, ($summoner[$summonerId]['revisionDate']/1000));
-        $newSummoner->setRevisionDate($date);
-
-        $this->em->persist($newSummoner);
-        $this->em->flush();
-        return $newSummoner;
-    }
-    
     public function updateSummonerRank(\AppBundle\Entity\Summoner\Summoner $summoner)
     {
         
         $soloq = null;
-        $summonerAPIData = $this->api->getLeaguesBySumonnerIdsEntry(array($summoner->getId()));
+        $summonerAPIData = $this->api->getLeaguesBySumonnerIdsEntry($summoner->getRegion(), array($summoner->getId()));
         if($this->api->getResponseCode() != 404)
         {
             foreach($summonerAPIData[$summoner->getId()] as $queue)
@@ -220,10 +196,10 @@ class SummonerService
         $this->em->flush();
     }    
 
-    public function getSummonerRank($summonerId)
+    public function getSummonerRank(\AppBundle\Entity\StaticData\Region $region, $summonerId)
     {
         $soloq = null;
-        $summoner = $this->api->getLeaguesBySumonnerIdsEntry(array($summonerId));
+        $summoner = $this->api->getLeaguesBySumonnerIdsEntry($region, array($summonerId));
         if($this->api->getResponseCode() == 404)
             return null;
         foreach($summoner[$summonerId] as $queue)
@@ -244,9 +220,9 @@ class SummonerService
 
     public function updateRankedStats(\AppBundle\Entity\Summoner\Summoner $summoner)
     {
-        for($season = OLDER_SEASON_AVAILABLE; $season <= ACTUAL_SEASON; $season++)
+        for($season = OLDER_SEASON_AVAILABLE; $season <= $this->current_season; $season++)
         {
-            $rankedStatsData = $this->api->getRankedStatsBySummonerId($summoner->getId(), $season);
+            $rankedStatsData = $this->api->getRankedStatsBySummonerId($summoner->getRegion(), $summoner->getId(), $season);
             if($this->api->getResponseCode() !== 404)
             {
                 foreach($rankedStatsData['champions'] as $championData)
@@ -277,10 +253,10 @@ class SummonerService
         return $this->getRankedStats($summoner);
     }
 
-    public function getRankedStats($summoner)
+    public function getRankedStats(\AppBundle\Entity\Summoner\Summoner $summoner)
     {
         $merged = array();
-        for($season = OLDER_SEASON_AVAILABLE; $season <= ACTUAL_SEASON; $season++)
+        for($season = OLDER_SEASON_AVAILABLE; $season <= $this->current_season; $season++)
         {
             $rankedStatsData = $this->em->getRepository('AppBundle:Summoner\RankedStats')->findBy([
                 'summonerId' => $summoner->getId(),
@@ -299,7 +275,7 @@ class SummonerService
 
     public function updateChampionsMastery($summonerId, \AppBundle\Entity\StaticData\Region $region)
     {
-        $championsMasteryData = $this->api->getChampionsMastery($summonerId);
+        $championsMasteryData = $this->api->getChampionsMastery($region, $summonerId);
         if($this->api->getResponseCode() !== 404)
         {
             foreach($championsMasteryData as $championData)
@@ -326,17 +302,6 @@ class SummonerService
             $this->em->flush();
         }
         return $this->getChampionsMastery($summonerId, $region);
-        /*
-        $topChampionsMastery = $api->getMasteryTopChampions($summonerId);
-        for($i = 0; $i < count($topChampionsMastery); $i++)
-        {
-            $arr = array('championKey' => $temp[$topChampionsMastery[$i]['championId']]['key']);
-            $topChampionsMastery[$i] = array_merge($topChampionsMastery[$i], $arr);
-        }
-        // Switch du 1er et 2eme
-        $tempChampMastery = $topChampionsMastery[0];
-        $topChampionsMastery[0] = $topChampionsMastery[1];
-        $topChampionsMastery[1] = $tempChampMastery;*/
     }
 
     public function getChampionsMastery($summonerId, \AppBundle\Entity\StaticData\Region $region)
@@ -370,7 +335,7 @@ class SummonerService
 
     public function updateMasteryPages($summonerId, \AppBundle\Entity\StaticData\Region $region)
     {
-        $masteryPagesData = $this->api->getMasteriesBySummonerIds(array($summonerId));
+        $masteryPagesData = $this->api->getMasteriesBySummonerIds($region, array($summonerId));
         if($this->api->getResponseCode() !== 404)
         {
             $pageNum = 1;
@@ -400,17 +365,6 @@ class SummonerService
             $this->em->flush();
         }
         return $this->getChampionsMastery($summonerId, $region);
-        /*
-        $topChampionsMastery = $api->getMasteryTopChampions($summonerId);
-        for($i = 0; $i < count($topChampionsMastery); $i++)
-        {
-            $arr = array('championKey' => $temp[$topChampionsMastery[$i]['championId']]['key']);
-            $topChampionsMastery[$i] = array_merge($topChampionsMastery[$i], $arr);
-        }
-        // Switch du 1er et 2eme
-        $tempChampMastery = $topChampionsMastery[0];
-        $topChampionsMastery[0] = $topChampionsMastery[1];
-        $topChampionsMastery[1] = $tempChampMastery;*/
     }
 
     public function getMasteryPages($summonerId, \AppBundle\Entity\StaticData\Region $region)
@@ -428,7 +382,7 @@ class SummonerService
 
     public function getRunePages(\AppBundle\Entity\Summoner\Summoner $summoner)
     {
-        $runePagesData = $this->api->getRunesBySummonerIds(array($summoner->getId()));
+        $runePagesData = $this->api->getRunesBySummonerIds($summoner->getRegion(), array($summoner->getId()));
         $images = array();
         $runeData = array();
         foreach($runePagesData[$summoner->getId()]['pages'] as $page)
@@ -450,7 +404,7 @@ class SummonerService
         );
     }
 
-    public function getRunePageByData(array $runePagesData)
+    public function getRunePageByData(\AppBundle\Entity\StaticData\Region $region, array $runePagesData)
     {
         $images = array();
         $ids = array();
@@ -469,7 +423,7 @@ class SummonerService
                 'id' => $id
             ]);
             $images[$id] = $runeData['runeId']->getImage();
-            $stats[$id] = $this->api->getStaticRuneById($id,'fr_FR');
+            $stats[$id] = $this->api->getStaticRuneById($region, $id,'fr_FR');
         }
         return array(
             'images' => $images,
@@ -477,7 +431,7 @@ class SummonerService
         );
     }
 
-    public function getRunePagesInfo(array $data)
+    public function getRunePagesInfo(\AppBundle\Entity\StaticData\Region $region, array $data)
     {
         $ids = array();
         $stats = array();
@@ -494,16 +448,16 @@ class SummonerService
         foreach($ids as $id)
         {
             //TODO: chercher les infos des runes directement depuis la BDD
-            $stats[$id] = $this->api->getStaticRuneById($id,'fr_FR');
+            $stats[$id] = $this->api->getStaticRuneById($region, $id,'fr_FR');
         }
         return $stats;
     }
 
     public function getLiveGame(\AppBundle\Entity\Summoner\Summoner $summoner)
     {
-        $currentGame = $this->api->getCurrentGame($summoner->getId());
+        $currentGame = $this->api->getCurrentGame($summoner->getRegion(), $summoner->getId());
 
-        $sumonnerSpellsData = $this->api->getStaticSummonerSpells();
+        $sumonnerSpellsData = $this->api->getStaticSummonerSpells($summoner->getRegion());
         $summonerSpells = array();
         foreach($sumonnerSpellsData["data"] as $sumonnerSpell)
         {
@@ -515,7 +469,7 @@ class SummonerService
             //var_dump($currentGame['participants'] );exit();
             foreach($currentGame['participants'] as $participant)
             {
-                $lg_soloq = $this->getSummonerRank($participant['summonerId']);
+                $lg_soloq = $this->getSummonerRank($summoner->getRegion(), $participant['summonerId']);
                 if(!isset($lg_soloq))
                 {
                     $lg_soloqimg = "unranked_";

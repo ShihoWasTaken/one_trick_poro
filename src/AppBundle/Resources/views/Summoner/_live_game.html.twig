@@ -1,4 +1,4 @@
-{% if currentGame.error is defined %}
+{% if currentGame.status.status_code is defined %}
     <div>{{ 'live.game.not.found'|trans }}</div>
 {% else %}
     <table id="blue_team" class="table table-bordered table-responsive">

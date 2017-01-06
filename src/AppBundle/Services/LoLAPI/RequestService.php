@@ -7,19 +7,11 @@ use Symfony\Component\DependencyInjection\ContainerInterface as Container;
 
 class RequestService
 {
-    protected $container;
-    protected $api_key;
-
     protected $responseCode;
     protected $headers;
     protected $response;
     protected $JSONResponseToArray;
-
-    public function __construct(Container $container)
-    {
-        $this->container = $container;
-        $this->api_key = $this->container->getParameter('riot_api_key');
-    }
+    protected $URL;
 
     public function errorMessage($responseCode)
     {
@@ -59,6 +51,7 @@ class RequestService
 
     public function request($url)
     {
+        $this->URL = $url;
         //Initiate cURL
         $ch = curl_init();
 
@@ -86,7 +79,7 @@ class RequestService
         while($this->responseCode == 429)
         {
             $rateLimitInfos = $this->getRateLimitInfos();
-            sleep($rateLimitInfos['retry'] + 1);
+            usleep(1000000 * ($rateLimitInfos['retry'] + 0.1));
             //Execute the cURL request.
             $response = curl_exec($ch);
 
@@ -156,23 +149,7 @@ class RequestService
     {
         $this->container = $container;
     }
-
-    /**
-     * @return mixed
-     */
-    public function getApiKey()
-    {
-        return $this->api_key;
-    }
-
-    /**
-     * @param mixed $api_key
-     */
-    public function setApiKey($api_key)
-    {
-        $this->api_key = $api_key;
-    }
-
+    
     /**
      * @return mixed
      */
@@ -235,5 +212,10 @@ class RequestService
     public function setJSONResponseToArray($JSONResponseToArray)
     {
         $this->JSONResponseToArray = $JSONResponseToArray;
+    }
+
+    public function getURL()
+    {
+        return $this->URL;
     }
 }

@@ -18,7 +18,7 @@ class Summoner
 {
     const UPDATE_INTERVAL = 60*60; // 1h
 
-    public function __construct($summonerId, $region)
+    public function __construct($summonerId, \AppBundle\Entity\StaticData\Region $region)
     {
         $this->id = $summonerId;
         $this->region = $region;

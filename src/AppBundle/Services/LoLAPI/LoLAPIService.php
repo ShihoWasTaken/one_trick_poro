@@ -17,20 +17,26 @@ use Symfony\Component\DependencyInjection\ContainerInterface as Container;
 
 class LoLAPIService extends RequestService
 {
-	private $region = 'euw';
+	private $container;
+	private $api_key;
+
+	public function __construct(Container $container)
+	{
+		$this->container = $container;
+		$this->api_key = $this->container->getParameter('riot_api_key');
+	}
 
 	public function toSafeLowerCase($string)
 	{
+		$string = str_replace(' ', '', $string);
 		return mb_strtolower($string, 'UTF-8');
 	}
-
-
 
 	/* Champion v1.2
      * Only 1 entry
      */
 
-	public function getChampions($freeToPlay = false)
+	public function getChampions(\AppBundle\Entity\StaticData\Region $region, $freeToPlay = false)
 	{
 		$optional_parameters = array();
 		$optional_parameters[] = 'api_key=' . $this->api_key;
@@ -40,13 +46,13 @@ class LoLAPIService extends RequestService
 			$optional_parameters[] = 'freeToPlay=true';
 		}
 
-		$url = HTTPS . $this->region. '.api.pvp.net/api/lol/' . $this->region . CHAMPION_API_VERSION . '/champion?'  . implode('&', $optional_parameters);
+		$url = HTTPS . $region->getSlug(). '.api.pvp.net/api/lol/' . $region->getSlug() . CHAMPION_API_VERSION . '/champion?'  . implode('&', $optional_parameters);
 		return $this->request($url);
 	}
 
-	public function getChampionById($championId)
+	public function getChampionById(\AppBundle\Entity\StaticData\Region $region, $championId)
 	{
-		$url = HTTPS . $this->region. '.api.pvp.net/api/lol/' . $this->region . CHAMPION_API_VERSION . '/champion/'. $championId . '?api_key=' . $this->api_key;
+		$url = HTTPS . $region->getSlug(). '.api.pvp.net/api/lol/' . $region->getSlug() . CHAMPION_API_VERSION . '/champion/'. $championId . '?api_key=' . $this->api_key;
 		return $this->request($url);
 	}
 
@@ -54,33 +60,68 @@ class LoLAPIService extends RequestService
      * Only 1 entry
      */
 
-	private function getPlatformIdByRegion($region)
+	private function getPlatformIdByRegion($slug)
 	{
-		return 'EUW1';
+		switch(strtoupper($slug))
+		{
+			case 'BR':
+				return 'BR1';
+				break;
+			case 'EUNE':
+				return 'EUN1';
+				break;
+			case 'EUW':
+				return 'EUW1';
+				break;
+			case 'JP':
+				return 'JP1';
+				break;
+			case 'KR':
+				return 'KR';
+				break;
+			case 'LAN':
+				return 'LA1';
+				break;
+			case 'LAS':
+				return 'LA2';
+				break;
+			case 'NA':
+				return 'NA1';
+				break;
+			case 'OCE':
+				return 'OC1';
+				break;
+			case 'TR':
+				return 'TR1';
+				break;
+			case 'RU':
+				return 'RU';
+				break;
+		}
 	}
 
-	public function getChampionMasteryByChampionId($summonerId, $championId)
+	public function getChampionMasteryByChampionId(\AppBundle\Entity\StaticData\Region $region, $summonerId, $championId)
 	{
-		$region = $this->getPlatformIdByRegion($this->region);
-		$url = HTTPS . $this->region. '.api.pvp.net/championmastery/location/' . $region . '/player/' . $summonerId . '/champion/' . $championId . '?api_key=' . $this->api_key;
+		$platformId = $this->getPlatformIdByRegion($region->getSlug());
+		$url = HTTPS . $region->getSlug(). '.api.pvp.net/championmastery/location/' . $platformId . '/player/' . $summonerId . '/champion/' . $championId . '?api_key=' . $this->api_key;
 		return $this->request($url);
 	}
 
-	public function getChampionsMastery($summonerId)
+	public function getChampionsMastery(\AppBundle\Entity\StaticData\Region $region, $summonerId)
 	{
-		$region = $this->getPlatformIdByRegion($this->region);
-		$url = HTTPS . $this->region. '.api.pvp.net/championmastery/location/' . $region . '/player/' . $summonerId . '/champions' . '?api_key=' . $this->api_key;
+		$platformId = $this->getPlatformIdByRegion($region->getSlug());
+		$url = HTTPS . $region->getSlug(). '.api.pvp.net/championmastery/location/' . $platformId . '/player/' . $summonerId . '/champions' . '?api_key=' . $this->api_key;
 		return $this->request($url);
 	}
 
-	public function getTotalMasteryScore($summonerId)
+	public function getTotalMasteryScore(\AppBundle\Entity\StaticData\Region $region, $summonerId)
 	{
-		$region = $this->getPlatformIdByRegion($this->region);
-		$url = HTTPS . $this->region. '.api.pvp.net/championmastery/location/' . $region . '/player/' . $summonerId . '/score' . '?api_key=' . $this->api_key;
+		$platformId = $this->getPlatformIdByRegion($region->getSlug());
+		$url = HTTPS . $region->getSlug(). '.api.pvp.net/championmastery/location/' . $platformId . '/player/' . $summonerId . '/score' . '?api_key=' . $this->api_key;
 		return $this->request($url);
 	}
 
-	public function getMasteryTopChampions($summonerId, $count = 3)
+	public function getMasteryTopChampions(\AppBundle\Entity\StaticData\Region $region, $summonerId, $count = 3)
 	{
 		$optional_parameters = array();
 		$optional_parameters[] = 'api_key=' . $this->api_key;
@@ -89,8 +130,8 @@ class LoLAPIService extends RequestService
 		{
 			$optional_parameters[] = 'count=' . $count;
 		}
-		$region = $this->getPlatformIdByRegion($this->region);
-		$url = HTTPS . $this->region . '.api.pvp.net/championmastery/location/' . $region . '/player/' . $summonerId . '/topchampions?' . implode('&',$optional_parameters);
+		$platformId = $this->getPlatformIdByRegion($region->getSlug());
+		$url = HTTPS . $region->getSlug() . '.api.pvp.net/championmastery/location/' . $platformId . '/player/' . $summonerId . '/topchampions?' . implode('&',$optional_parameters);
 		return $this->request($url);
 	}
 
@@ -99,10 +140,10 @@ class LoLAPIService extends RequestService
      * Only 1 entry
      */
 
-	public function getCurrentGame($summonerId)
+	public function getCurrentGame(\AppBundle\Entity\StaticData\Region $region, $summonerId)
 	{
-		$region = $this->getPlatformIdByRegion($this->region);
-		$url = HTTPS . $this->region . '.api.pvp.net/observer-mode/rest/consumer/getSpectatorGameInfo/' . $region . '/' . $summonerId . '?api_key=' . $this->api_key;
+		$platformId = $this->getPlatformIdByRegion($region->getSlug());
+		$url = HTTPS . $region->getSlug() . '.api.pvp.net/observer-mode/rest/consumer/getSpectatorGameInfo/' . $platformId . '/' . $summonerId . '?api_key=' . $this->api_key;
 		return $this->request($url);
 	}
 
@@ -110,9 +151,9 @@ class LoLAPIService extends RequestService
      * Only 1 entry
      */
 
-	public function getFeaturedGames()
+	public function getFeaturedGames(\AppBundle\Entity\StaticData\Region $region)
 	{
-		$url = HTTPS . $this->region . '.api.pvp.net/observer-mode/rest/featured' . '?api_key=' . $this->api_key;
+		$url = HTTPS . $region->getSlug() . '.api.pvp.net/observer-mode/rest/featured' . '?api_key=' . $this->api_key;
 		return $this->request($url);
 	}
 
@@ -120,9 +161,9 @@ class LoLAPIService extends RequestService
      * Only 1 entry
      */
 
-	public function getRecentGames($summonerId)
+	public function getRecentGames(\AppBundle\Entity\StaticData\Region $region, $summonerId)
 	{
-		$url = HTTPS . $this->region . '.api.pvp.net/api/lol/' . $this->region . GAME_API_VERSION . '/game/by-summoner/' . $summonerId . '/recent?api_key=' . $this->api_key;
+		$url = HTTPS . $region->getSlug() . '.api.pvp.net/api/lol/' . $region->getSlug() . GAME_API_VERSION . '/game/by-summoner/' . $summonerId . '/recent?api_key=' . $this->api_key;
 		return $this->request($url);
 	}
 
@@ -130,58 +171,58 @@ class LoLAPIService extends RequestService
      * Max 10 entries
      */
 
-	public function getLeaguesBySumonnerIds(Array $summonersIds)
+	public function getLeaguesBySumonnerIds(\AppBundle\Entity\StaticData\Region $region, Array $summonersIds)
 	{
-		$url = HTTPS . $this->region . '.api.pvp.net/api/lol/' . $this->region . LEAGUE_API_VERSION . '/league/by-summoner/' . join(',', $summonersIds) .'?api_key=' . $this->api_key;
+		$url = HTTPS . $region->getSlug() . '.api.pvp.net/api/lol/' . $region->getSlug() . LEAGUE_API_VERSION . '/league/by-summoner/' . join(',', $summonersIds) .'?api_key=' . $this->api_key;
 		return $this->request($url);
 	}
 
-	public function getLeaguesBySumonnerIdsEntry(Array $summonersIds)
+	public function getLeaguesBySumonnerIdsEntry(\AppBundle\Entity\StaticData\Region $region, Array $summonersIds)
 	{
-		$url = HTTPS . $this->region . '.api.pvp.net/api/lol/' . $this->region . LEAGUE_API_VERSION . '/league/by-summoner/' . join(',', $summonersIds) .'/entry?api_key=' . $this->api_key;
-		return $this->request($url);
-	}
-	
-	private function getLeagueChallenger($queue)
-	{
-		$url = HTTPS . $this->region . '.api.pvp.net/api/lol/' . $this->region . LEAGUE_API_VERSION . '/league/challenger?type=' . $queue .'&api_key='. $this->api_key;
+		$url = HTTPS . $region->getSlug() . '.api.pvp.net/api/lol/' . $region->getSlug() . LEAGUE_API_VERSION . '/league/by-summoner/' . join(',', $summonersIds) .'/entry?api_key=' . $this->api_key;
 		return $this->request($url);
 	}
 
-	public function getLeagueChallengerSoloQueue()
+	private function getLeagueChallenger(\AppBundle\Entity\StaticData\Region $region, $queue)
 	{
-		getLeagueChallenger('RANKED_SOLO_5x5');
-	}
-
-	public function getLeagueChallengerRanked5v5()
-	{
-		getLeagueChallenger('RANKED_TEAM_5x5');
-	}
-
-	public function getLeagueChallengerRanked3v3()
-	{
-		getLeagueChallenger('RANKED_TEAM_3x3');
-	}
-
-	private function getLeagueMaster($queue)
-	{
-		$url = HTTPS . $this->region . '.api.pvp.net/api/lol/' . $this->region . LEAGUE_API_VERSION . '/league/master?type=' . $queue .'&api_key='. $this->api_key;
+		$url = HTTPS . $region->getSlug() . '.api.pvp.net/api/lol/' . $region->getSlug() . LEAGUE_API_VERSION . '/league/challenger?type=' . $queue .'&api_key='. $this->api_key;
 		return $this->request($url);
 	}
 
-	public function getLeagueMasterSoloQueue()
+	public function getLeagueChallengerSoloQueue(\AppBundle\Entity\StaticData\Region $region)
 	{
-		getLeagueMaster('RANKED_SOLO_5x5');
+		$this->getLeagueChallenger($region, 'RANKED_SOLO_5x5');
 	}
 
-	public function getLeagueMasterRanked5v5()
+	public function getLeagueChallengerRanked5v5(\AppBundle\Entity\StaticData\Region $region)
 	{
-		getLeagueMaster('RANKED_TEAM_5x5');
+		$this->getLeagueChallenger($region, 'RANKED_TEAM_5x5');
 	}
 
-	public function getLeagueMasterRanked3v3()
+	public function getLeagueChallengerRanked3v3(\AppBundle\Entity\StaticData\Region $region)
 	{
-		getLeagueMaster('RANKED_TEAM_3x3');
+		$this->getLeagueChallenger($region, 'RANKED_TEAM_3x3');
+	}
+
+	private function getLeagueMaster(\AppBundle\Entity\StaticData\Region $region, $queue)
+	{
+		$url = HTTPS . $region->getSlug() . '.api.pvp.net/api/lol/' . $region->getSlug() . LEAGUE_API_VERSION . '/league/master?type=' . $queue .'&api_key='. $this->api_key;
+		return $this->request($url);
+	}
+
+	public function getLeagueMasterSoloQueue(\AppBundle\Entity\StaticData\Region $region)
+	{
+		$this->getLeagueMaster($region, 'RANKED_SOLO_5x5');
+	}
+
+	public function getLeagueMasterRanked5v5(\AppBundle\Entity\StaticData\Region $region)
+	{
+		$this->getLeagueMaster($region, 'RANKED_TEAM_5x5');
+	}
+
+	public function getLeagueMasterRanked3v3(\AppBundle\Entity\StaticData\Region $region)
+	{
+		$this->getLeagueMaster($region, 'RANKED_TEAM_3x3');
 	}
 
 
@@ -189,7 +230,7 @@ class LoLAPIService extends RequestService
      * No rate limit
      */
 
-	public function getStaticDataChampions($locale = null, $version = null, $dataById = null, $champData = null)
+	public function getStaticDataChampions(\AppBundle\Entity\StaticData\Region $region, $locale = null, $version = null, $dataById = null, $champData = null)
 	{
 		$optional_parameters = array();
 		$optional_parameters[] = 'api_key=' . $this->api_key;
@@ -210,11 +251,11 @@ class LoLAPIService extends RequestService
 		{
 			$optional_parameters[] = 'champData=' . $champData;
 		}
-		$url = 'https://global.api.pvp.net/api/lol/static-data/' . $this->region . '/v1.2/champion?' . implode('&', $optional_parameters);
+		$url = 'https://global.api.pvp.net/api/lol/static-data/' . $region->getSlug() . '/v1.2/champion?' . implode('&', $optional_parameters);
 		return $this->request($url);
 	}
 
-	public function getStaticDataChampionById($championId, $locale = null, $version = null, $champData = null)
+	public function getStaticDataChampionById(\AppBundle\Entity\StaticData\Region $region, $championId, $locale = null, $version = null, $champData = null)
 	{
 		$optional_parameters = array();
 		$optional_parameters[] = 'api_key=' . $this->api_key;
@@ -231,11 +272,11 @@ class LoLAPIService extends RequestService
 		{
 			$optional_parameters[] = 'champData=' . $champData;
 		}
-		$url = 'https://global.api.pvp.net/api/lol/static-data/' . $this->region . '/v1.2/champion/' . $championId . '?' . implode('&', $optional_parameters);
+		$url = 'https://global.api.pvp.net/api/lol/static-data/' . $region->getSlug() . '/v1.2/champion/' . $championId . '?' . implode('&', $optional_parameters);
 		return $this->request($url);
 	}
 
-	public function getStaticDataItems($locale = null, $version = null, $dataById = null, $itemListData = null)
+	public function getStaticDataItems(\AppBundle\Entity\StaticData\Region $region, $locale = null, $version = null, $dataById = null, $itemListData = null)
 	{
 		$optional_parameters = array();
 		$optional_parameters[] = 'api_key=' . $this->api_key;
@@ -256,11 +297,11 @@ class LoLAPIService extends RequestService
 		{
 			$optional_parameters[] = 'itemListData=' . $itemListData;
 		}
-		$url = 'https://global.api.pvp.net/api/lol/static-data/' . $this->region . '/v1.2/item?' . implode('&', $optional_parameters);
+		$url = 'https://global.api.pvp.net/api/lol/static-data/' . $region->getSlug() . '/v1.2/item?' . implode('&', $optional_parameters);
 		return $this->request($url);
 	}
 
-	public function getStaticDataItemById($itemId, $locale = null, $version = null, $itemListData = null)
+	public function getStaticDataItemById(\AppBundle\Entity\StaticData\Region $region, $itemId, $locale = null, $version = null, $itemListData = null)
 	{
 		$optional_parameters = array();
 		$optional_parameters[] = 'api_key=' . $this->api_key;
@@ -277,11 +318,11 @@ class LoLAPIService extends RequestService
 		{
 			$optional_parameters[] = 'itemListData=' . $itemListData;
 		}
-		$url = 'https://global.api.pvp.net/api/lol/static-data/' . $this->region . '/v1.2/item/' . $itemId . '?' . implode('&', $optional_parameters);
+		$url = 'https://global.api.pvp.net/api/lol/static-data/' . $region->getSlug() . '/v1.2/item/' . $itemId . '?' . implode('&', $optional_parameters);
 		return $this->request($url);
 	}
 
-	public function getStaticLanguageStrings($locale = null, $version = null)
+	public function getStaticLanguageStrings(\AppBundle\Entity\StaticData\Region $region, $locale = null, $version = null)
 	{
 		$optional_parameters = array();
 		$optional_parameters[] = 'api_key=' . $this->api_key;
@@ -294,34 +335,17 @@ class LoLAPIService extends RequestService
 		{
 			$optional_parameters[] = 'version=' . $version;
 		}
-		$url = 'https://global.api.pvp.net/api/lol/static-data/' . $this->region . '/v1.2/language-strings?' . implode('&', $optional_parameters);
+		$url = 'https://global.api.pvp.net/api/lol/static-data/' . $region->getSlug() . '/v1.2/language-strings?' . implode('&', $optional_parameters);
 		return $this->request($url);
 	}
 
-	public function getStaticLanguages()
+	public function getStaticLanguages(\AppBundle\Entity\StaticData\Region $region)
 	{
-		$url = 'https://global.api.pvp.net/api/lol/static-data/' . $this->region . '/v1.2/languages?api_key=' . $this->api_key;
+		$url = 'https://global.api.pvp.net/api/lol/static-data/' . $region->getSlug() . '/v1.2/languages?api_key=' . $this->api_key;
 		return $this->request($url);
 	}
 
-	public function getStaticMap($locale = null, $version = null)
-	{
-		$optional_parameters = array();
-		$optional_parameters[] = 'api_key=' . $this->api_key;
-
-		if($locale !== false)
-		{
-			$optional_parameters[] = 'locale=' . $locale;
-		}
-		if($version !== false)
-		{
-			$optional_parameters[] = 'version=' . $version;
-		}
-		$url = 'https://global.api.pvp.net/api/lol/static-data/' . $this->region . '/v1.2/map?' . implode('&', $optional_parameters);
-		return $this->request($url);
-	}
-
-	public function getStaticMasteries($locale = null, $version = null, $masteryListData = null)
+	public function getStaticMap(\AppBundle\Entity\StaticData\Region $region, $locale = null, $version = null)
 	{
 		$optional_parameters = array();
 		$optional_parameters[] = 'api_key=' . $this->api_key;
@@ -334,15 +358,11 @@ class LoLAPIService extends RequestService
 		{
 			$optional_parameters[] = 'version=' . $version;
 		}
-		if($masteryListData !== false)
-		{
-			$optional_parameters[] = 'masteryListData=' . $masteryListData;
-		}
-		$url = 'https://global.api.pvp.net/api/lol/static-data/' . $this->region . '/v1.2/mastery?' . implode('&', $optional_parameters);
+		$url = 'https://global.api.pvp.net/api/lol/static-data/' . $region->getSlug() . '/v1.2/map?' . implode('&', $optional_parameters);
 		return $this->request($url);
 	}
 
-	public function getStaticMasteryById($id, $locale = null, $version = null, $masteryListData = null)
+	public function getStaticMasteries(\AppBundle\Entity\StaticData\Region $region, $locale = null, $version = null, $masteryListData = null)
 	{
 		$optional_parameters = array();
 		$optional_parameters[] = 'api_key=' . $this->api_key;
@@ -359,17 +379,38 @@ class LoLAPIService extends RequestService
 		{
 			$optional_parameters[] = 'masteryListData=' . $masteryListData;
 		}
-		$url = 'https://global.api.pvp.net/api/lol/static-data/' . $this->region . '/v1.2/mastery/' . $id . '?' . implode('&', $optional_parameters);
+		$url = 'https://global.api.pvp.net/api/lol/static-data/' . $region->getSlug() . '/v1.2/mastery?' . implode('&', $optional_parameters);
 		return $this->request($url);
 	}
 
-	public function getStaticRealm()
+	public function getStaticMasteryById(\AppBundle\Entity\StaticData\Region $region, $id, $locale = null, $version = null, $masteryListData = null)
 	{
-		$url = 'https://global.api.pvp.net/api/lol/static-data/' . $this->region . '/v1.2/realm?api_key=' . $this->api_key;
+		$optional_parameters = array();
+		$optional_parameters[] = 'api_key=' . $this->api_key;
+
+		if($locale !== false)
+		{
+			$optional_parameters[] = 'locale=' . $locale;
+		}
+		if($version !== false)
+		{
+			$optional_parameters[] = 'version=' . $version;
+		}
+		if($masteryListData !== false)
+		{
+			$optional_parameters[] = 'masteryListData=' . $masteryListData;
+		}
+		$url = 'https://global.api.pvp.net/api/lol/static-data/' . $region->getSlug() . '/v1.2/mastery/' . $id . '?' . implode('&', $optional_parameters);
 		return $this->request($url);
 	}
 
-	public function getStaticRunes($locale = null, $version = null, $runeListData = null)
+	public function getStaticRealm(\AppBundle\Entity\StaticData\Region $region)
+	{
+		$url = 'https://global.api.pvp.net/api/lol/static-data/' . $region->getSlug() . '/v1.2/realm?api_key=' . $this->api_key;
+		return $this->request($url);
+	}
+
+	public function getStaticRunes(\AppBundle\Entity\StaticData\Region $region, $locale = null, $version = null, $runeListData = null)
 	{
 		$optional_parameters = array();
 		$optional_parameters[] = 'api_key=' . $this->api_key;
@@ -386,11 +427,11 @@ class LoLAPIService extends RequestService
 		{
 			$optional_parameters[] = 'runeListData=' . $runeListData;
 		}
-		$url = 'https://global.api.pvp.net/api/lol/static-data/' . $this->region . '/v1.2/rune?' . implode('&', $optional_parameters);
+		$url = 'https://global.api.pvp.net/api/lol/static-data/' . $region->getSlug() . '/v1.2/rune?' . implode('&', $optional_parameters);
 		return $this->request($url);
 	}
 
-	public function getStaticRuneById($id, $locale = null, $version = null, $runeListData = null)
+	public function getStaticRuneById(\AppBundle\Entity\StaticData\Region $region, $id, $locale = null, $version = null, $runeListData = null)
 	{
 		$optional_parameters = array();
 		$optional_parameters[] = 'api_key=' . $this->api_key;
@@ -407,11 +448,11 @@ class LoLAPIService extends RequestService
 		{
 			$optional_parameters[] = 'runeListData=' . $runeListData;
 		}
-		$url = 'https://global.api.pvp.net/api/lol/static-data/' . $this->region . '/v1.2/rune/' . $id . '?' . implode('&', $optional_parameters);
+		$url = 'https://global.api.pvp.net/api/lol/static-data/' . $region->getSlug() . '/v1.2/rune/' . $id . '?' . implode('&', $optional_parameters);
 		return $this->request($url);
 	}
 
-	public function getStaticSummonerSpells($locale = null, $version = null, $spellData = null)
+	public function getStaticSummonerSpells(\AppBundle\Entity\StaticData\Region $region, $locale = null, $version = null, $spellData = null)
 	{
 		$optional_parameters = array();
 		$optional_parameters[] = 'api_key=' . $this->api_key;
@@ -428,11 +469,11 @@ class LoLAPIService extends RequestService
 		{
 			$optional_parameters[] = 'spellData=' . $spellData;
 		}
-		$url = 'https://global.api.pvp.net/api/lol/static-data/' . $this->region . '/v1.2/summoner-spell?' . implode('&', $optional_parameters);
+		$url = 'https://global.api.pvp.net/api/lol/static-data/' . $region->getSlug() . '/v1.2/summoner-spell?' . implode('&', $optional_parameters);
 		return $this->request($url);
 	}
 
-	public function getStaticSummonerSpellById($id, $locale = null, $version = null, $spellData = null)
+	public function getStaticSummonerSpellById(\AppBundle\Entity\StaticData\Region $region, $id, $locale = null, $version = null, $spellData = null)
 	{
 		$optional_parameters = array();
 		$optional_parameters[] = 'api_key=' . $this->api_key;
@@ -449,14 +490,14 @@ class LoLAPIService extends RequestService
 		{
 			$optional_parameters[] = 'spellData=' . $spellData;
 		}
-		$url = 'https://global.api.pvp.net/api/lol/static-data/' . $this->region . '/v1.2/summoner-spell/' . $id . '?' . implode('&', $optional_parameters);
+		$url = 'https://global.api.pvp.net/api/lol/static-data/' . $region->getSlug() . '/v1.2/summoner-spell/' . $id . '?' . implode('&', $optional_parameters);
 		return $this->request($url);
 	}
 
 
-	public function getStaticDataVersions()
+	public function getStaticDataVersions(\AppBundle\Entity\StaticData\Region $region)
 	{
-		$url = 'https://global.api.pvp.net/api/lol/static-data/' . $this->region . '/v1.2/versions?api_key=' . $this->api_key;
+		$url = 'https://global.api.pvp.net/api/lol/static-data/' . $region->getSlug() . '/v1.2/versions?api_key=' . $this->api_key;
 		return $this->request($url);
 	}
 
@@ -470,9 +511,9 @@ class LoLAPIService extends RequestService
 		return $this->request($url);
 	}
 
-	public function getShardByRegion($region)
+	public function getShardByRegion($platformId)
 	{
-		$url = 'http://status.leagueoflegends.com/shards/' . $region;
+		$url = 'http://status.leagueoflegends.com/shards/' . $platformId;
 		return $this->request($url);
 	}
 
@@ -480,7 +521,7 @@ class LoLAPIService extends RequestService
      * Only 1 entry
      */
 
-	public function getMatch($id, $includeTimeline = false)
+	public function getMatch(\AppBundle\Entity\StaticData\Region $region, $id, $includeTimeline = false)
 	{
 		$optional_parameters = array();
 		$optional_parameters[] = 'api_key=' . $this->api_key;
@@ -489,7 +530,7 @@ class LoLAPIService extends RequestService
 		{
 			$optional_parameters[] = 'includeTimeline=true';
 		}
-		$url = HTTPS . $this->region. '.api.pvp.net/api/lol/' . $this->region. '/v2.2/match/' . $id . '?' . implode('&', $optional_parameters);
+		$url = HTTPS . $region->getSlug(). '.api.pvp.net/api/lol/' . $region->getSlug(). '/v2.2/match/' . $id . '?' . implode('&', $optional_parameters);
 		return $this->request($url);
 	}
 
@@ -497,7 +538,7 @@ class LoLAPIService extends RequestService
      * Only 1 entry
      */
 
-	public function getMatchlist($id, $championId = null, $rankedQueues = null, $seasons = null, $beginTime = null, $endTime = null, $beginIndex = null, $endIndex = null)
+	public function getMatchlist(\AppBundle\Entity\StaticData\Region $region, $id, $championId = null, $rankedQueues = null, $seasons = null, $beginTime = null, $endTime = null, $beginIndex = null, $endIndex = null)
 	{
 		$optional_parameters = array();
 		$optional_parameters[] = 'api_key=' . $this->api_key;
@@ -531,7 +572,7 @@ class LoLAPIService extends RequestService
 			$optional_parameters[] = 'endIndex=' . $endIndex;
 		}
 
-		$url = HTTPS . $this->region. '.api.pvp.net/api/lol/' . $this->region. '/v2.2/matchlist/by-summoner/' . $id . '?' . implode('&', $optional_parameters);
+		$url = HTTPS . $region->getSlug(). '.api.pvp.net/api/lol/' . $region->getSlug(). '/v2.2/matchlist/by-summoner/' . $id . '?' . implode('&', $optional_parameters);
 		return $this->request($url);
 	}
 
@@ -564,7 +605,7 @@ class LoLAPIService extends RequestService
 		return $season;
 	}
 
-	public function getRankedStatsBySummonerId($id, $season = null)
+	public function getRankedStatsBySummonerId(\AppBundle\Entity\StaticData\Region $region, $id, $season = null)
 	{
 		if(isset($season))
 		{
@@ -574,11 +615,11 @@ class LoLAPIService extends RequestService
 		{
 			$season = $this->getSeasonCode();
 		}
-		$url = HTTPS . $this->region. '.api.pvp.net/api/lol/' . $this->region. '/v1.3/stats/by-summoner/' . $id.  '/ranked?season=' . $season . '&api_key=' . $this->api_key;
+		$url = HTTPS . $region->getSlug(). '.api.pvp.net/api/lol/' . $region->getSlug(). '/v1.3/stats/by-summoner/' . $id.  '/ranked?season=' . $season . '&api_key=' . $this->api_key;
 		return $this->request($url);
 	}
 
-	public function getSummaryStatsBySummonerId($id, $season = null)
+	public function getSummaryStatsBySummonerId(\AppBundle\Entity\StaticData\Region $region, $id, $season = null)
 	{
 		if(isset($season))
 		{
@@ -588,46 +629,46 @@ class LoLAPIService extends RequestService
 		{
 			$season = $this->getSeasonCode();
 		}
-		$url = HTTPS . $this->region. '.api.pvp.net/api/lol/' . $this->region. '/v1.3/stats/by-summoner/' . $id.  '/summary?season=' . $season . '&api_key=' . $this->api_key;
+		$url = HTTPS . $region->getSlug(). '.api.pvp.net/api/lol/' . $region->getSlug(). '/v1.3/stats/by-summoner/' . $id.  '/summary?season=' . $season . '&api_key=' . $this->api_key;
 		return $this->request($url);
 	}
 
 	/* Summoner v1.4
      * Array of max 40 entries
      */
-	public function getSummonerByNames(Array $names)
+	public function getSummonerByNames(\AppBundle\Entity\StaticData\Region $region, Array $names)
 	{
 		foreach($names as $name)
 		{
 			$name = strtolower($name);
 			$name = str_replace(' ', '', $name);
 		}
-		$url = HTTPS . $this->region. '.api.pvp.net/api/lol/' . $this->region. '/v1.4/summoner/by-name/' . join(',', $names) .  '?api_key=' . $this->api_key;
+		$url = HTTPS . $region->getSlug(). '.api.pvp.net/api/lol/' . $region->getSlug(). '/v1.4/summoner/by-name/' . join(',', $names) .  '?api_key=' . $this->api_key;
 		$url = str_replace(' ', '', $url);
 		return $this->request($url);
 	}
 
-	public function getSummonerByIds(Array $ids)
+	public function getSummonerByIds(\AppBundle\Entity\StaticData\Region $region, Array $ids)
 	{
-		$url = HTTPS . $this->region. '.api.pvp.net/api/lol/' . $this->region. '/v1.4/summoner/' . join(',', $ids) .  '?api_key=' . $this->api_key;
+		$url = HTTPS . $region->getSlug(). '.api.pvp.net/api/lol/' . $region->getSlug(). '/v1.4/summoner/' . join(',', $ids) .  '?api_key=' . $this->api_key;
 		return $this->request($url);
 	}
 
-	public function getMasteriesBySummonerIds(Array $ids)
+	public function getMasteriesBySummonerIds(\AppBundle\Entity\StaticData\Region $region, Array $ids)
 	{
-		$url = HTTPS . $this->region. '.api.pvp.net/api/lol/' . $this->region. '/v1.4/summoner/' . join(',', $ids) . '/masteries?api_key=' . $this->api_key;
+		$url = HTTPS . $region->getSlug(). '.api.pvp.net/api/lol/' . $region->getSlug(). '/v1.4/summoner/' . join(',', $ids) . '/masteries?api_key=' . $this->api_key;
 		return $this->request($url);
 	}
 
-	public function getNamesBySummonerIds(Array $ids)
+	public function getNamesBySummonerIds(\AppBundle\Entity\StaticData\Region $region, Array $ids)
 	{
-		$url = HTTPS . $this->region. '.api.pvp.net/api/lol/' . $this->region. '/v1.4/summoner/' . join(',', $ids) . '/name?api_key=' . $this->api_key;
+		$url = HTTPS . $region->getSlug(). '.api.pvp.net/api/lol/' . $region->getSlug(). '/v1.4/summoner/' . join(',', $ids) . '/name?api_key=' . $this->api_key;
 		return $this->request($url);
 	}
 
-	public function getRunesBySummonerIds(Array $ids)
+	public function getRunesBySummonerIds(\AppBundle\Entity\StaticData\Region $region, Array $ids)
 	{
-		$url = HTTPS . $this->region. '.api.pvp.net/api/lol/' . $this->region. '/v1.4/summoner/' . join(',', $ids) . '/runes?api_key=' . $this->api_key;
+		$url = HTTPS . $region->getSlug(). '.api.pvp.net/api/lol/' . $region->getSlug(). '/v1.4/summoner/' . join(',', $ids) . '/runes?api_key=' . $this->api_key;
 		return $this->request($url);
 	}
 }

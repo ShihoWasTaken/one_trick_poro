@@ -55,7 +55,7 @@ class SummonerController extends Controller
         // Si le summoner n'existe pas encore en BDD, on le crée
         if (empty($summoner))
         {
-            $summonerData = $api->getSummonerByIds(array($summonerId));
+            $summonerData = $api->getSummonerByIds($region, array($summonerId));
             if($api->getResponseCode() == 404)
             {
                 //TODO: exception summoner not found
@@ -116,7 +116,7 @@ class SummonerController extends Controller
         // Si le summoner n'existe pas encore en BDD, on le crée
         if ($summoner == null)
         {
-            $summoner = $api->getSummonerByIds(array($summonerId));
+            $summoner = $api->getSummonerByIds($safeRegion, array($summonerId));
             if($api->getResponseCode() == 404)
             {
                 //TODO: exception summoner not found
@@ -139,7 +139,7 @@ class SummonerController extends Controller
         }
         $rankedStats = $sum->getRankedStats($summoner);
 
-        $soloq = $sum->getSummonerRank($summonerId);
+        $soloq = $sum->getSummonerRank($safeRegion, $summonerId);
         if(!isset($soloq))
         {
             $soloqimg = "unranked_";
@@ -189,16 +189,20 @@ class SummonerController extends Controller
                 $lg_data[$participant['summonerId']]['img'] = $lg_soloqimg;
             }
         }*/
-        $topChampionsMastery = $api->getMasteryTopChampions($summonerId);
-        for($i = 0; $i < count($topChampionsMastery); $i++)
+        $topChampionsMastery = $api->getMasteryTopChampions($safeRegion, $summonerId);
+        if(!empty($topChampionsMastery))
         {
-            $arr = array('championKey' => $temp[$topChampionsMastery[$i]['championId']]['key']);
-            $topChampionsMastery[$i] = array_merge($topChampionsMastery[$i], $arr);
+            for($i = 0; $i < count($topChampionsMastery); $i++)
+            {
+                $arr = array('championKey' => $temp[$topChampionsMastery[$i]['championId']]['key']);
+                $topChampionsMastery[$i] = array_merge($topChampionsMastery[$i], $arr);
+            }
+            // Switch du 1er et 2eme
+            $tempChampMastery = $topChampionsMastery[0];
+            $topChampionsMastery[0] = $topChampionsMastery[1];
+            $topChampionsMastery[1] = $tempChampMastery;
         }
-        // Switch du 1er et 2eme
-        $tempChampMastery = $topChampionsMastery[0];
-        $topChampionsMastery[0] = $topChampionsMastery[1];
-        $topChampionsMastery[1] = $tempChampMastery;
+
 
         return $this->render('AppBundle:Summoner:index.html.twig',
             array(
@@ -213,113 +217,6 @@ class SummonerController extends Controller
                 'champions' => $temp,
                 'rankedStats' => $rankedStats,
                 //'live_game_data' => $lg_data
-            ));
-    }
-    
-    public function indexAction2($region, $summonerId)
-    {
-        $em = $this->get('doctrine')->getManager();
-        $api = $this->container->get('app.lolapi');
-        $sum = $this->container->get('app.lolsummoner');
-        $topChampionsMastery = $api->getMasteryTopChampions($summonerId);
-        $static_data_version = $this->container->getParameter('static_data_version');
-
-
-        $currentGame = $api->getCurrentGame($summonerId);
-        $sumonnerSpellsData = $api->getStaticSummonerSpells();
-        $summonerSpells = array();
-        foreach($sumonnerSpellsData["data"] as $sumonnerSpell)
-        {
-            $summonerSpells[$sumonnerSpell["id"]] = $sumonnerSpell["key"];
-        }
-
-        $soloq = $sum->getSummonerRank($summonerId);
-        if(!isset($soloq))
-        {
-            $soloqimg = "unranked_";
-        }
-        else
-        {
-            $soloqimg = strtolower($soloq['tier']) . '_' . $soloq['entries'][0]['division'];
-        }
-
-        $champions = $em->getRepository('AppBundle:StaticData\Champion')->findAll();
-        $temp = array();
-        foreach($champions as $champion)
-        {
-            $temp[$champion->getId()] = array('key' => $champion->getKey());
-        }
-        for($i = 0; $i < count($topChampionsMastery); $i++)
-        {
-            $arr = array('championKey' => $temp[$topChampionsMastery[$i]['championId']]['key']);
-            $topChampionsMastery[$i] = array_merge($topChampionsMastery[$i], $arr);
-        }
-        // Switch du 1er et 2eme
-        $tempChampMastery = $topChampionsMastery[0];
-        $topChampionsMastery[0] = $topChampionsMastery[1];
-        $topChampionsMastery[1] = $tempChampMastery;
-
-        $summoner =  $em->getRepository('AppBundle:Summoner\Summoner')->findOneByRegionAndSummonerIdSafe($region, $summonerId);
-        if(empty($summoner))
-        {
-            $summoner = $sum->createSummoner($region, $summonerId);
-        }
-        else
-        {
-            $summoner = $summoner[0];
-        }
-
-        // Chests
-        $chests = $api->getChampionsMastery($summonerId);
-
-        for($i = 0; $i < count($chests); $i++)
-        {
-            $temp[$chests[$i]['championId']] = array_merge($temp[$chests[$i]['championId']], $chests[$i]);
-        }
-
-        /* Ranked stats*/
-        //TODO: il faut prévoir le cas où il n'y a pas de données renvoyées pour la saison en cours
-        //$rankedStats = $api->getRankedStatsBySummonerId($summonerId, 6);
-        $rankedStats = $sum->updateRankedStats($summonerId);
-
-        return $this->render('AppBundle:Summoner:index.html.twig',
-            array(
-                'topChampionsMastery' => $topChampionsMastery,
-                'summoner' => $summoner,
-                'soloq' => $soloq,
-                'soloqimg' => $soloqimg,
-                'static_data_version' => $static_data_version,
-                'currentGame' => $currentGame,
-                'summonerSpells' => $summonerSpells,
-                'champions' => $temp,
-                'rankedStats' => $rankedStats['champions'],
-                'averageRankedStats' => $rankedStats['average'],
-            ));
-    }
-
-    public function chestsAction($region, $summonerId)
-    {
-        $em = $this->get('doctrine')->getManager();
-        $api = $this->container->get('app.lolapi');
-        $chests = $api->getChampionsMastery($summonerId);
-        $champions = $em->getRepository('AppBundle:StaticData\Champion')->findAll();
-        $temp = array();
-        foreach($champions as $champion)
-        {
-            $temp[$champion->getId()] = array('key' => $champion->getKey());
-        }
-
-        for($i = 0; $i < count($chests); $i++)
-        {
-            $temp[$chests[$i]['championId']] = array_merge($temp[$chests[$i]['championId']], $chests[$i]);
-        }
-        $champions = $temp;
-        $summoner =  $em->getRepository('AppBundle:Summoner\Summoner')->findOneByRegionAndSummonerId($region, $summonerId);
-
-        return $this->render('AppBundle:Summoner:chests.html.twig',
-            array(
-                'champions' => $champions,
-                'summoner' => $summoner,
             ));
     }
 }

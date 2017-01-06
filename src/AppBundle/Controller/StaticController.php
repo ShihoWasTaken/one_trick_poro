@@ -25,13 +25,20 @@ class StaticController extends Controller
     {
         $api = $this->container->get('app.lolapi');
         // On doit traiter le nom du summoner
-        $summonerName =  str_replace(' ', '', mb_strtolower($request->request->get('searchbar-summonerName', 'UTF-8')));
-        $summoner = $api->getSummonerByNames(array($summonerName));
-        if(isset($summoner['errorCode']))
+        $summonerName =  $api->toSafeLowerCase($request->request->get('searchbar-summonerName', 'UTF-8'));
+
+        $sum = $this->container->get('app.lolsummoner');
+        $region = $sum->getRegionBySlug($request->request->get('searchbar-region'));
+        $summoner = $api->getSummonerByNames($region, array($summonerName));
+        if($api->getResponseCode() == 404)
         {
-            throw new NotFoundHttpException('Sorry not existing!');
+            throw new NotFoundHttpException('Summoner not existing');
         }
-        return $this->redirectToRoute('app_summoner', array('region' => $request->request->get('searchbar-region'),
-        'summonerId' => $summoner[$summonerName]['id']));
+        return $this->redirectToRoute('app_summoner',
+            array(
+            'region' => $request->request->get('searchbar-region'),
+            'summonerId' => $summoner[$summonerName]['id']
+            )
+        );
     }
 }
