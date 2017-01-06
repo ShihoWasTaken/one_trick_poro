@@ -2,7 +2,6 @@
 
 namespace AppBundle\Services\LoLAPI;
 
-use AppBundle\Services\CurlHttpException;
 use Symfony\Component\DependencyInjection\ContainerInterface as Container;
 
 class RequestService

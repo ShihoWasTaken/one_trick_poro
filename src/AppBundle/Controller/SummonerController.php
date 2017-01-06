@@ -6,7 +6,6 @@ namespace AppBundle\Controller;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
 use AppBundle\Entity\Summoner\Summoner;
-use AppBundle\Repository\Summoner\SummonerRepository;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class SummonerController extends Controller

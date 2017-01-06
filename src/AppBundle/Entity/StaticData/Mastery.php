@@ -2,7 +2,6 @@
 
 namespace AppBundle\Entity\StaticData;
 
-use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\ORM\Mapping as ORM;
 
 /**

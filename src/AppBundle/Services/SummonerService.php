@@ -8,7 +8,6 @@ use AppBundle\Entity\Summoner\RankedStats;
 use AppBundle\Entity\Summoner\ChampionMastery;
 use AppBundle\Entity\Summoner\Tier;
 use Symfony\Component\Config\Definition\Exception\Exception;
-use AppBundle\Services\CurlHttpException;
 use AppBundle\Services\LoLAPI\LoLAPIService;
 use Symfony\Component\DependencyInjection\ContainerInterface as Container;
 

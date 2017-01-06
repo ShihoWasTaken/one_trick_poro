@@ -4,8 +4,6 @@
 namespace AppBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\HttpFoundation\Response;
-use AppBundle\Services\LoLAPI\LoLAPIService;
 
 class LoLAPIController extends Controller
 {

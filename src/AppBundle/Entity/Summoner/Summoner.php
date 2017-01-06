@@ -6,8 +6,6 @@ use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\ORM\Mapping as ORM;
 use  AppBundle\Entity\User;
 use Doctrine\Common\Collections\ArrayCollection;
-use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
-use Doctrine\ORM\Events;
 
 /**
  * @ORM\Entity(repositoryClass="AppBundle\Repository\Summoner\SummonerRepository")

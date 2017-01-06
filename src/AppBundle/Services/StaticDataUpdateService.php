@@ -6,10 +6,8 @@ use AppBundle\Entity\StaticData\Champion;
 use AppBundle\Entity\StaticData\Rune;
 use AppBundle\Entity\StaticData\Mastery;
 use AppBundle\Entity\StaticData\Region;
-use Symfony\Component\Config\Definition\Exception\Exception;
 use AppBundle\Services\LoLAPI\LoLAPIService;
 use Symfony\Component\DependencyInjection\ContainerInterface as Container;
-use Doctrine\ORM\Query;
 
 class StaticDataUpdateService
 {

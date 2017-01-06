@@ -12,7 +12,6 @@ define('MATCHLIST_API_VERSION', '/v2.2');
 define('STATS_API_VERSION', '/v1.3');
 define('SUMMONER_API_VERSION', '/v1.4');
 
-use AppBundle\Services\CurlHttpException;
 use Symfony\Component\DependencyInjection\ContainerInterface as Container;
 
 class LoLAPIService extends RequestService
