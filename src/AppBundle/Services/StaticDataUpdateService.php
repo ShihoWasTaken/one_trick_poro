@@ -53,7 +53,7 @@ class StaticDataUpdateService
 			$newRegion = $this->container->get('doctrine')->getRepository('AppBundle:StaticData\Region')->findBy([
 				'tag' => $region['region_tag']
 			]);
-			if($newRegion == null)
+			if(empty($newRegion))
 			{
 				$newRegion = new Region($region['region_tag'], $region['name'], $region['slug']);
 				$this->em->persist($newRegion);

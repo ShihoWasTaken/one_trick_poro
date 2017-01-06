@@ -34,7 +34,7 @@ class SummonerService
         $region = $this->em->getRepository('AppBundle:StaticData\Region')->findOneBy([
             'slug' => $slug
         ]);
-        if($region == null)
+        if(empty($region))
         {
             throw new Exception('Region not existing');
         }
@@ -233,7 +233,7 @@ class SummonerService
                         'season' => $season,
                         'championId' => $championData['id']
                     ]);
-                    if ($championRankedStats == null)
+                    if (empty($championRankedStats))
                     {
                         $championRankedStats = new rankedStats($summoner->getId(), $summoner->getRegion()->getId(), $season, $championData['id']);
                     }

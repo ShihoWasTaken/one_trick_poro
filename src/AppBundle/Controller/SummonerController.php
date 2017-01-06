@@ -115,7 +115,7 @@ class SummonerController extends Controller
         ]);
 
         // Si le summoner n'existe pas encore en BDD, on le crée
-        if ($summoner == null)
+        if (empty($summoner))
         {
             $summoner = $api->getSummonerByIds($safeRegion, array($summonerId));
             if($api->getResponseCode() == 404)
