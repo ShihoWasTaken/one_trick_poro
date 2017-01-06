@@ -45,22 +45,10 @@ app_link_summoner_to_user:
     methods:  [POST]
     requirements: { method: POST }
 
-app_update_summoner_infos:
-    path:     /summoner/{region}/{summonerId}/update
-    defaults: { _controller: AppBundle:SummonerAjax:updateInfos }
-    methods:  [POST]
-    requirements: { method: POST }
-
 app_summoner:
     path:     /summoner/{region}/{summonerId}
     defaults: { _controller: AppBundle:Summoner:index }
     methods:  [GET]
-
-app_summoner_chests:
-    path:     /summoner/{region}/{summonerId}/chests
-    defaults: { _controller: AppBundle:Summoner:chests }
-    methods:  [POST]
-    requirements: { method: POST }
 
 app_summoner_chests_ajax:
     path:     /summoner/{region}/{summonerId}/chestsAjax

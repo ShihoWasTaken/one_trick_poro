@@ -53,6 +53,7 @@ class SummonerController extends Controller
         ]);
 
         // Si le summoner n'existe pas encore en BDD, on le crée
+        //TODO: Faire ça dans une méthode POST
         if (empty($summoner))
         {
             $summonerData = $api->getSummonerByIds($region, array($summonerId));
