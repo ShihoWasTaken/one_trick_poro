@@ -1,1 +1,250 @@
 {% include 'AppBundle:Summoner:_top_champion_mastery.html.twig' %}
+{% if rankedStats is not empty %}
+    <table class="table table-bordered table-responsive table-striped">
+        <tbody>
+            <tr>
+                <td>Winrate</td>
+                <td>{{ rankedStats.6.average.winrate }} % (<span class="positive-color">{{ rankedStats.6.average.wins }}</span> - <span class="negative-color">{{ rankedStats.6.average.loses }}</span>)</td>
+            </tr>
+            <tr>
+                <td>KDA</td>
+                <td>{{ rankedStats.6.average.KDA }} ({{ rankedStats.6.average.killsAVG }} / {{ rankedStats.6.average.deathsAVG }} / {{ rankedStats.6.average.assistsAVG }})</td>
+            </tr>
+            <tr>
+                <td>Creeps</td>
+                <td>{{ rankedStats.6.average.creepsAVG }}</td>
+            </tr>
+        </tbody>
+    </table>
+{% endif %}
+<div>
+    <div class="relative-container">
+        <div class="runes-background" style="background-image: url({{ asset('bundles/app/images/runes/rune-bg.png') }});"></div>
+        {% for index in 1..9 %}
+            <div class="overlay runes rune-overlay-{{ index }}"  style="background-image: url('http://ddragon.leagueoflegends.com/cdn/6.24.1/img/rune/r_3_3.png');"></div>
+        {% endfor %}
+        {% for index in 10..18 %}
+            <div class="overlay runes rune-overlay-{{ index }}" style="background-image: url('http://ddragon.leagueoflegends.com/cdn/6.24.1/img/rune/y_4_3.png');"></div>
+        {% endfor %}
+        {% for index in 19..27 %}
+            <div class="overlay runes rune-overlay-{{ index }}" style="background-image: url('http://ddragon.leagueoflegends.com/cdn/6.24.1/img/rune/b_1_3.png');"></div>
+        {% endfor %}
+        {% for index in 28..30 %}
+            <div class="overlay runes quint rune-overlay-{{ index }}" style="background-image: url('http://ddragon.leagueoflegends.com/cdn/6.24.1/img/rune/bl_1_3.png');"></div>
+        {% endfor %}
+    </div>
+</div>
+<br>
+<br>
+<br>
+<style>
+    .relative-container {
+        position: relative;
+    }
+    .overlay {
+        position: absolute;
+        z-index: 100;
+    }
+
+    .runes-background
+    {
+        width: 656px;
+        height: 436px;
+    }
+
+    .runes
+    {
+        width: 50px;
+        height: 50px;
+        background-repeat: no-repeat;
+        background-size: cover
+
+    }
+
+    .runes.quint
+    {
+        width: 80px;
+        height: 80px;
+    }
+
+    .rune-overlay-1
+    {
+        left: 24px;
+        top: 374px;
+    }
+
+    .rune-overlay-2
+    {
+        left: 86px;
+        top: 375px;
+    }
+
+    .rune-overlay-3
+    {
+        left: 158px;
+        top: 377px;
+    }
+
+    .rune-overlay-4
+    {
+        left: 10px;
+        top: 318px;
+    }
+
+    .rune-overlay-5
+    {
+        left: 72px;
+        top: 314px;
+    }
+
+    .rune-overlay-6
+    {
+        left: 127px;
+        top: 329px;
+    }
+
+    .rune-overlay-7
+    {
+        left: 32px;
+        top: 267px;
+    }
+
+    .rune-overlay-8
+    {
+        left: 113px;
+        top: 271px;
+    }
+
+    .rune-overlay-9
+    {
+        left: 74px;
+        top: 228px;
+    }
+
+    .rune-overlay-10
+    {
+        left: 38px;
+        top: 185px;
+    }
+
+    .rune-overlay-11
+    {
+        left: 107px;
+        top: 179px;
+    }
+
+    .rune-overlay-12
+    {
+        left: 67px;
+        top: 135px;
+    }
+
+    .rune-overlay-13
+    {
+        left: 122px;
+        top: 112px;
+    }
+
+    .rune-overlay-14
+    {
+        left: 154px;
+        top: 67px;
+    }
+
+    .rune-overlay-15
+    {
+        left: 211px;
+        top: 40px;
+    }
+
+    .rune-overlay-16
+    {
+        left: 268px;
+        top: 22px;
+    }
+
+    .rune-overlay-17
+    {
+        left: 332px;
+        top: 3px;
+    }
+
+    .rune-overlay-18
+    {
+        left: 360px;
+        top: 53px;
+    }
+
+    .rune-overlay-19
+    {
+        left: 399px;
+        top: 6px;
+    }
+
+    .rune-overlay-20
+    {
+        left: 433px;
+        top: 54px;
+    }
+
+    .rune-overlay-21
+    {
+        left: 465px;
+        top: 6px;
+    }
+
+    .rune-overlay-22
+    {
+        left: 480px;
+        top: 92px;
+    }
+
+    .rune-overlay-23
+    {
+        left: 510px;
+        top: 46px;
+    }
+
+    .rune-overlay-24
+    {
+        left: 550px;
+        top: 6px;
+    }
+
+    .rune-overlay-25
+    {
+        left: 599px;
+        top: 40px;
+    }
+
+    .rune-overlay-26
+    {
+        left: 556px;
+        top: 80px;
+    }
+
+    .rune-overlay-27
+    {
+        left: 578px;
+        top: 132px;
+    }
+
+    .rune-overlay-28
+    {
+        left: 199px;
+        top: 219px;
+    }
+
+    .rune-overlay-29
+    {
+        left: 41px;
+        top: 30px;
+    }
+
+    .rune-overlay-30
+    {
+        left: 428px;
+        top: 167px;
+    }
+
+</style>
