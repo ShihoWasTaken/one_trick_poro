@@ -48,7 +48,7 @@ class StaticDataUpdateService
 		$regions = $this->api->getShards();
 		foreach($regions as $region)
 		{
-			$newRegion = $this->container->get('doctrine')->getRepository('AppBundle:StaticData\Region')->findBy([
+			$newRegion = $this->container->get('doctrine')->getRepository('AppBundle:StaticData\Region')->findOneBy([
 				'tag' => $region['region_tag']
 			]);
 			if(empty($newRegion))
@@ -68,7 +68,10 @@ class StaticDataUpdateService
 	public function updateChampions()
 	{
 		$em = $this->container->get('doctrine')->getManager();
-		$champions = $this->api->getStaticDataChampions();
+		$region = $this->container->get('doctrine')->getRepository('AppBundle:StaticData\Region')->findOneBy([
+			'slug' => 'euw'
+		]);
+		$champions = $this->api->getStaticDataChampions($region);
 		$repository = $this->container->get('doctrine')->getRepository('AppBundle:StaticData\Champion');
 		$championsInDatabase = $repository->findAll();
 		$updated= false;
@@ -98,7 +101,10 @@ class StaticDataUpdateService
 	public function updateRunes()
 	{
 		$em = $this->container->get('doctrine')->getManager();
-		$runes = $this->api->getStaticRunes(null, null, 'all');
+		$region = $this->container->get('doctrine')->getRepository('AppBundle:StaticData\Region')->findOneBy([
+			'slug' => 'euw'
+		]);
+		$runes = $this->api->getStaticRunes($region, null, null, 'all');
 		$repository = $this->container->get('doctrine')->getRepository('AppBundle:StaticData\Rune');
 		$runesInDatabase = $repository->findAll();
 		$updated= false;
@@ -130,7 +136,10 @@ class StaticDataUpdateService
 	public function updateMasteries()
 	{
 		$em = $this->container->get('doctrine')->getManager();
-		$masteries = $this->api->getStaticMasteries(null, null, 'all');
+		$region = $this->container->get('doctrine')->getRepository('AppBundle:StaticData\Region')->findOneBy([
+			'slug' => 'euw'
+		]);
+		$masteries = $this->api->getStaticMasteries($region, null, null, 'all');
 		$repository = $this->container->get('doctrine')->getRepository('AppBundle:StaticData\Mastery');
 		$masteriesInDatabase = $repository->findAll();
 		$updated= false;
