@@ -178,6 +178,38 @@ class SummonerAjaxController extends Controller
         }
     }
 
+    public function masteriesAction(Request $request, $summonerId, $region)
+    {
+        $static_data_version = $this->container->getParameter('static_data_version');
+        if(!$request->isXmlHttpRequest())
+        {
+            return new JsonResponse(array('httpCode' => 400, 'error' => 'Requête non AJAX'));
+        }
+        else
+        {
+            $sum = $this->container->get('app.lolsummoner');
+            $em = $this->get('doctrine')->getManager();
+
+            $region = $sum->getRegionBySlug($region);
+            // On récupère le summoner en BDD
+            $summoner = $em->getRepository('AppBundle:Summoner\Summoner')->findOneBy([
+                'id' => $summonerId,
+                'region' => $region
+            ]);
+
+            $masteriesPages = $sum->getMasteriesPages($summoner);
+            $template =  $this->render('AppBundle:Summoner:_masteries.html.twig',
+                array(
+                    'masteriesPages' => $masteriesPages,
+                    //'masteriesPages' => $masteriesPages['data'],
+                    //'$masteries' => $masteriesPages['images'],
+                    'static_data_version' => $static_data_version
+                ))
+                ->getContent();
+            return new Response($template);
+        }
+    }
+
     public function liveGameAction(Request $request, $summonerId, $region)
     {
         $static_data_version = $this->container->getParameter('static_data_version');

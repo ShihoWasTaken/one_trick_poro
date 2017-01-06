@@ -5,11 +5,13 @@ body
     background-image: url('../images/backgrounds/teambuilder-wallpaper.jpg');
     background-attachment: fixed;
     background-size: cover;
+    padding-bottom: 60px;
 }
 
 .white-bg
 {
     background-color: white;
+    padding-bottom: 20px;
 }
 
 .modal-content

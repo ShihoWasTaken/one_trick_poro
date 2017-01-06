@@ -68,6 +68,12 @@ app_summoner_runes_ajax:
     methods:  [POST]
     requirements: { method: POST }
 
+app_summoner_masteries_ajax:
+    path:     /summoner/{region}/{summonerId}/masteriesAjax
+    defaults: { _controller: AppBundle:SummonerAjax:masteries }
+    methods:  [POST]
+    requirements: { method: POST }
+
 app_summoner_live_game_ajax:
     path:     /summoner/{region}/{summonerId}/liveGameAjax
     defaults: { _controller: AppBundle:SummonerAjax:liveGame }

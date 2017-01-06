@@ -174,7 +174,7 @@
                         {% include 'AppBundle:Summoner:_loading.html.twig' %}
                     </div>
                     <div id="masteries" class="tab-pane fade">
-                        {% include 'AppBundle:Summoner:_masteries.html.twig' %}
+                        {% include 'AppBundle:Summoner:_loading.html.twig' %}
                     </div>
                     <div id="championMasteries" class="tab-pane fade">
                         {% include 'AppBundle:Summoner:_loading.html.twig' %}
@@ -221,7 +221,8 @@
              var isChestsLoaded = false;
              var isLiveGameLoaded = false;
              var isRuneLoaded = false;
-             var isMasteriesLoaded = false;
+             var isMasteriesPagesLoaded = false;
+             var isChampionMasteriesLoaded = false;
              var isFilterizdLoaded = false;
 
              $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
@@ -262,8 +263,25 @@
                                  isRuneLoaded = true;
                              }
                              break;
+                         case "#masteries":
+                             if(!isMasteriesPagesLoaded)
+                             {
+                                 var summonerId = {{ summoner.id }};
+                                 var region = '{{ summoner.region.slug }}';
+                                 $.ajax({
+                                     url: '{{	path('app_summoner_masteries_ajax', {'region': summoner.region.slug, 'summonerId': summoner.id}) }}',
+                                     type: 'POST',
+                                     data: {'summonerId': summonerId, 'region': region},
+                                     dataType: 'html',
+                                     success: function(data) {
+                                         $('#masteries').html(data);
+                                     }
+                                 });
+                                 isMasteriesPagesLoaded = true;
+                             }
+                             break;
                          case "#championMasteries":
-                             if(!isMasteriesLoaded)
+                             if(!isChampionMasteriesLoaded)
                              {
                                  var summonerId = {{ summoner.id }};
                                  var region = '{{ summoner.region.slug }}';
@@ -286,7 +304,7 @@
 
                                      }
                                  });
-                                 isMasteriesLoaded = true;
+                                 isChampionMasteriesLoaded = true;
                              }
                              break;
                          case "#chests":

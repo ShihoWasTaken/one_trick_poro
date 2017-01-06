@@ -1,0 +1,80 @@
+<div class="form-group">
+    <label for="masteriesPageSelect">{{ 'runes.page.choice'|trans }}:</label>
+    <select class="form-control" id="masteriesPageSelect">
+        {% for page in masteriesPages.pages %}
+            <option value="{{ loop.index }}">{{ page.name }}</option>
+        {% endfor %}
+    </select>
+</div>
+{% for page in masteriesPages.pages %}
+    <div class="hidden" id="masteries-page-{{ loop.index }}">
+        <h1>{{ page.name }}</h1>
+        <div class="hidden masteries-page-current-{{ page.current ? 'true':'false' }}">{{ loop.index }}</div>
+        <div class="col-md-9">
+
+            <div class="relative-container">
+                <div class="masteries-background" style="background-image: url({{ asset('bundles/app/images/masteries/masteries-background.jpg') }});"></div>
+                {% if page.masteries is defined %}
+                    {% for mastery in page.masteries %}
+                        <div>
+                            <div class="overlay masteries masteries-overlay-{{ mastery.id }}"  style="background-image: url('http://ddragon.leagueoflegends.com/cdn/{{ static_data_version }}/img/mastery/{{ mastery.id }}.png');"></div>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            </div>
+        </div>
+        <div class="col-md-3">
+            <h2>Total</h2>
+        </div>
+    </div>
+{% endfor %}
+<script>
+    $( document ).ready(function() {
+
+        var lastMasteriesPageDisplayed = 1;
+
+        $('#masteriesPageSelect').change(function(){
+            var data = $(this).val();
+            $('#masteries-page-' + lastMasteriesPageDisplayed).addClass('hidden');
+            $('#masteries-page-' + data).removeClass('hidden');
+            lastMasteriesPageDisplayed = data;
+        });
+
+        var index =         $('.masteries-page-current-true:first').text();
+
+        $('#masteriesPageSelect')
+                .val(index)
+                .trigger('change');
+    });
+</script>
+<style>
+    .relative-container {
+        position: relative;
+    }
+
+    .overlay {
+        position: absolute;
+        z-index: 100;
+    }
+
+    .masteries-background
+    {
+        width: 828px;
+        height: 479px;
+    }
+
+    .masteries
+    {
+        width: 50px;
+        height: 50px;
+        background-repeat: no-repeat;
+        background-size: cover
+    }
+
+    .masteries-off
+    {
+        filter: grayscale(80%);
+    }
+
+
+</style>
