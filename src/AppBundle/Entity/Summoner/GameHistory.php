@@ -23,27 +23,27 @@ class GameHistory
     private $id;
 
     /**
-     * @ORM\Column(name="championId", type="integer")
+     * @ORM\Column(type="integer")
      * @ORM\OneToOne(targetEntity="Champion")
      */
     private $championId;
 
     /**
-     * @ORM\Column(name="spellId1", type="integer")
+     * @ORM\Column(type="integer")
      * @ORM\OneToOne(targetEntity="SummonerSpell")
      */
     private $spellId1;
 
     /**
-     * @ORM\Column(name="spellId2", type="integer")
+     * @ORM\Column(type="integer")
      * @ORM\OneToOne(targetEntity="SummonerSpell")
      */
     private $spellId2;
 
     /**
-     * @ORM\Column(name="isWin", type="boolean")
+     * @ORM\Column(type="boolean")
      */
-    private $isWin;
+    private $victory;
 
     /**
      * Set id
@@ -141,27 +141,29 @@ class GameHistory
         return $this->spellId2;
     }
 
+
+
     /**
-     * Set isWin
+     * Set victory
      *
-     * @param boolean $isWin
+     * @param boolean $victory
      *
      * @return GameHistory
      */
-    public function setIsWin($isWin)
+    public function setVictory($victory)
     {
-        $this->isWin = $isWin;
+        $this->victory = $victory;
 
         return $this;
     }
 
     /**
-     * Get isWin
+     * Get victory
      *
      * @return boolean
      */
-    public function getIsWin()
+    public function isVictory()
     {
-        return $this->isWin;
+        return $this->victory;
     }
 }
