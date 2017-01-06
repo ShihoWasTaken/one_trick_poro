@@ -237,7 +237,6 @@ class SummonerService
                         $championRankedStats = new rankedStats($summoner->getId(), $summoner->getRegion()->getId(), $season, $championData['id']);
                     }
                     $playedGames = $championData['stats']['totalSessionsPlayed'];
-                    $championRankedStats->setPlayedGames($playedGames);
                     $championRankedStats->setKills($championData['stats']['totalChampionKills']);
                     $championRankedStats->setDeaths($championData['stats']['totalDeathsPerSession']);
                     $championRankedStats->setAssists($championData['stats']['totalAssists']);

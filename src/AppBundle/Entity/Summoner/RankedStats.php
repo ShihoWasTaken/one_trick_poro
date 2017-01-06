@@ -47,11 +47,6 @@ class RankedStats
     private $championId;
 
     /**
-     * @ORM\Column(name="playedGames", type="smallint")
-     */
-    private $playedGames;
-
-    /**
      * @ORM\Column(name="wins", type="smallint")
      */
     private $wins;
@@ -62,22 +57,22 @@ class RankedStats
     private $loses;
 
     /**
-     * @ORM\Column(name="kills", type="smallint")
+     * @ORM\Column(name="kills", type="integer")
      */
     private $kills;
 
     /**
-     * @ORM\Column(name="deaths", type="smallint")
+     * @ORM\Column(name="deaths", type="integer")
      */
     private $deaths;
 
     /**
-     * @ORM\Column(name="assists", type="smallint")
+     * @ORM\Column(name="assists", type="integer")
      */
     private $assists;
 
     /**
-     * @ORM\Column(name="creeps", type="smallint")
+     * @ORM\Column(name="creeps", type="integer")
      */
     private $creeps;
 
@@ -88,7 +83,7 @@ class RankedStats
      */
     public function getWinrate()
     {
-        return round(($this->wins / $this->playedGames * 100), 2);
+        return round(($this->wins / $this->getPlayedGames() * 100), 2);
     }
 
     /**
@@ -108,7 +103,7 @@ class RankedStats
      */
     public function getKillsAVG()
     {
-        return round(($this->kills / $this->playedGames), 1);
+        return round(($this->kills / $this->getPlayedGames()), 1);
     }
 
     /**
@@ -118,7 +113,7 @@ class RankedStats
      */
     public function getDeathsAVG()
     {
-        return round(($this->deaths / $this->playedGames), 1);
+        return round(($this->deaths / $this->getPlayedGames()), 1);
     }
 
     /**
@@ -128,7 +123,7 @@ class RankedStats
      */
     public function getAssistsAVG()
     {
-        return round(($this->assists / $this->playedGames), 1);
+        return round(($this->assists / $this->getPlayedGames()), 1);
     }
 
     /**
@@ -138,7 +133,7 @@ class RankedStats
      */
     public function getCreepsAVG()
     {
-        return round(($this->creeps / $this->playedGames), 1);
+        return round(($this->creeps / $this->getPlayedGames()), 1);
     }
 
     /**
@@ -238,27 +233,13 @@ class RankedStats
     }
 
     /**
-     * Set playedGames
-     *
-     * @param integer $playedGames
-     *
-     * @return RankedStats
-     */
-    public function setPlayedGames($playedGames)
-    {
-        $this->playedGames = $playedGames;
-
-        return $this;
-    }
-
-    /**
      * Get playedGames
      *
      * @return integer
      */
     public function getPlayedGames()
     {
-        return $this->playedGames;
+        return ($this->wins + $this->loses);
     }
 
     /**
