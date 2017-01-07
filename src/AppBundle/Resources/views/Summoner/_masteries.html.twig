@@ -14,6 +14,7 @@
 
             <div class="relative-container">
                 <div class="masteries-background" style="background-image: url({{ asset('bundles/app/images/masteries/masteries-background.jpg') }});"></div>
+                {#
                 {% if page.masteries is defined %}
                     {% for mastery in page.masteries %}
                         <div>
@@ -21,6 +22,12 @@
                         </div>
                     {% endfor %}
                 {% endif %}
+                #}
+                {% for mastery in masteries %}
+                    <div>
+                        <div class="overlay masteries masteries-overlay-{{ mastery.id }}"  style="background-image: url('http://ddragon.leagueoflegends.com/cdn/{{ static_data_version }}/img/mastery/{{ mastery.id }}.png');"></div>
+                    </div>
+                {% endfor %}
             </div>
         </div>
         <div class="col-md-3">
@@ -74,6 +81,98 @@
     .masteries-off
     {
         filter: grayscale(80%);
+    }
+
+    /* On ajoute 138px en largeur */
+    .masteries-overlay-6111
+    {
+        top: 20px;
+        left: 88px;
+    }
+
+    .masteries-overlay-6114
+    {
+        top: 20px;
+        left: 148px;
+    }
+
+    .masteries-overlay-6311
+    {
+        top: 20px;
+        left: 364px;
+    }
+
+    .masteries-overlay-6312
+    {
+        top: 20px;
+        left: 424px;
+    }
+
+    .masteries-overlay-6211
+    {
+        top: 20px;
+        left: 640px;
+    }
+
+    .masteries-overlay-6212
+    {
+        top: 20px;
+        left: 700px;
+    }
+
+    /* On descends de 65px */
+    .masteries-overlay-6121
+    {
+        top: 85px;
+        left: 58px;
+    }
+
+    .masteries-overlay-6122
+    {
+        top: 85px;
+        left: 118px;
+    }
+
+    .masteries-overlay-6123
+    {
+        top: 85px;
+        left: 178px;
+    }
+
+    .masteries-overlay-6321
+    {
+        top: 85px;
+        left: 334px;
+    }
+
+    .masteries-overlay-6322
+    {
+        top: 85px;
+        left: 394px;
+    }
+
+    .masteries-overlay-6323
+    {
+        top: 85px;
+        left: 454px;
+    }
+
+    .masteries-overlay-6221
+    {
+        top: 85px;
+        left: 610px;
+    }
+
+    .masteries-overlay-6222
+    {
+        top: 85px;
+        left: 670px;
+    }
+
+    .masteries-overlay-6223
+    {
+        top: 85px;
+        left: 730px;
     }
 
 

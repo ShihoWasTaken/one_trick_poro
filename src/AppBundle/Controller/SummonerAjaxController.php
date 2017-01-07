@@ -198,9 +198,16 @@ class SummonerAjaxController extends Controller
             ]);
 
             $masteriesPages = $sum->getMasteriesPages($summoner);
+
+            $masteries = $em->getRepository('AppBundle:StaticData\Mastery')->findAll([
+                'id' => $summonerId,
+                'region' => $region
+            ]);
+
             $template =  $this->render('AppBundle:Summoner:_masteries.html.twig',
                 array(
                     'masteriesPages' => $masteriesPages,
+                    'masteries' => $masteries,
                     //'masteriesPages' => $masteriesPages['data'],
                     //'$masteries' => $masteriesPages['images'],
                     'static_data_version' => $static_data_version
