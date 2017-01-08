@@ -17,7 +17,7 @@
                 {% if page.slots is defined %}
                     {% for rune in page.slots %}
                         <div>
-                            <div class="overlay runes rune-overlay-{{ rune.runeSlotId }} {% if rune.runeSlotId > 27 %}quint{% endif %}"  style="background-image: url('http://ddragon.leagueoflegends.com/cdn/{{ static_data_version }}/img/rune/{{ runes[rune.runeId] }}');"></div>
+                            <div  data-toggle="tooltip" data-html="true" title="<h4>{{ translations[rune.runeId].name }}</h4>{{ translations[rune.runeId].description }}" class="overlay runes rune-overlay-{{ rune.runeSlotId }} {% if rune.runeSlotId > 27 %}quint{% endif %}"  style="background-image: url('http://ddragon.leagueoflegends.com/cdn/{{ static_data_version }}/img/rune/{{ runes[rune.runeId] }}');"></div>
                         </div>
                     {% endfor %}
                 {% endif %}
@@ -45,6 +45,7 @@
         $('#runesPageSelect')
                 .val(index)
                 .trigger('change');
+        $('[data-toggle="tooltip"]').tooltip();
     });
 </script>
 <style>

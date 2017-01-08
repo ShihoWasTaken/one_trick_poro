@@ -6,6 +6,8 @@ use AppBundle\Entity\StaticData\Champion;
 use AppBundle\Entity\StaticData\Rune;
 use AppBundle\Entity\StaticData\Mastery;
 use AppBundle\Entity\StaticData\Region;
+use AppBundle\Entity\StaticData\Translation\MasteryTranslation;
+use AppBundle\Entity\StaticData\Translation\RuneTranslation;
 use AppBundle\Services\LoLAPI\LoLAPIService;
 use Symfony\Component\DependencyInjection\ContainerInterface as Container;
 
@@ -131,11 +133,28 @@ class StaticDataUpdateService
 			$em->flush();
 		else
 			echo 'Aucune nouvelle rune n\'a été trouvée';
+		$languages = $this->container->get('doctrine')->getRepository('AppBundle:Language')->findAll();
+		foreach($languages as $language)
+		{
+			$runesTranslationData = $this->api->getStaticRunes($region, $language->getLocaleCode(), null, null);
+			foreach($runesTranslationData['data'] as $data)
+			{
+				$runeTranslation = new RuneTranslation();
+				$runeTranslation->setRuneId($data['id']);
+				$runeTranslation->setLanguageId($language->getId());
+				$runeTranslation->setName($data['name']);
+				$runeTranslation->setDescription($data['description']);
+				$em->persist($runeTranslation);
+			}
+			echo('Traduction ' . $language->getSymfonyLocale() . ' des runes ajoutées ' . $this->endline());
+		}
+		$em->flush();
 	}
 
 	public function updateMasteries()
 	{
 		$em = $this->container->get('doctrine')->getManager();
+		$languages = $this->container->get('doctrine')->getRepository('AppBundle:Language')->findAll();
 		$region = $this->container->get('doctrine')->getRepository('AppBundle:StaticData\Region')->findOneBy([
 			'slug' => 'euw'
 		]);
@@ -166,5 +185,20 @@ class StaticDataUpdateService
 			$em->flush();
 		else
 			echo 'Aucune nouvelle maitrise n\'a été trouvée';
+		foreach($languages as $language)
+		{
+			$masteryTranslationData = $this->api->getStaticMasteries($region, $language->getLocaleCode(), null, null);
+			foreach($masteryTranslationData['data'] as $data)
+			{
+				$MasteryTranslation = new MasteryTranslation();
+				$MasteryTranslation->setMasteryId($data['id']);
+				$MasteryTranslation->setLanguageId($language->getId());
+				$MasteryTranslation->setName($data['name']);
+				$MasteryTranslation->setDescription(implode('|', $data['description']));
+				$em->persist($MasteryTranslation);
+			}
+			echo('Traduction ' . $language->getSymfonyLocale() . ' des masteries ajoutées ' . $this->endline());
+		}
+		$em->flush();
 	}
 }

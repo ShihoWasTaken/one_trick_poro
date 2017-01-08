@@ -166,10 +166,25 @@ class SummonerAjaxController extends Controller
             $runesPages = $sum->getRunePages($summoner);
             //$runeData = $sum->getRunePagesInfo($region, $runesPages['data']);
 
+            $language = $em->getRepository('AppBundle:Language')->findOneBy([
+                'symfonyLocale' => $request->getLocale()
+            ]);
+
+            // TODO: rechercher seulement les runes concernées
+            $runesTranslations = $em->getRepository('AppBundle:StaticData\Translation\RuneTranslation')->findBy([
+                'languageId' => $language->getId()
+            ]);
+            $translations = array();
+            foreach($runesTranslations as $translation)
+            {
+                $translations[$translation->getRuneId()] = $translation;
+            }
+
             $template =  $this->render('AppBundle:Summoner:_runes.html.twig',
                 array(
                     'runePages' => $runesPages['data'],
                     'runes' => $runesPages['images'],
+                    'translations' => $translations,
                     //'runesData' => $runeData,
                     'static_data_version' => $static_data_version
                 ))
@@ -203,11 +218,24 @@ class SummonerAjaxController extends Controller
                 'id' => $summonerId,
                 'region' => $region
             ]);
+            $language = $em->getRepository('AppBundle:Language')->findOneBy([
+                'symfonyLocale' => $request->getLocale()
+            ]);
+
+            $masteriesTranslations = $em->getRepository('AppBundle:StaticData\Translation\MasteryTranslation')->findBy([
+                'languageId' => $language->getId()
+            ]);
+            $translations = array();
+            foreach($masteriesTranslations as $translation)
+            {
+                $translations[$translation->getMasteryId()] = $translation;
+            }
 
             $template =  $this->render('AppBundle:Summoner:_masteries.html.twig',
                 array(
                     'masteriesPages' => $masteriesPages,
                     'masteries' => $masteries,
+                    'translations' => $translations,
                     //'masteriesPages' => $masteriesPages['data'],
                     //'$masteries' => $masteriesPages['images'],
                     'static_data_version' => $static_data_version

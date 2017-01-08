@@ -25,7 +25,7 @@
                 #}
                 {% for mastery in masteries %}
                     <div>
-                        <div data-toggle="tooltip" data-html="true" title="Tooltip on left<br>Tooltip on left<br>Tooltip on left<br>Tooltip on leftTooltip on left<br>Tooltip on left" class="overlay masteries masteries-overlay-{{ mastery.id }} {% if page.masteries[mastery.id] is not defined %}masteries-off{%  endif %}"  style="background-image: url('http://ddragon.leagueoflegends.com/cdn/{{ static_data_version }}/img/mastery/{{ mastery.id }}.png');">
+                        <div data-toggle="tooltip" data-html="true" title="<h3>{{ translations[mastery.id].name }}</h3>{{ translations[mastery.id].formattedDescription }}" class="overlay masteries masteries-overlay-{{ mastery.id }} {% if page.masteries[mastery.id] is not defined %}masteries-off{%  endif %}"  style="background-image: url('http://ddragon.leagueoflegends.com/cdn/{{ static_data_version }}/img/mastery/{{ mastery.id }}.png');">
                             <div class="overlay masteries-rank">{% if page.masteries[mastery.id] is defined %}{{ page.masteries[mastery.id] }}{% else %}0{%  endif %}/{{ mastery.maxRank }}</div>
                         </div>
                     </div>
