@@ -2,7 +2,7 @@
     <label for="runesPageSelect">{{ 'runes.page.choice'|trans }}:</label>
     <select class="form-control" id="runesPageSelect">
         {% for page in runePages.pages %}
-            <option value="{{ loop.index }}">{{ page.name }}</option>
+            <option value="{{ loop.index }}">{{ loop.index }} - {{ page.name }}</option>
         {% endfor %}
     </select>
 </div>

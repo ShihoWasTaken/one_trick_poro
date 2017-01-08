@@ -405,29 +405,27 @@ class SummonerService
     public function getMasteriesPages(\AppBundle\Entity\Summoner\Summoner $summoner)
     {
         $masteriesPagesData = $this->api->getMasteriesBySummonerIds($summoner->getRegion(), array($summoner->getId()));
-        /*
-        $images = array();
-        $runeData = array();
-        foreach($runePagesData[$summoner->getId()]['pages'] as $page)
+        $pages = array();
+        foreach($masteriesPagesData[$summoner->getId()]['pages'] as $page)
         {
-            if(isset($page['slots']))
+            $index = count($pages);
+            if(isset($page['name']))
             {
-                foreach($page['slots'] as $rune)
-                {
-                    $runeData['runeId'] = $this->em->getRepository('AppBundle:StaticData\Rune')->findOneBy([
-                        'id' => $rune['runeId']
-                    ]);
-                    $images[$rune['runeId']] = $runeData['runeId']->getImage();
-                }
+                $pages[$index]['name'] = $page['name'];
+            }
+            else
+            {
+                $pages[$index]['name'] = '';
+            }
+
+            $pages[$index]['current'] = $page['current'];
+            $pages[$index]['masteries'] = array();
+            foreach($page['masteries'] as $mastery)
+            {
+                $pages[$index]['masteries'][$mastery['id']] = $mastery['rank'];
             }
         }
-
-        return array(
-            'images' => $images,
-            'data' => $runePagesData[$summoner->getId()]
-        );
-        */
-        return $masteriesPagesData[$summoner->getId()];
+        return $pages;
     }
 
     public function getRunePageByData(\AppBundle\Entity\StaticData\Region $region, array $runePagesData)
