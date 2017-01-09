@@ -94,3 +94,13 @@ button.btn > .loader
     width: 24px;
     margin: 0 5px;
 }
+
+.champion-mastery-level-icon
+{
+    width: 100px;
+}
+
+.champion-mastery-div
+{
+    height: 320px;
+}

@@ -1,0 +1,4 @@
+<div class="history-team-player">
+    <img class="history-team-champion-icon" src="http://ddragon.leagueoflegends.com/cdn/{{ static_data_version }}/img/champion/{{ champions[player.championId].key }}.png">
+    <a href="{{ url('app_summoner', {'summonerId': player.summonerId,'region': summoner.region.slug}) }}">{{ summonerNames[player.summonerId] }}</a>
+</div>

@@ -428,6 +428,12 @@ class SummonerService
         return $pages;
     }
 
+    public function getMatchHistory(\AppBundle\Entity\Summoner\Summoner $summoner)
+    {
+        $recentGamesData = $this->api->getRecentGames($summoner->getRegion(), $summoner->getId());
+        return $recentGamesData;
+    }
+
     public function getRunePageByData(\AppBundle\Entity\StaticData\Region $region, array $runePagesData)
     {
         $images = array();
@@ -477,16 +483,58 @@ class SummonerService
         return $stats;
     }
 
-    public function getLiveGame(\AppBundle\Entity\Summoner\Summoner $summoner)
+    public function getSummonerSpellsSortedById(\AppBundle\Entity\StaticData\Region $region)
     {
-        $currentGame = $this->api->getCurrentGame($summoner->getRegion(), $summoner->getId());
-
-        $sumonnerSpellsData = $this->api->getStaticSummonerSpells($summoner->getRegion());
+        $sumonnerSpellsData = $this->api->getStaticSummonerSpells($region);
         $summonerSpells = array();
         foreach($sumonnerSpellsData["data"] as $sumonnerSpell)
         {
             $summonerSpells[$sumonnerSpell["id"]] = $sumonnerSpell["key"];
         }
+        return $summonerSpells;
+    }
+
+    public function getSummonerNamesByIds(\AppBundle\Entity\StaticData\Region $region, array $ids)
+    {
+        $size = count($ids);
+        $names = array();
+        if($size > 40)
+        {
+            for($i = 0; $i < ($size/40); $i++)
+            {
+                $slice = array_slice($ids, $i * 40, 40, true);
+                $temp_names[$i] = $this->api->getNamesBySummonerIds($region, $slice);
+                foreach($temp_names[$i] as $id => $name)
+                {
+                    $names[$id] = $name;
+                }
+            }
+        }
+        else
+        {
+            $names = $this->api->getNamesBySummonerIds($region, $ids);
+        }
+        return $names;
+    }
+
+    //TODO: faire un même fonction qui va chercher seulement quelques items a partir d'un tableau d'id
+    //TODO: Il faudrait carrément faire des requêtes pour les récupérer en tableau d'ID
+    public function getItemsSortedById()
+    {
+        $items = $this->em->getRepository('AppBundle:StaticData\Item')->findAll();
+        $sorted = array();
+        foreach($items as $item)
+        {
+            $sorted[$item->getId()] = $item;
+        }
+        return $sorted;
+    }
+
+    public function getLiveGame(\AppBundle\Entity\Summoner\Summoner $summoner)
+    {
+        $currentGame = $this->api->getCurrentGame($summoner->getRegion(), $summoner->getId());
+
+        $summonerSpells = $this->getSummonerSpellsSortedById($summoner->getRegion());
         $liveGame = array();
         if(isset($currentGame['participants']))
         {

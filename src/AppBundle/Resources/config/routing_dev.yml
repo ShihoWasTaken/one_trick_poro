@@ -1,0 +1,4 @@
+app_dev_test:
+    path:     /test
+    defaults: { _controller: AppBundle:StaticData:updateChampions }
+    methods:  [GET]

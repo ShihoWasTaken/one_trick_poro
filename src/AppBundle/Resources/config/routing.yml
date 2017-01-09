@@ -80,10 +80,11 @@ app_summoner_live_game_ajax:
     methods:  [POST]
     requirements: { method: POST }
 
-app_dev_test:
-    path:     /test
-    defaults: { _controller: AppBundle:StaticData:updateChampions }
-    methods:  [GET]
+app_summoner_history_ajax:
+    path:     /summoner/{region}/{summonerId}/historyAjax
+    defaults: { _controller: AppBundle:SummonerAjax:history }
+    methods:  [POST]
+    requirements: { method: POST }
 
 app_admin_update_champions:
     path:     /update/champions

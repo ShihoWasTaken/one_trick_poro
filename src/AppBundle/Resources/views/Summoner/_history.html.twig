@@ -1,0 +1,26 @@
+<div class="col-md-12">
+    <h2>{{ 'match.history'|trans }}</h2>
+    {% for game in history.games %}
+        <div class="col-md-12 text-center match-history-div {% if game.stats.win == 'true' %}victory-bg{% else %}defeat-bg{% endif %}">
+            <div class="col-md-8">
+                <img class="history-summoner-champion-icon" src="http://ddragon.leagueoflegends.com/cdn/{{ static_data_version }}/img/champion/{{ champions[game.championId].key }}.png">
+                {%  for index in 0..6%}
+                    {% include 'AppBundle:Summoner:_history_item.html.twig' with {'item': gamesItems[game.gameId][index] } %}
+                {% endfor %}
+            </div>
+            <div class="col-md-4">
+                <div class="col-md-6">
+                    {% for player in gamesPlayers[game.gameId][100] %}
+                        {% include 'AppBundle:Summoner:_history_team_player.html.twig' with {'player': player, 'summoner': summoner} %}
+                    {% endfor %}
+                </div>
+                <div class="col-md-6">
+                    {% for player in gamesPlayers[game.gameId][200] %}
+                        {% include 'AppBundle:Summoner:_history_team_player.html.twig' with {'player': player } %}
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        <div class="col-md-12"><hr></div>
+    {% endfor %}
+</div>

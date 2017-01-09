@@ -245,6 +245,76 @@ class SummonerAjaxController extends Controller
         }
     }
 
+    public function historyAction(Request $request, $summonerId, $region)
+    {
+        $static_data_version = $this->container->getParameter('static_data_version');
+        if(!$request->isXmlHttpRequest())
+        {
+            return new JsonResponse(array('httpCode' => 400, 'error' => 'Requête non AJAX'));
+        }
+        else
+        {
+            $sum = $this->container->get('app.lolsummoner');
+            $em = $this->get('doctrine')->getManager();
+
+            $region = $sum->getRegionBySlug($region);
+            // On récupère le summoner en BDD
+            $summoner = $em->getRepository('AppBundle:Summoner\Summoner')->findOneBy([
+                'id' => $summonerId,
+                'region' => $region
+            ]);
+
+            $history = $sum->getMatchHistory($summoner);
+            $champions = $sum->getChampionsSortedByIds();
+            $summonerSpells = $sum->getSummonerSpellsSortedById($summoner->getRegion());
+            $gamesItems = array();
+            $gamesPlayers = array();
+            $playersIds = array();
+            foreach($history['games'] as $game)
+            {
+                for($i = 0; $i <= 6; $i++)
+                {
+                    if(isset($game['stats']['item' . $i]))
+                    {
+                        $gamesItems[$game['gameId']][$i] = $game['stats']['item' . $i];
+                    }
+                    else
+                    {
+                        $gamesItems[$game['gameId']][$i] = null;
+                    }
+                }
+                $playersIds[] = $summonerId;
+                foreach($game['fellowPlayers'] as $player)
+                {
+                    $playersIds[] = $player['summonerId'];
+                }
+                $summonerNames = $sum->getSummonerNamesByIds($summoner->getRegion(), $playersIds);
+                foreach($game['fellowPlayers'] as $player)
+                {
+                    $gamesPlayers[$game['gameId']][$player['teamId']][] = $player;
+                }
+                $gamesPlayers[$game['gameId']][$game['teamId']][] = array(
+                    'summonerId' => $history['summonerId'],
+                    'championId' => $game['championId']
+                );
+            }
+
+            $template =  $this->render('AppBundle:Summoner:_history.html.twig',
+                array(
+                    'history' => $history,
+                    'champions' => $champions,
+                    'summonerSpells' => $summonerSpells,
+                    'summonerNames' => $summonerNames,
+                    'gamesItems' => $gamesItems,
+                    'gamesPlayers' => $gamesPlayers,
+                    'summoner' => $summoner,
+                    'static_data_version' => $static_data_version
+                ))
+                ->getContent();
+            return new Response($template);
+        }
+    }
+
     public function liveGameAction(Request $request, $summonerId, $region)
     {
         $static_data_version = $this->container->getParameter('static_data_version');

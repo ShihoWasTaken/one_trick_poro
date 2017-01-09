@@ -1,0 +1,32 @@
+.defeat-bg
+{
+    background-color: PeachPuff;
+}
+
+.victory-bg
+{
+    background-color: LightGreen;
+}
+
+.history-team-champion-icon
+{
+    width: 16px;
+}
+
+.history-item
+{
+    width: 32px;
+}
+
+.history-summoner-champion-icon
+{
+    width: 48px;
+}
+
+.history-team-player
+{
+    text-align: left;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}

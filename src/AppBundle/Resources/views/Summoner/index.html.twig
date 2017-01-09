@@ -15,6 +15,9 @@
     {% stylesheets 'bundles/app/css/Summoner/live_game.css' %}
         <link rel="stylesheet" href="{{ asset_url }}" />
     {% endstylesheets %}
+    {% stylesheets 'bundles/app/css/Summoner/history.css' %}
+    <link rel="stylesheet" href="{{ asset_url }}" />
+    {% endstylesheets %}
     <link rel="stylesheet" src="https://cdn.datatables.net/1.10.13/css/jquery.dataTables.min.css" />
     <link rel="stylesheet" src="https://cdn.datatables.net/plug-ins/1.10.13/integration/font-awesome/dataTables.fontAwesome.css" />
 {% endblock stylesheets %}
@@ -168,7 +171,7 @@
                         {% include 'AppBundle:Summoner:_ranked_stats.html.twig' %}
                     </div>
                     <div id="history" class="tab-pane fade">
-                        {% include 'AppBundle:Summoner:_history.html.twig' %}
+                        {% include 'AppBundle:Summoner:_loading.html.twig' %}
                     </div>
                     <div id="runes" class="tab-pane fade">
                         {% include 'AppBundle:Summoner:_loading.html.twig' %}
@@ -223,6 +226,7 @@
              var isRuneLoaded = false;
              var isMasteriesPagesLoaded = false;
              var isChampionMasteriesLoaded = false;
+             var isHistoryLoaded = false;
              var isFilterizdLoaded = false;
 
              $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
@@ -244,6 +248,23 @@
                                      }
                                  });
                                  isLiveGameLoaded = true;
+                             }
+                             break;
+                         case "#history":
+                             if(!isHistoryLoaded)
+                             {
+                                 var summonerId = {{ summoner.id }};
+                                 var region = '{{ summoner.region.slug }}';
+                                 $.ajax({
+                                     url: '{{	path('app_summoner_history_ajax', {'region': summoner.region.slug, 'summonerId': summoner.id}) }}',
+                                     type: 'POST',
+                                     data: {'summonerId': summonerId, 'region': region},
+                                     dataType: 'html',
+                                     success: function(data) {
+                                         $('#history').html(data);
+                                     }
+                                 });
+                                 isHistoryLoaded = true;
                              }
                              break;
                          case "#runes":
