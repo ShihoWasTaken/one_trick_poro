@@ -28,6 +28,11 @@
                         <tbody>
                         {% for game in games %}
                             <tr>
+                                <td colspan="10">
+                                    {{ game.gameMode }} | {{ game.mapId }} | {{ game.gameLength }}
+                                </td>
+                            </tr>
+                            <tr>
                                 {% for player in game.participants %}
                                     <td>{{ player.summonerName }}</td>
                                 {% endfor %}

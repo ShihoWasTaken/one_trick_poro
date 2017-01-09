@@ -18,18 +18,18 @@
 
 img.live-game-champion
 {
-    width: 31%;
+    width: 48px;
 }
 
 img.live-game-summoner
 {
-    width: 15%;
+    width: 24px;
 }
 
 img.live-game-rank
 {
     display: inline-block;
-    width: 48px;
+    width: 32px;
 }
 
 span.live-game-rank
@@ -40,4 +40,19 @@ span.live-game-rank
 span.live-game-name
 {
     overflow: hidden;
+}
+
+th.live-game-name
+{
+    width: 100px;
+}
+
+th.live-game-champion
+{
+    width: 48px;
+}
+
+img.live-game-banned
+{
+    width: 64px;
 }
