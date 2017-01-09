@@ -1,35 +1,39 @@
-title.summoner.profile: "%summonerName%'s profile"
-summoner.update: 'Update'
-league.points: 'LP'
-unranked: 'Unranked'
-summary: 'Summary'
+title.summoner.profile: '%summonerName%''s profile'
+summoner.update: Update
+league.points: LP
+unranked: Unranked
+summary: Summary
 live.game: 'Live game'
 ranked.stats: 'Ranked stats'
-history: 'History'
-runes: 'Runes'
-masteries: 'Masteries'
+history: History
+runes: Runes
+masteries: Masteries
 champions.mastery: 'Champion mastery'
-chests: 'Chests'
-season: 'Season'
-summoner.updating: 'Updating'
-summoner.index.creating.message: "We are retrieving data about this summoner. We will update this page once it's finished"
+chests: Chests
+season: Season
+summoner.updating: Updating
+summoner.index.creating.message: 'We are retrieving data about this summoner. We will update this page once it''s finished'
 chests.all.champions: 'All champions'
 chests.owned: 'Owned chests'
 chests.remaining: 'Remaining chests'
-search: 'Search'
+search: Search
 live.game.not.found: 'This summoner is not currently in game'
-live.game.name: 'Name'
-live.game.tier: 'Rank'
-live.game.stats: 'Stats'
-live.game.champion: 'Champion'
+live.game.name: Name
+live.game.tier: Rank
+live.game.stats: Stats
+live.game.champion: Champion
 live.game.champion.stats: 'Champion stats'
-live.game.runes: 'Runes'
+live.game.runes: Runes
 runes.page.choice: 'Select a rune page to display'
-navbar.about: 'About'
+navbar.about: About
 sitename: 'One Trick Poro'
-navbar.register: 'Register'
+navbar.register: Register
 navbar.login: 'Log in'
 navbar.account: 'My profile'
-home_page.title: 'Home'
-about_page.title: 'About'
-about_page.content: __about_page.content
+home_page.title: Home
+about_page.title: About
+about_page.content: 'about'
+match.history: 'Match history'
+masteries.page.choice: 'Choose a masteries page please'
+live.game.played: 'played'
+navbar.contact: 'Contact'

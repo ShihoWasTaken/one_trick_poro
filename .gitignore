@@ -21,5 +21,6 @@ Gemfile.lock
 config/
 log/
 *.php~
+*.yml~
 sonar-project.properties
 database.sh

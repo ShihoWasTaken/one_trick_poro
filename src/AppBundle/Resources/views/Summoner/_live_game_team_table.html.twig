@@ -25,7 +25,7 @@
             </td>
             <td>
                 {% if playerStats[player.summonerId].general is not empty %}
-                    {{ playerStats[player.summonerId].general.winrate }} % ({{ playerStats[player.summonerId].general.playedGames }})<br>
+                    {{ playerStats[player.summonerId].general.winrate }} % ({{ playerStats[player.summonerId].general.playedGames }} {{ 'live.game.played'|trans }})<br>
                     {{ playerStats[player.summonerId].general.killsAVG }} / {{ playerStats[player.summonerId].general.deathsAVG }} / {{ playerStats[player.summonerId].general.assistsAVG }}
                 {% endif %}
             </td>

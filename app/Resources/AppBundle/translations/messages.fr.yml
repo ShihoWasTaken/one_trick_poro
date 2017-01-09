@@ -1,36 +1,39 @@
 title.summoner.profile: 'Profil de %summonerName%'
 summoner.update: 'Mettre à jour'
-league.points: 'PL'
+league.points: PL
 unranked: 'Non classé'
-summary: 'Résumé'
+summary: Résumé
 live.game: 'Partie en cours'
 ranked.stats: 'Statisques en classée'
-history: 'Historique'
-runes: 'Runes'
-masteries: 'Maîtrises'
+history: Historique
+runes: Runes
+masteries: Maîtrises
 champions.mastery: 'Maîtrises de champion'
-chests: 'Coffres'
-season: 'Saison'
+chests: Coffres
+season: Saison
 summoner.updating: 'Mise à jour'
 summoner.index.creating.message: 'Nous récupérons les informations sur cet invocateur, la page sera actualisée automatiquement'
 chests.all.champions: 'Tous les champions'
 chests.owned: 'Coffre(s) possédé(s)'
 chests.remaining: 'Coffre(s) disponible(s)'
-search: 'Recherche'
-live.game.not.found: "Cet invocateur n'est pas en game"
-live.game.name: 'Pseudo'
-live.game.tier: 'Rang'
-live.game.stats: 'Stats'
-live.game.champion: 'Champion'
+search: Recherche
+live.game.not.found: 'Cet invocateur n''est pas en game'
+live.game.name: Pseudo
+live.game.tier: Rang
+live.game.stats: Stats
+live.game.champion: Champion
 live.game.champion.stats: 'Stats du champion'
-live.game.runes: 'Runes'
+live.game.runes: Runes
 runes.page.choice: 'Sélectionnez la page de runes à afficher'
 navbar.about: 'A propos'
-navbar.contact: 'Contact'
+navbar.contact: Contact
 sitename: 'One Trick Poro'
 navbar.register: 'Créer un compte'
-navbar.login: 'Connexion'
+navbar.login: Connexion
 navbar.account: 'Mon compte'
-home_page.title: 'Accueil'
+home_page.title: Accueil
 about_page.title: 'A propos'
-about_page.content: '__about_page.content'
+about_page.content: 'a Propos'
+match.history: 'Historique des parties'
+masteries.page.choice: 'Veuillez choisir une page de maîtrises'
+live.game.played: 'jouées'
