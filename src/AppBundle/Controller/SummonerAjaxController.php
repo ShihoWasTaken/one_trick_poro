@@ -56,19 +56,14 @@ class SummonerAjaxController extends Controller
             $api = $this->container->get('app.lolapi');
             $sum = $this->container->get('app.lolsummoner');
             $region = $sum->getRegionBySlug($region);
+            $language = $sum->getLanguageByRequestLocale($request);
             $chests = $api->getChampionsMastery($region, $summonerId);
-            $champions = $em->getRepository('AppBundle:StaticData\Champion')->findAll();
-            $temp = array();
-            foreach($champions as $champion)
-            {
-                $temp[$champion->getId()] = array('key' => $champion->getKey());
-            }
+            $champions = $sum->getChampionsSortedByIds($language);
 
             for($i = 0; $i < count($chests); $i++)
             {
-                $temp[$chests[$i]['championId']] = array_merge($temp[$chests[$i]['championId']], $chests[$i]);
+                $champions[$chests[$i]['championId']] = array_merge($champions[$chests[$i]['championId']], $chests[$i]);
             }
-            $champions = $temp;
             $owned = 0;
             $remaining = 0;
             $dataCategory = array();
@@ -116,18 +111,12 @@ class SummonerAjaxController extends Controller
             $region = $sum->getRegionBySlug($region);
             $championsMasteryData = $api->getChampionsMastery($region, $summonerId);
             //$chests = $api->getChampionsMastery($summonerId);
-            $champions = $em->getRepository('AppBundle:StaticData\Champion')->findAll();
-            $temp = array();
-            foreach($champions as $champion)
-            {
-                $temp[$champion->getId()] = array('key' => $champion->getKey());
-            }
-
+            $language = $sum->getLanguageByRequestLocale($request);
+            $champions = $sum->getChampionsSortedByIds($language);
             for($i = 0; $i < count($championsMasteryData); $i++)
             {
-                $temp[$championsMasteryData[$i]['championId']] = array_merge($temp[$championsMasteryData[$i]['championId']], $championsMasteryData[$i]);
+                $champions[$championsMasteryData[$i]['championId']] = array_merge($champions[$championsMasteryData[$i]['championId']], $championsMasteryData[$i]);
             }
-            $champions = $temp;
             //var_dump($champions[103]);
             //exit();
 
@@ -166,9 +155,7 @@ class SummonerAjaxController extends Controller
             $runesPages = $sum->getRunePages($summoner);
             //$runeData = $sum->getRunePagesInfo($region, $runesPages['data']);
 
-            $language = $em->getRepository('AppBundle:Language')->findOneBy([
-                'symfonyLocale' => $request->getLocale()
-            ]);
+            $language = $sum->getLanguageByRequestLocale($request);
 
             // TODO: rechercher seulement les runes concernées
             $runesTranslations = $em->getRepository('AppBundle:StaticData\Translation\RuneTranslation')->findBy([
@@ -214,13 +201,8 @@ class SummonerAjaxController extends Controller
 
             $masteriesPages = $sum->getMasteriesPages($summoner);
 
-            $masteries = $em->getRepository('AppBundle:StaticData\Mastery')->findAll([
-                'id' => $summonerId,
-                'region' => $region
-            ]);
-            $language = $em->getRepository('AppBundle:Language')->findOneBy([
-                'symfonyLocale' => $request->getLocale()
-            ]);
+            $masteries = $em->getRepository('AppBundle:StaticData\Mastery')->findAll();
+            $language = $sum->getLanguageByRequestLocale($request);
 
             $masteriesTranslations = $em->getRepository('AppBundle:StaticData\Translation\MasteryTranslation')->findBy([
                 'languageId' => $language->getId()
@@ -265,7 +247,8 @@ class SummonerAjaxController extends Controller
             ]);
 
             $history = $sum->getMatchHistory($summoner);
-            $champions = $sum->getChampionsSortedByIds();
+            $language = $sum->getLanguageByRequestLocale($request);
+            $champions = $sum->getChampionsSortedByIds($language);
             $summonerSpells = $sum->getSummonerSpellsSortedById($summoner->getRegion());
             $gamesItems = array();
             $gamesPlayers = array();
@@ -317,6 +300,7 @@ class SummonerAjaxController extends Controller
 
     public function liveGameAction(Request $request, $summonerId, $region)
     {
+        //TODO: afficher les infos progressivement si un summoner n'est pas créé
         $static_data_version = $this->container->getParameter('static_data_version');
         if(!$request->isXmlHttpRequest())
         {
@@ -336,7 +320,18 @@ class SummonerAjaxController extends Controller
             ]);
 
             $liveGame = $sum->getLiveGame($mainSummoner);
-            $champions = $sum->getChampionsSortedByIds();
+
+            if(isset($liveGame['currentGame']['status']['status_code']))
+            {
+                $template =  $this->render('AppBundle:Summoner:_live_game_not_found.html.twig',
+                    array(
+                ))
+                    ->getContent();
+                return new Response($template);
+            }
+
+            $language = $sum->getLanguageByRequestLocale($request);
+            $champions = $sum->getChampionsSortedByIds($language);
             $runeData = null;
             $playerStats = array();
             if(isset($liveGame['currentGame']['participants']))
@@ -388,6 +383,25 @@ class SummonerAjaxController extends Controller
                     $playerStats[$player['summonerId']]['champion'] = $rankedStats2;
                 }
             }
+            $masteries = $em->getRepository('AppBundle:StaticData\Mastery')->findAll();
+            $language = $sum->getLanguageByRequestLocale($request);
+
+            $masteriesTranslations = $em->getRepository('AppBundle:StaticData\Translation\MasteryTranslation')->findBy([
+                'languageId' => $language->getId()
+            ]);
+            $translations = array();
+            foreach($masteriesTranslations as $translation)
+            {
+                $translations[$translation->getMasteryId()] = $translation;
+            }
+            $masteriesPages = array();
+            foreach($liveGame['currentGame']['participants'] as $player)
+            {
+                foreach($player['masteries'] as $mastery)
+                {
+                    $masteriesPages[$player['summonerId']][$mastery['masteryId']] = $mastery['rank'];
+                }
+            }
 
             $template =  $this->render('AppBundle:Summoner:_live_game.html.twig',
                 array(
@@ -399,6 +413,9 @@ class SummonerAjaxController extends Controller
                     'runesImg' => $runeData['images'],
                     'runesStats' => $runeData['stats'],
                     'playerStats' => $playerStats,
+                    'masteriesPages' => $masteriesPages,
+                    'masteries' => $masteries,
+                    'translations' => $translations,
                     'static_data_version' => $static_data_version
                 ))
                 ->getContent();

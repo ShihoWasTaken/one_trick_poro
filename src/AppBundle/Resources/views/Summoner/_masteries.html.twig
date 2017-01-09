@@ -14,15 +14,6 @@
 
             <div class="relative-container">
                 <div class="masteries-background" style="background-image: url({{ asset('bundles/app/images/masteries/masteries-background.jpg') }});"></div>
-                {#
-                {% if page.masteries is defined %}
-                    {% for mastery in page.masteries %}
-                        <div>
-                            <div class="overlay masteries masteries-overlay-{{ mastery.id }}"  style="background-image: url('http://ddragon.leagueoflegends.com/cdn/{{ static_data_version }}/img/mastery/{{ mastery.id }}.png');"></div>
-                        </div>
-                    {% endfor %}
-                {% endif %}
-                #}
                 {% for mastery in masteries %}
                     <div>
                         <div data-toggle="tooltip" data-html="true" title="<h3>{{ translations[mastery.id].name }}</h3>{{ translations[mastery.id].formattedDescription }}" class="overlay masteries masteries-overlay-{{ mastery.id }} {% if page.masteries[mastery.id] is not defined %}masteries-off{%  endif %}"  style="background-image: url('http://ddragon.leagueoflegends.com/cdn/{{ static_data_version }}/img/mastery/{{ mastery.id }}.png');">

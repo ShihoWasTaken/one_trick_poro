@@ -420,9 +420,12 @@ class SummonerService
 
             $pages[$index]['current'] = $page['current'];
             $pages[$index]['masteries'] = array();
-            foreach($page['masteries'] as $mastery)
+            if(isset($page['masteries']))
             {
-                $pages[$index]['masteries'][$mastery['id']] = $mastery['rank'];
+                foreach($page['masteries'] as $mastery)
+                {
+                    $pages[$index]['masteries'][$mastery['id']] = $mastery['rank'];
+                }
             }
         }
         return $pages;
@@ -561,14 +564,30 @@ class SummonerService
         return $data;
     }
 
-    public function getChampionsSortedByIds()
+    public function getChampionsSortedByIds(\AppBundle\Entity\Language $language)
     {
         $champions = $this->em->getRepository('AppBundle:StaticData\Champion')->findAll();
+        $translates = $this->em->getRepository('AppBundle:StaticData\Translation\ChampionTranslation')->findBy([
+                'languageId' => $language->getId()
+        ]);
         $temp = array();
         foreach($champions as $champion)
         {
             $temp[$champion->getId()] = array('key' => $champion->getKey());
         }
+        foreach($translates as $translate)
+        {
+            $temp[$translate->getChampionId()]['name'] = $translate->getName();
+            $temp[$translate->getChampionId()]['title'] = $translate->getTitle();
+        }
         return $temp;
+    }
+
+    public function getLanguageByRequestLocale(\Symfony\Component\HttpFoundation\Request $request)
+    {
+        $language = $this->em->getRepository('AppBundle:Language')->findOneBy([
+                'symfonyLocale' => $request->getLocale()
+            ]);
+        return $language;
     }
 }

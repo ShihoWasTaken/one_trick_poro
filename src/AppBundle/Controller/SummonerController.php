@@ -4,6 +4,7 @@
 namespace AppBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use AppBundle\Entity\Summoner\Summoner;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -36,7 +37,7 @@ class SummonerController extends Controller
         return $response;
     }
 
-    public function indexAction($region, $summonerId)
+    public function indexAction(Request $request, $region, $summonerId)
     {
         $em = $this->get('doctrine')->getManager();
         $api = $this->container->get('app.lolapi');
@@ -84,14 +85,10 @@ class SummonerController extends Controller
                     'summoner' => $newSummoner
                 ));
         }
-        //return new Response("ok");
-        return $this->indexAction3($region->getSlug(), $summonerId);
-        return $this->render('AppBundle:Summoner:index.html.twig',
-            array(
-            ));
+        return $this->indexAction3($request, $region->getSlug(), $summonerId);
     }
 
-    public function indexAction3($region, $summonerId)
+    public function indexAction3(Request $request, $region, $summonerId)
     {
         $em = $this->get('doctrine')->getManager();
         $api = $this->container->get('app.lolapi');
@@ -149,13 +146,9 @@ class SummonerController extends Controller
             $soloqimg = strtolower($soloq['tier']) . '_' . $soloq['entries'][0]['division'];
         }
 
-        $champions = $em->getRepository('AppBundle:StaticData\Champion')->findAll();
-        $temp = array();
-        foreach($champions as $champion)
-        {
-            $temp[$champion->getId()] = array('key' => $champion->getKey());
-        }
-        
+        $language = $sum->getLanguageByRequestLocale($request);
+        $champions = $sum->getChampionsSortedByIds($language);
+
         //$championsMastery = $sum->updateChampionsMastery($summonerId, $safeRegion);
 
         /*
@@ -194,7 +187,7 @@ class SummonerController extends Controller
         {
             for($i = 0; $i < count($topChampionsMastery); $i++)
             {
-                $arr = array('championKey' => $temp[$topChampionsMastery[$i]['championId']]['key']);
+                $arr = array('championKey' => $champions[$topChampionsMastery[$i]['championId']]['key']);
                 $topChampionsMastery[$i] = array_merge($topChampionsMastery[$i], $arr);
             }
             // Switch du 1er et 2eme
@@ -214,7 +207,7 @@ class SummonerController extends Controller
                 'static_data_version' => $static_data_version,
                 //'currentGame' => $currentGame,
                 //'summonerSpells' => $summonerSpells,
-                'champions' => $temp,
+                'champions' => $champions,
                 'rankedStats' => $rankedStats,
                 //'live_game_data' => $lg_data
             ));

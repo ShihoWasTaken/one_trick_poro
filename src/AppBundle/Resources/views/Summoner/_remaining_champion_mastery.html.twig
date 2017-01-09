@@ -2,7 +2,7 @@
     <h2>Maitrises de champions</h2>
     {% for mastery in championsMastery %}
         <div class="col-md-4 text-center champion-mastery-div">
-            <h4>{{ champions[mastery.championId].key }}</h4>
+            <h4>{{ champions[mastery.championId].name }}</h4>
             <img src="http://ddragon.leagueoflegends.com/cdn/{{ static_data_version }}/img/champion/{{ champions[mastery.championId].key }}.png">
             {% if mastery.highestGrade is defined %}
                 <div>Meilleure note {{ mastery.highestGrade }} </div>

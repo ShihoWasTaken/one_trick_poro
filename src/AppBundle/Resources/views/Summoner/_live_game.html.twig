@@ -1,8 +1,100 @@
-{% if currentGame.status.status_code is defined %}
-    <div>{{ 'live.game.not.found'|trans }}</div>
-{% else %}
-    <table id="blue_team" class="table table-bordered table-responsive">
-        <thead>
+<table id="blue_team" class="table table-bordered table-responsive">
+    <thead>
+    <tr>
+        <th>{{ 'live.game.name'|trans }}</th>
+        <th>{{ 'live.game.tier'|trans }}</th>
+        <th>{{ 'live.game.stats'|trans }}</th>
+        <th>{{ 'live.game.champion'|trans }}</th>
+        <th>{{ 'live.game.champion.stats'|trans }}</th>
+        <th>{{ 'live.game.runes'|trans }}</th>
+    </tr>
+    </thead>
+    <tr>
+        {% for bannedChampion in currentGame.bannedChampions %}
+            {% if bannedChampion.teamId == 100 %}
+                <img src="http://ddragon.leagueoflegends.com/cdn/{{ static_data_version }}/img/champion/{{ champions[bannedChampion.championId]['key'] }}.png">
+            {% endif %}
+        {% endfor %}
+    </tr>
+    {% for player in currentGame.participants %}
+        {% if player.teamId == 100 %}
+            <tr>
+                <td><a target="_blank" href="{{ url('app_summoner', {'summonerId': player.summonerId,'region': summoner.region.slug}) }}"><span class="live-game-name">{{ player.summonerName }}</span></a></td>
+                <td>
+                    {% if live_game_data is not empty %}
+                        <img class="live-game-rank" src="{{ asset('bundles/app/images/leagues/' ~ live_game_data[player.summonerId].img ~ '.png') }}" />
+                        <span class="live-game-rank" >{{ live_game_data[player.summonerId].rank }}</span>
+                    {% endif %}
+                </td>
+                <td>
+                    {% if playerStats[player.summonerId].general is not empty %}
+                    {{ playerStats[player.summonerId].general.winrate }} %<br>
+                        <span class="positive-color">{{ playerStats[player.summonerId].general.wins }}</span> - <span class="negative-color">{{ playerStats[player.summonerId].general.loses }}</span><br>
+                        {{ playerStats[player.summonerId].general.kda }}<br>
+                        {{ playerStats[player.summonerId].general.killsAVG }} / {{ playerStats[player.summonerId].general.deathsAVG }} / {{ playerStats[player.summonerId].general.assistsAVG }}
+                    {% endif %}
+                </td>
+                <td>
+                    <img class="live-game-champion" src="http://ddragon.leagueoflegends.com/cdn/{{ static_data_version }}/img/champion/{{ champions[player.championId]['key'] }}.png">
+                    <br>
+                    <img class="live-game-summoner" src="http://ddragon.leagueoflegends.com/cdn/{{ static_data_version }}/img/spell/{{ summonerSpells[player.spell1Id] }}.png">
+                    <img class="live-game-summoner" src="http://ddragon.leagueoflegends.com/cdn/{{ static_data_version }}/img/spell/{{ summonerSpells[player.spell2Id] }}.png">
+                </td>
+                <td>
+                    {% if playerStats[player.summonerId].champion is not empty %}
+                        {{ playerStats[player.summonerId].champion.winrate }} %<br>
+                        <span class="positive-color">{{ playerStats[player.summonerId].champion.wins }}</span> - <span class="negative-color">{{ playerStats[player.summonerId].champion.loses }}</span><br>
+                        {{ playerStats[player.summonerId].champion.kda }}<br>
+                        {{ playerStats[player.summonerId].champion.killsAVG }} / {{ playerStats[player.summonerId].champion.deathsAVG }} / {{ playerStats[player.summonerId].champion.assistsAVG }}
+                    {% endif %}
+                </td>
+                <td>
+                    <!-- Trigger the modal with a button -->
+                    <button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#runesModal-{{ player.summonerId }}">Runes</button>
+                    <!-- Modal -->
+                    <div id="runesModal-{{ player.summonerId }}" class="modal fade" role="dialog">
+                        <div class="modal-dialog">
+
+                            <!-- Modal content-->
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                    <h4 class="modal-title">{{ player.summonerName }}</h4>
+                                </div>
+                                <div class="modal-body">
+                                    {% for rune in player.runes %}
+                                        <img src="http://ddragon.leagueoflegends.com/cdn/{{ static_data_version }}/img/rune/{{ runesImg[rune.runeId] }}" /> X {{  rune.count }}<br>
+                                        {{ runesStats[rune.runeId].description }}<br>
+                                        {{ runesStats[rune.runeId].name }}<br>
+                                        {%  if not loop.last %}
+                                            <hr>
+                                        {%  endif %}
+                                    {% endfor %}
+                                    <div class="relative-container">
+                                        <div class="masteries-background" style="background-image: url({{ asset('bundles/app/images/masteries/masteries-background.jpg') }});"></div>
+                                        {% for mastery in masteries %}
+                                            <div>
+                                                <div data-toggle="tooltip" data-html="true" title="<h3>{{ translations[mastery.id].name }}</h3>{{ translations[mastery.id].formattedDescription }}" class="overlay masteries masteries-overlay-{{ mastery.id }} {% if masteriesPages[player.summonerId][mastery.id] is not defined %}masteries-off{%  endif %}"  style="background-image: url('http://ddragon.leagueoflegends.com/cdn/{{ static_data_version }}/img/mastery/{{ mastery.id }}.png');">
+                                                    <div class="overlay masteries-rank">{% if masteriesPages[player.summonerId][mastery.id] is defined %}{{ masteriesPages[player.summonerId][mastery.id] }}{% else %}0{%  endif %}/{{ mastery.maxRank }}</div>
+                                                </div>
+                                            </div>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </td>
+            </tr>
+        {% endif %}
+    {% endfor %}
+</table>
+<table id="purple_team" class="table table-bordered table-responsive">
+    <thead>
         <tr>
             <th>{{ 'live.game.name'|trans }}</th>
             <th>{{ 'live.game.tier'|trans }}</th>
@@ -11,168 +103,416 @@
             <th>{{ 'live.game.champion.stats'|trans }}</th>
             <th>{{ 'live.game.runes'|trans }}</th>
         </tr>
-        </thead>
-        <tr>
-            {% for bannedChampion in currentGame.bannedChampions %}
-                {% if bannedChampion.teamId == 100 %}
-                    <img src="http://ddragon.leagueoflegends.com/cdn/{{ static_data_version }}/img/champion/{{ champions[bannedChampion.championId]['key'] }}.png">
-                {% endif %}
-            {% endfor %}
-        </tr>
-        {% for player in currentGame.participants %}
-            {% if player.teamId == 100 %}
-                <tr>
-                    <td><a target="_blank" href="{{ url('app_summoner', {'summonerId': player.summonerId,'region': summoner.region.slug}) }}"><span class="live-game-name">{{ player.summonerName }}</span></a></td>
-                    <td>
-                        {% if live_game_data is not empty %}
-                            <img class="live-game-rank" src="{{ asset('bundles/app/images/leagues/' ~ live_game_data[player.summonerId].img ~ '.png') }}" />
-                            <span class="live-game-rank" >{{ live_game_data[player.summonerId].rank }}</span>
-                        {% endif %}
-                    </td>
-                    <td>
-                        {% if playerStats[player.summonerId].general is not empty %}
-                        {{ playerStats[player.summonerId].general.winrate }} %<br>
-                            <span class="positive-color">{{ playerStats[player.summonerId].general.wins }}</span> - <span class="negative-color">{{ playerStats[player.summonerId].general.loses }}</span><br>
-                            {{ playerStats[player.summonerId].general.kda }}<br>
-                            {{ playerStats[player.summonerId].general.killsAVG }} / {{ playerStats[player.summonerId].general.deathsAVG }} / {{ playerStats[player.summonerId].general.assistsAVG }}
-                        {% endif %}
-                    </td>
-                    <td>
-                        <img class="live-game-champion" src="http://ddragon.leagueoflegends.com/cdn/{{ static_data_version }}/img/champion/{{ champions[player.championId]['key'] }}.png">
-                        <br>
-                        <img class="live-game-summoner" src="http://ddragon.leagueoflegends.com/cdn/{{ static_data_version }}/img/spell/{{ summonerSpells[player.spell1Id] }}.png">
-                        <img class="live-game-summoner" src="http://ddragon.leagueoflegends.com/cdn/{{ static_data_version }}/img/spell/{{ summonerSpells[player.spell2Id] }}.png">
-                    </td>
-                    <td>
-                        {% if playerStats[player.summonerId].champion is not empty %}
-                            {{ playerStats[player.summonerId].champion.winrate }} %<br>
-                            <span class="positive-color">{{ playerStats[player.summonerId].champion.wins }}</span> - <span class="negative-color">{{ playerStats[player.summonerId].champion.loses }}</span><br>
-                            {{ playerStats[player.summonerId].champion.kda }}<br>
-                            {{ playerStats[player.summonerId].champion.killsAVG }} / {{ playerStats[player.summonerId].champion.deathsAVG }} / {{ playerStats[player.summonerId].champion.assistsAVG }}
-                        {% endif %}
-                    </td>
-                    <td>
-                        <!-- Trigger the modal with a button -->
-                        <button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#runesModal-{{ player.summonerId }}">Runes</button>
-
-                        <!-- Modal -->
-                        <div id="runesModal-{{ player.summonerId }}" class="modal fade" role="dialog">
-                            <div class="modal-dialog">
-
-                                <!-- Modal content-->
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <button type="button" class="close" data-dismiss="modal">&times;</button>
-                                        <h4 class="modal-title">{{ player.summonerName }}</h4>
-                                    </div>
-                                    <div class="modal-body">
-                                        {% for rune in player.runes %}
-                                            <img src="http://ddragon.leagueoflegends.com/cdn/{{ static_data_version }}/img/rune/{{ runesImg[rune.runeId] }}" /> X {{  rune.count }}<br>
-                                            {{ runesStats[rune.runeId].description }}<br>
-                                            {{ runesStats[rune.runeId].name }}<br>
-                                            {%  if not loop.last %}
-                                                <hr>
-                                            {%  endif %}
-                                        {% endfor %}
-                                    </div>
-                                    <div class="modal-footer">
-                                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                                    </div>
-                                </div>
-
-                            </div>
-                        </div>
-                    </td>
-                </tr>
+    </thead>
+    <tbody>
+    <tr>
+        {% for bannedChampion in currentGame.bannedChampions %}
+            {% if bannedChampion.teamId == 200 %}
+                <img src="http://ddragon.leagueoflegends.com/cdn/{{ static_data_version }}/img/champion/{{ champions[bannedChampion.championId]['key'] }}.png">
             {% endif %}
         {% endfor %}
-    </table>
-    <table id="purple_team" class="table table-bordered table-responsive">
-        <thead>
+    </tr>
+    {% for player in currentGame.participants %}
+        {% if player.teamId == 200 %}
             <tr>
-                <th>{{ 'live.game.name'|trans }}</th>
-                <th>{{ 'live.game.tier'|trans }}</th>
-                <th>{{ 'live.game.stats'|trans }}</th>
-                <th>{{ 'live.game.champion'|trans }}</th>
-                <th>{{ 'live.game.champion.stats'|trans }}</th>
-                <th>{{ 'live.game.runes'|trans }}</th>
-            </tr>
-        </thead>
-        <tbody>
-        <tr>
-            {% for bannedChampion in currentGame.bannedChampions %}
-                {% if bannedChampion.teamId == 200 %}
-                    <img src="http://ddragon.leagueoflegends.com/cdn/{{ static_data_version }}/img/champion/{{ champions[bannedChampion.championId]['key'] }}.png">
-                {% endif %}
-            {% endfor %}
-        </tr>
-        {% for player in currentGame.participants %}
-            {% if player.teamId == 200 %}
-                <tr>
-                    <td><a target="_blank" href="{{ url('app_summoner', {'summonerId': player.summonerId,'region': summoner.region.slug}) }}"><span class="live-game-name">{{ player.summonerName }}</span></a></td>
-                    <td>
-                        {% if live_game_data is not empty %}
-                            <img class="live-game-rank" src="{{ asset('bundles/app/images/leagues/' ~ live_game_data[player.summonerId].img ~ '.png') }}" />
-                            <span class="live-game-rank" >{{ live_game_data[player.summonerId].rank }}</span>
-                        {% endif %}
-                    </td>
-                    <td>
-                        {% if playerStats[player.summonerId].general is not empty %}
-                            {{ playerStats[player.summonerId].general.winrate }} %<br>
-                            <span class="positive-color">{{ playerStats[player.summonerId].general.wins }}</span> - <span class="negative-color">{{ playerStats[player.summonerId].general.loses }}</span><br>
-                            {{ playerStats[player.summonerId].general.kda }}<br>
-                            {{ playerStats[player.summonerId].general.killsAVG }} / {{ playerStats[player.summonerId].general.deathsAVG }} / {{ playerStats[player.summonerId].general.assistsAVG }}
-                        {% endif %}
-                    </td>
-                    <td>
-                        <img class="live-game-champion" src="http://ddragon.leagueoflegends.com/cdn/{{ static_data_version }}/img/champion/{{ champions[player.championId]['key'] }}.png">
-                        <br>
-                        <img class="live-game-summoner" src="http://ddragon.leagueoflegends.com/cdn/{{ static_data_version }}/img/spell/{{ summonerSpells[player.spell1Id] }}.png">
-                        <img class="live-game-summoner" src="http://ddragon.leagueoflegends.com/cdn/{{ static_data_version }}/img/spell/{{ summonerSpells[player.spell2Id] }}.png">
-                    </td>
-                    <td>
-                        {% if playerStats[player.summonerId].champion is not empty %}
-                            {{ playerStats[player.summonerId].champion.winrate }} %<br>
-                            <span class="positive-color">{{ playerStats[player.summonerId].champion.wins }}</span> - <span class="negative-color">{{ playerStats[player.summonerId].champion.loses }}</span><br>
-                            {{ playerStats[player.summonerId].champion.kda }}<br>
-                            {{ playerStats[player.summonerId].champion.killsAVG }} / {{ playerStats[player.summonerId].champion.deathsAVG }} / {{ playerStats[player.summonerId].champion.assistsAVG }}
-                        {% endif %}
-                    </td>
-                    <td>
-                        <!-- Trigger the modal with a button -->
-                        <button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#runesModal-{{ player.summonerId }}">Runes</button>
+                <td><a target="_blank" href="{{ url('app_summoner', {'summonerId': player.summonerId,'region': summoner.region.slug}) }}"><span class="live-game-name">{{ player.summonerName }}</span></a></td>
+                <td>
+                    {% if live_game_data is not empty %}
+                        <img class="live-game-rank" src="{{ asset('bundles/app/images/leagues/' ~ live_game_data[player.summonerId].img ~ '.png') }}" />
+                        <span class="live-game-rank" >{{ live_game_data[player.summonerId].rank }}</span>
+                    {% endif %}
+                </td>
+                <td>
+                    {% if playerStats[player.summonerId].general is not empty %}
+                        {{ playerStats[player.summonerId].general.winrate }} %<br>
+                        <span class="positive-color">{{ playerStats[player.summonerId].general.wins }}</span> - <span class="negative-color">{{ playerStats[player.summonerId].general.loses }}</span><br>
+                        {{ playerStats[player.summonerId].general.kda }}<br>
+                        {{ playerStats[player.summonerId].general.killsAVG }} / {{ playerStats[player.summonerId].general.deathsAVG }} / {{ playerStats[player.summonerId].general.assistsAVG }}
+                    {% endif %}
+                </td>
+                <td>
+                    <img class="live-game-champion" src="http://ddragon.leagueoflegends.com/cdn/{{ static_data_version }}/img/champion/{{ champions[player.championId]['key'] }}.png">
+                    <br>
+                    <img class="live-game-summoner" src="http://ddragon.leagueoflegends.com/cdn/{{ static_data_version }}/img/spell/{{ summonerSpells[player.spell1Id] }}.png">
+                    <img class="live-game-summoner" src="http://ddragon.leagueoflegends.com/cdn/{{ static_data_version }}/img/spell/{{ summonerSpells[player.spell2Id] }}.png">
+                </td>
+                <td>
+                    {% if playerStats[player.summonerId].champion is not empty %}
+                        {{ playerStats[player.summonerId].champion.winrate }} %<br>
+                        <span class="positive-color">{{ playerStats[player.summonerId].champion.wins }}</span> - <span class="negative-color">{{ playerStats[player.summonerId].champion.loses }}</span><br>
+                        {{ playerStats[player.summonerId].champion.kda }}<br>
+                        {{ playerStats[player.summonerId].champion.killsAVG }} / {{ playerStats[player.summonerId].champion.deathsAVG }} / {{ playerStats[player.summonerId].champion.assistsAVG }}
+                    {% endif %}
+                </td>
+                <td>
+                    <!-- Trigger the modal with a button -->
+                    <button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#runesModal-{{ player.summonerId }}">Runes</button>
+                    <!-- Modal -->
+                    <div id="runesModal-{{ player.summonerId }}" class="modal fade" role="dialog">
+                        <div class="modal-dialog">
 
-                        <!-- Modal -->
-                        <div id="runesModal-{{ player.summonerId }}" class="modal fade" role="dialog">
-                            <div class="modal-dialog">
-
-                                <!-- Modal content-->
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <button type="button" class="close" data-dismiss="modal">&times;</button>
-                                        <h4 class="modal-title">{{ player.summonerName }}</h4>
-                                    </div>
-                                    <div class="modal-body">
-                                        {% for rune in player.runes %}
-                                            <img src="http://ddragon.leagueoflegends.com/cdn/{{ static_data_version }}/img/rune/{{ runesImg[rune.runeId] }}" /> X {{  rune.count }}<br>
-                                            {{ runesStats[rune.runeId].description }}<br>
-                                            {{ runesStats[rune.runeId].name }}<br>
-                                            {%  if not loop.last %}
-                                                <hr>
-                                            {%  endif %}
+                            <!-- Modal content-->
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                    <h4 class="modal-title">{{ player.summonerName }}</h4>
+                                </div>
+                                <div class="modal-body">
+                                    {% for rune in player.runes %}
+                                        <img src="http://ddragon.leagueoflegends.com/cdn/{{ static_data_version }}/img/rune/{{ runesImg[rune.runeId] }}" /> X {{  rune.count }}<br>
+                                        {{ runesStats[rune.runeId].description }}<br>
+                                        {{ runesStats[rune.runeId].name }}<br>
+                                        {%  if not loop.last %}
+                                            <hr>
+                                        {%  endif %}
+                                    {% endfor %}
+                                    <div class="relative-container">
+                                        <div class="masteries-background" style="background-image: url({{ asset('bundles/app/images/masteries/masteries-background.jpg') }});"></div>
+                                        {% for mastery in masteries %}
+                                            <div>
+                                                <div data-toggle="tooltip" data-html="true" title="<h3>{{ translations[mastery.id].name }}</h3>{{ translations[mastery.id].formattedDescription }}" class="overlay masteries masteries-overlay-{{ mastery.id }} {% if masteriesPages[player.summonerId][mastery.id] is not defined %}masteries-off{%  endif %}"  style="background-image: url('http://ddragon.leagueoflegends.com/cdn/{{ static_data_version }}/img/mastery/{{ mastery.id }}.png');">
+                                                    <div class="overlay masteries-rank">{% if masteriesPages[player.summonerId][mastery.id] is defined %}{{ masteriesPages[player.summonerId][mastery.id] }}{% else %}0{%  endif %}/{{ mastery.maxRank }}</div>
+                                                </div>
+                                            </div>
                                         {% endfor %}
                                     </div>
-                                    <div class="modal-footer">
-                                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                                    </div>
                                 </div>
-
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                </div>
                             </div>
+
                         </div>
-                    </td>
-                </tr>
-            {% endif %}
-        {% endfor %}
-        </tbody>
-    </table>
-{% endif %}
+                    </div>
+                </td>
+            </tr>
+        {% endif %}
+    {% endfor %}
+    </tbody>
+</table>
+<script>
+    $( document ).ready(function() {
+        $('[data-toggle="tooltip"]').tooltip();
+    });
+</script>
+<style>
+    .relative-container {
+        position: relative;
+    }
+
+    .overlay {
+        position: absolute;
+        z-index: 100;
+    }
+
+    .masteries-background
+    {
+        width: 828px;
+        height: 479px;
+    }
+
+    .masteries
+    {
+        width: 50px;
+        height: 50px;
+        background-repeat: no-repeat;
+        background-size: cover
+    }
+
+    .masteries-off
+    {
+        filter: grayscale(100%);
+    }
+
+    .masteries-rank
+    {
+        bottom: -15px;
+        left: 0;
+        color: gold;
+        text-align: center;
+        width: 50px;
+        height: 15px;
+        vertical-align: middle;
+        background-color: black;
+        border: 1px solid gold;
+        font-size: 11px;
+    }
+
+    /* On ajoute 138px en largeur */
+    .masteries-overlay-6111
+    {
+        top: 10px;
+        left: 88px;
+    }
+
+    .masteries-overlay-6114
+    {
+        top: 10px;
+        left: 148px;
+    }
+
+    .masteries-overlay-6311
+    {
+        top: 10px;
+        left: 364px;
+    }
+
+    .masteries-overlay-6312
+    {
+        top: 10px;
+        left: 424px;
+    }
+
+    .masteries-overlay-6211
+    {
+        top: 10px;
+        left: 640px;
+    }
+
+    .masteries-overlay-6212
+    {
+        top: 10px;
+        left: 700px;
+    }
+
+    /* On descends de 80px */
+    .masteries-overlay-6121
+    {
+        top: 90px;
+        left: 58px;
+    }
+
+    .masteries-overlay-6122
+    {
+        top: 90px;
+        left: 118px;
+    }
+
+    .masteries-overlay-6123
+    {
+        top: 90px;
+        left: 178px;
+    }
+
+    .masteries-overlay-6321
+    {
+        top: 90px;
+        left: 334px;
+    }
+
+    .masteries-overlay-6322
+    {
+        top: 90px;
+        left: 394px;
+    }
+
+    .masteries-overlay-6323
+    {
+        top: 90px;
+        left: 454px;
+    }
+
+    .masteries-overlay-6221
+    {
+        top: 90px;
+        left: 610px;
+    }
+
+    .masteries-overlay-6222
+    {
+        top: 90px;
+        left: 670px;
+    }
+
+    .masteries-overlay-6223
+    {
+        top: 90px;
+        left: 730px;
+    }
+
+    /* part 2 */
+    /* On ajoute 138px en largeur */
+    .masteries-overlay-6131
+    {
+        top: 170px;
+        left: 88px;
+    }
+
+    .masteries-overlay-6134
+    {
+        top: 170px;
+        left: 148px;
+    }
+
+    .masteries-overlay-6331
+    {
+        top: 170px;
+        left: 364px;
+    }
+
+    .masteries-overlay-6332
+    {
+        top: 170px;
+        left: 424px;
+    }
+
+    .masteries-overlay-6231
+    {
+        top: 170px;
+        left: 640px;
+    }
+
+    .masteries-overlay-6232
+    {
+        top: 170px;
+        left: 700px;
+    }
+
+    /* On descends de 80px */
+    .masteries-overlay-6141
+    {
+        top: 250px;
+        left: 58px;
+    }
+
+    .masteries-overlay-6142
+    {
+        top: 250px;
+        left: 118px;
+    }
+
+    .masteries-overlay-6143
+    {
+        top: 250px;
+        left: 178px;
+    }
+
+    .masteries-overlay-6341
+    {
+        top: 250px;
+        left: 334px;
+    }
+
+    .masteries-overlay-6342
+    {
+        top: 250px;
+        left: 394px;
+    }
+
+    .masteries-overlay-6343
+    {
+        top: 250px;
+        left: 454px;
+    }
+
+    .masteries-overlay-6241
+    {
+        top: 250px;
+        left: 610px;
+    }
+
+    .masteries-overlay-6242
+    {
+        top: 250px;
+        left: 670px;
+    }
+
+    .masteries-overlay-6243
+    {
+        top: 250px;
+        left: 730px;
+    }
+
+    /* part 3 */
+    /* On ajoute 138px en largeur */
+    .masteries-overlay-6151
+    {
+        top: 330px;
+        left: 88px;
+    }
+
+    .masteries-overlay-6154
+    {
+        top: 330px;
+        left: 148px;
+    }
+
+    .masteries-overlay-6351
+    {
+        top: 330px;
+        left: 364px;
+    }
+
+    .masteries-overlay-6352
+    {
+        top: 330px;
+        left: 424px;
+    }
+
+    .masteries-overlay-6251
+    {
+        top: 330px;
+        left: 640px;
+    }
+
+    .masteries-overlay-6252
+    {
+        top: 330px;
+        left: 700px;
+    }
+
+    /* On descends de 80px */
+    .masteries-overlay-6161
+    {
+        top: 410px;
+        left: 58px;
+    }
+
+    .masteries-overlay-6162
+    {
+        top: 410px;
+        left: 118px;
+    }
+
+    .masteries-overlay-6164
+    {
+        top: 410px;
+        left: 178px;
+    }
+
+    .masteries-overlay-6361
+    {
+        top: 410px;
+        left: 334px;
+    }
+
+    .masteries-overlay-6362
+    {
+        top: 410px;
+        left: 394px;
+    }
+
+    .masteries-overlay-6363
+    {
+        top: 410px;
+        left: 454px;
+    }
+
+    .masteries-overlay-6261
+    {
+        top: 410px;
+        left: 610px;
+    }
+
+    .masteries-overlay-6262
+    {
+        top: 410px;
+        left: 670px;
+    }
+
+    .masteries-overlay-6263
+    {
+        top: 410px;
+        left: 730px;
+    }
+</style>
