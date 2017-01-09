@@ -9,6 +9,7 @@ use AppBundle\Entity\StaticData\Region;
 use AppBundle\Entity\StaticData\Item;
 use AppBundle\Entity\StaticData\Translation\MasteryTranslation;
 use AppBundle\Entity\StaticData\Translation\RuneTranslation;
+use AppBundle\Entity\StaticData\Translation\ChampionTranslation;
 use AppBundle\Services\LoLAPI\LoLAPIService;
 use Symfony\Component\DependencyInjection\ContainerInterface as Container;
 
@@ -99,6 +100,22 @@ class StaticDataUpdateService
 			$em->flush();
 		else
 			echo 'Aucun nouveau champion n\'a été trouvé';
+		$languages = $this->container->get('doctrine')->getRepository('AppBundle:Language')->findAll();
+		foreach($languages as $language)
+		{
+			$championTranslationData = $this->api->getStaticDataChampions($region, $language->getLocaleCode(), null, null, null);
+			foreach($championTranslationData['data'] as $data)
+			{
+				$championTranslation = new ChampionTranslation();
+				$championTranslation->setChampionId($data['id']);
+				$championTranslation->setLanguageId($language->getId());
+				$championTranslation->setName($data['name']);
+				$championTranslation->setTitle($data['title']);
+				$em->persist($championTranslation);
+			}
+			echo('Traduction ' . $language->getSymfonyLocale() . ' des champions ajoutées ' . $this->endline());
+		}
+		$em->flush();
 	}
 
 	public function updateRunes()

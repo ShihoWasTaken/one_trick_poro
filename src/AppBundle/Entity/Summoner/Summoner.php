@@ -341,4 +341,14 @@ class Summoner
     {
         return $this->firstUpdated;
     }
+
+    /**
+     * Get firstUpdated
+     *
+     * @return boolean
+     */
+    public function getFirstUpdated()
+    {
+        return $this->firstUpdated;
+    }
 }

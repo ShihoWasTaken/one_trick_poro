@@ -166,4 +166,14 @@ class GameHistory
     {
         return $this->victory;
     }
+
+    /**
+     * Get victory
+     *
+     * @return boolean
+     */
+    public function getVictory()
+    {
+        return $this->victory;
+    }
 }

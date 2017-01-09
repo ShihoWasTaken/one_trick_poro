@@ -6,16 +6,16 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="mastery_translation")
+ * @ORM\Table(name="champion_translation")
  */
-class MasteryTranslation
+class ChampionTranslation
 {
     /**
      * @ORM\Id
      * @ORM\Column(type="smallint")
      * @ORM\GeneratedValue(strategy="NONE")
      */
-    private $masteryId;
+    private $championId;
 
     /**
      * @ORM\Id
@@ -30,42 +30,32 @@ class MasteryTranslation
     private $name;
 
     /**
-     * @ORM\Column(type="string", length=2048)
+     * @ORM\Column(type="string", length=32)
      */
-    private $description;
+    private $title;
 
     /**
-     * Get description
+     * Set championId
      *
-     * @return string
+     * @param integer $championId
+     *
+     * @return ChampionTranslation
      */
-    public function getFormattedDescription()
+    public function setChampionId($championId)
     {
-        return str_replace('|', '<br><br>', $this->description);
-    }
-
-    /**
-     * Set masteryId
-     *
-     * @param integer $masteryId
-     *
-     * @return MasteryTranslation
-     */
-    public function setMasteryId($masteryId)
-    {
-        $this->masteryId = $masteryId;
+        $this->championId = $championId;
 
         return $this;
     }
 
     /**
-     * Get masteryId
+     * Get championId
      *
      * @return integer
      */
-    public function getMasteryId()
+    public function getChampionId()
     {
-        return $this->masteryId;
+        return $this->championId;
     }
 
     /**
@@ -73,7 +63,7 @@ class MasteryTranslation
      *
      * @param integer $languageId
      *
-     * @return MasteryTranslation
+     * @return ChampionTranslation
      */
     public function setLanguageId($languageId)
     {
@@ -97,7 +87,7 @@ class MasteryTranslation
      *
      * @param string $name
      *
-     * @return MasteryTranslation
+     * @return ChampionTranslation
      */
     public function setName($name)
     {
@@ -117,26 +107,26 @@ class MasteryTranslation
     }
 
     /**
-     * Set description
+     * Set title
      *
-     * @param string $description
+     * @param string $title
      *
-     * @return MasteryTranslation
+     * @return ChampionTranslation
      */
-    public function setDescription($description)
+    public function setTitle($title)
     {
-        $this->description = $description;
+        $this->title = $title;
 
         return $this;
     }
 
     /**
-     * Get description
+     * Get title
      *
      * @return string
      */
-    public function getDescription()
+    public function getTitle()
     {
-        return $this->description;
+        return $this->title;
     }
 }
