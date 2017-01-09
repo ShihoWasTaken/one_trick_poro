@@ -2,3 +2,8 @@ app_dev_test:
     path:     /test
     defaults: { _controller: AppBundle:StaticData:updateChampions }
     methods:  [GET]
+
+app_dev_featured:
+    path:     /featured
+    defaults: { _controller: AppBundle:Dev:featured }
+    methods:  [GET]

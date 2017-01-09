@@ -12,3 +12,7 @@ _errors:
 
 _main:
     resource: routing.yml
+
+app_dev:
+    resource: "@AppBundle/Resources/config/routing_dev.yml"
+    prefix:   /

@@ -401,6 +401,27 @@ class SummonerAjaxController extends Controller
                 {
                     $masteriesPages[$player['summonerId']][$mastery['masteryId']] = $mastery['rank'];
                 }
+                if($player['teamId'] == 100)
+                {
+                    $players['blue'][] = $player;
+                }
+                else
+                {
+                    $players['purple'][] = $player;
+                }
+            }
+            $bannedChampions['blue'] = array();
+            $bannedChampions['purple'] = array();
+            foreach($liveGame['currentGame']['bannedChampions'] as $champion)
+            {
+                if($champion['teamId'] == 100)
+                {
+                    $bannedChampions['blue'][] = $champion;
+                }
+                else
+                {
+                    $bannedChampions['purple'][] = $champion;
+                }
             }
 
             $template =  $this->render('AppBundle:Summoner:_live_game.html.twig',
@@ -416,6 +437,8 @@ class SummonerAjaxController extends Controller
                     'masteriesPages' => $masteriesPages,
                     'masteries' => $masteries,
                     'translations' => $translations,
+                    'players' => $players,
+                    'bannedChampions' => $bannedChampions,
                     'static_data_version' => $static_data_version
                 ))
                 ->getContent();

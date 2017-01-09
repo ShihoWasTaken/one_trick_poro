@@ -11,6 +11,9 @@
                     <li><a href="{{ path('fos_user_security_logout') }}">Se déconnecter</a></li>
                 {% endif %}
 				<li><a href="#" type="button" data-toggle="modal" data-target="#modalChooseLanguage">Langage: {{ app.request.locale | upper }} <span class="caret"></span></a></li>
+				{% if app.environment == 'dev'  %}
+					<li><a href="{{ path('app_dev_featured') }}">Featured</a></li>
+				{% endif %}
 			</ul>
 			<form class="navbar-form navbar-left" role="search" action="{{ path('app_searchbar') }}" method="post">
 				<div class="input-group">
