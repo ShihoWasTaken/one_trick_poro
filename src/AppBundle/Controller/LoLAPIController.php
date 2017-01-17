@@ -9,6 +9,7 @@ class LoLAPIController extends Controller
 {
     public function profileAction($userId)
     {
+        $static_data_version = $this->container->getParameter('static_data_version');
         $user = $this->get('security.token_storage')->getToken()->getUser();
         if($user != 'anon.')
         {
@@ -27,6 +28,7 @@ class LoLAPIController extends Controller
         return $this->render('AppBundle:Account:profile.html.twig',
             array(
                 'user' => $user,
+                'static_data_version' => $static_data_version
             ));
     }
 

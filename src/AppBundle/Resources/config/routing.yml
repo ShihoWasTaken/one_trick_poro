@@ -33,14 +33,8 @@ app_profile_edit:
     defaults: { _controller: AppBundle:LoLAPI:editProfile }
     methods:  [GET]
 
-app_link_summoner_to_user_blank:
-    path:     /link-account
-    defaults: { _controller: AppBundle:SummonerAjax:linkSummonerToUserBlank }
-    methods:  [POST]
-    requirements: { method: POST }
-
 app_link_summoner_to_user:
-    path:     /link-account/{summonerName}
+    path:     /link-account
     defaults: { _controller: AppBundle:SummonerAjax:linkSummonerToUser }
     methods:  [POST]
     requirements: { method: POST }

@@ -84,6 +84,41 @@ class Tier
      */
     protected $summoners;
 
+    /**
+     * Get Image path without the ".png"
+     *
+     * @return string
+     */
+    public function getImage()
+    {
+        if($this->id === self::ID_UNRANKED)
+            return 'unranked_';
+        else
+        {
+            $pos = strpos($this->getName(), ' ');
+            $rest = substr($this->getName(), 0, $pos);
+            switch($this->division)
+            {
+                default:
+                case 1:
+                    $division = 'I';
+                    break;
+                case 2:
+                    $division = 'II';
+                    break;
+                case 3:
+                    $division = 'III';
+                    break;
+                case 4:
+                    $division = 'IV';
+                    break;
+                case 5:
+                    $division = 'V';
+                    break;
+            }
+            return strtolower($rest) . '_' . $division;
+        }
+    }
 
     /**
      * Get id

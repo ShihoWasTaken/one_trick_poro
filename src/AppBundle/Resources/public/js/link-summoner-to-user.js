@@ -50,9 +50,9 @@ $('#formLinkSummonerToUser').on('submit', function(e)
     var summonerName = $('#summonerToLink').val();
     e.preventDefault();
     $.ajax({
-        url: Routing.generate('app_link_summoner_to_user', { 'summonerName':summonerName }),
+        url: Routing.generate('app_link_summoner_to_user'),
         type: 'POST',
-        data: {'summonerName': summonerName},
+        data: {'summonerName': summonerName, 'region': 'euw'},
         dataType: 'html',
         success: function(data) {
             $('#loadingDiv').addClass('hidden');

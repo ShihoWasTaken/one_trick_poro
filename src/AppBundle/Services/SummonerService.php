@@ -16,6 +16,9 @@ define('OLDER_SEASON_AVAILABLE', 3);
 class SummonerService
 {
     private $container;
+    /**
+     * @var \AppBundle\Services\LoLAPI\LoLAPIService
+     */
     private $api;
     private $em;
     private $current_season;
@@ -69,11 +72,12 @@ class SummonerService
         $this->em->flush();
     }
 
-    public function linkSummonerToUser(User $user, $summonerName)
+    public function linkSummonerToUser(User $user, $summonerName, $regionSlug)
     {
-        $summonerName = strtolower($summonerName);
+        $region = $this->getRegionBySlug($regionSlug);
+        $summonerName = $this->api->toSafeLowerCase($summonerName);
         //$code = 'LeagueOfTools-' . $user->getId();
-        $code = 'Ahri';
+        $code = 'Sivir';
 
         $summoner = $this->api->getSummonerByNames($region, array($summonerName));
         if(!isset($summoner[$summonerName]['id']))
@@ -88,26 +92,23 @@ class SummonerService
         }
         if (in_array($code, $pageNames))
         {
-            /*
-            $em = $this->container->get('doctrine')->getManager();
-            // On ajoute au User
-            //$user->addSummoner($summoner);
+            // On récupère le summoner en BDD
+            $summonerDatabase = $this->em->getRepository('AppBundle:Summoner\Summoner')->findOneBy([
+                'id' => $summonerId,
+                'region' => $region
+            ]);
 
-            $newSummoner = new Summoner();
-            $newSummoner->setUser($user);
-            $newSummoner->setRegion('euw');
-            $newSummoner->setSummonerId($summonerId);
-            $newSummoner->setName($summoner[$summonerName]['name']);
-            $newSummoner->setLevel($summoner[$summonerName]['summonerLevel']);
-            $newSummoner->setProfileIconId($summoner[$summonerName]['profileIconId']);
-            $date = date_create();
-            date_timestamp_set($date, ($summoner[$summonerName]['revisionDate']/1000));
-            $newSummoner->setRevisionDate($date);
+            // Si le summoner n'existe pas encore en BDD, on le crée
+            if (empty($summonerDatabase))
+            {
+                // TODO: Créer summoner
+            }
+            $summonerDatabase->setUser($user);
 
-            $em->persist($newSummoner);
-            $em->flush();
+            $this->em->persist($summonerDatabase);
+            $this->em->flush();
 
-            return 'success';*/
+            return 'success';
         }
         else
             return 'page_not_found';
@@ -133,57 +134,59 @@ class SummonerService
                         break;
                 }
             }
+
+            switch($soloq['tier'])
+            {
+                default:
+                case 'UNRANKED':
+                    $leagueId = Tier::UNRANKED;
+                    break;
+                case 'BRONZE':
+                    $leagueId = Tier::BRONZE;
+                    break;
+                case 'SILVER':
+                    $leagueId = Tier::SILVER;
+                    break;
+                case 'GOLD':
+                    $leagueId = Tier::GOLD;
+                    break;
+                case 'PLATINUM':
+                    $leagueId = Tier::PLATINUM;
+                    break;
+                case 'DIAMOND':
+                    $leagueId = Tier::DIAMOND;
+                    break;
+                case 'MASTER':
+                    $leagueId = Tier::MASTER;
+                    break;
+                case 'CHALLENGER':
+                    $leagueId = Tier::CHALLENGER;
+                    break;
+            }
+            switch($soloq['entries'][0]['division'])
+            {
+                default:
+                case 'I':
+                    $divisionId = 1;
+                    break;
+                case 'II':
+                    $divisionId = 2;
+                    break;
+                case 'III':
+                    $divisionId = 3;
+                    break;
+                case 'IV':
+                    $divisionId = 4;
+                    break;
+                case 'V':
+                    $divisionId = 5;
+                    break;
+            }
         }
         else
         {
-            return null;
-        }
-        switch($soloq['tier'])
-        {
-            default:
-            case 'UNRANKED':
-                $leagueId = Tier::UNRANKED;
-                break;
-            case 'BRONZE':
-                $leagueId = Tier::BRONZE;
-                break;
-            case 'SILVER':
-                $leagueId = Tier::SILVER;
-                break;
-            case 'GOLD':
-                $leagueId = Tier::GOLD;
-                break;
-            case 'PLATINUM':
-                $leagueId = Tier::PLATINUM;
-                break;
-            case 'DIAMOND':
-                $leagueId = Tier::DIAMOND;
-                break;
-            case 'MASTER':
-                $leagueId = Tier::MASTER;
-                break;
-            case 'CHALLENGER':
-                $leagueId = Tier::CHALLENGER;
-                break;
-        }
-        switch($soloq['entries'][0]['division'])
-        {
-            default:
-            case 'I':
-                $divisionId = 1;
-                break;
-            case 'II':
-                $divisionId = 2;
-                break;
-            case 'III':
-                $divisionId = 3;
-                break;
-            case 'IV':
-                $divisionId = 4;
-                break;
-            case 'V':
-                $divisionId = 5;
-                break;
+            $leagueId = Tier::UNRANKED;
+            $divisionId = 1;
         }
 
         $databaseTier = $this->em->getRepository('AppBundle:Summoner\Tier')->findOneBy([

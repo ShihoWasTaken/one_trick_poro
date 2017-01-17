@@ -18,8 +18,8 @@ class SummonerAjaxController extends Controller
         return new Response($template);
     }
 
-    public function linkSummonerToUserAction(Request $request, $summonerName)
-    {/*
+    public function linkSummonerToUserAction(Request $request)
+    {
         $authenticatedUser = $this->get('security.token_storage')->getToken()->getUser();
         if(!$request->isXmlHttpRequest())
         {
@@ -31,16 +31,18 @@ class SummonerAjaxController extends Controller
         }
         else
         {
+            $summonerName = $request->request->get('summonerName');
+            $region = $request->request->get('region');
             $summonerService = $this->container->get('app.lolsummoner');
 
-            $linkMessage = $summonerService->linkSummonerToUser($authenticatedUser, $summonerName);
+            $linkMessage = $summonerService->linkSummonerToUser($authenticatedUser, $summonerName, $region);
             $template = $this->render('AppBundle:Account:_link-account.html.twig',
                 array(
                     'linkMessage' => $linkMessage,
                 ))
                 ->getContent();
             return new Response($template);
-        }*/
+        }
     }
 
     public function chestsAction(Request $request, $summonerId, $region)

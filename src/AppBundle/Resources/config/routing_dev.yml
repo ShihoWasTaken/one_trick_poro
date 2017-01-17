@@ -7,3 +7,12 @@ app_dev_featured:
     path:     /featured
     defaults: { _controller: AppBundle:Dev:featured }
     methods:  [GET]
+
+app_dev_monitoring:
+    path:     /monitoring
+    defaults: { _controller: AppBundle:Dev:monitoring }
+    methods:  [GET]
+
+app_dev_monitoring_ajax:
+    path:     /monitoringAjax
+    defaults: { _controller: AppBundle:Dev:monitoringAjax }

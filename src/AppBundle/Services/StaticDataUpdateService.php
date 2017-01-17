@@ -16,6 +16,9 @@ use Symfony\Component\DependencyInjection\ContainerInterface as Container;
 class StaticDataUpdateService
 {
 	private $container;
+	/**
+	 * @var \AppBundle\Services\LoLAPI\LoLAPIService
+	 */
 	private $api;
 	private $em;
 
