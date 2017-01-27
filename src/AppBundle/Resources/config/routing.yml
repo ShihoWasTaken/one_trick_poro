@@ -100,3 +100,9 @@ app_summoner_create_ajax:
     defaults: { _controller: AppBundle:Summoner:ajaxCreate }
     methods:  [POST]
     requirements: { method: POST }
+
+app_search_summoners:
+    path:     /search/summoners/
+    defaults: { _controller: AppBundle:Summoner:search }
+    methods:  [GET]
+    requirements: { method: GET }

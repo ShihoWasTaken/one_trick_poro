@@ -102,6 +102,23 @@ class SummonerService
             if (empty($summonerDatabase))
             {
                 // TODO: Créer summoner
+                $summonerData = $this->api->getSummonerByIds($region, array($summonerId));
+                if($this->api->getResponseCode() == 404)
+                {
+                    //TODO: exception summoner not found
+                    throw new NotFoundHttpException('Summoner not existing');
+                }
+                $newSummoner = new Summoner($summonerId, $region);
+                $newSummoner->setUser(null);
+                $newSummoner->setName($summonerData[$summonerId]['name']);
+                $newSummoner->setLevel($summonerData[$summonerId]['summonerLevel']);
+                $newSummoner->setProfileIconId($summonerData[$summonerId]['profileIconId']);
+                $date = date_create();
+                date_timestamp_set($date, ($summonerData[$summonerId]['revisionDate']/1000));
+                $newSummoner->setRevisionDate($date);
+                $this->em->persist($newSummoner);
+                $this->em->flush();
+                $summonerDatabase = $newSummoner;
             }
             $summonerDatabase->setUser($user);
 

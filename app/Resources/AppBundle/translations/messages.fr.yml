@@ -36,4 +36,21 @@ about_page.title: 'A propos'
 about_page.content: 'a Propos'
 match.history: 'Historique des parties'
 masteries.page.choice: 'Veuillez choisir une page de maîtrises'
-live.game.played: 'jouées'
+live.game.played: jouées
+search.page.title: __search.page.title
+edit.infos: __edit.infos
+link.summoner: __link.summoner
+unlink.summoner: __unlink.summoner
+link.summoner.title: __link.summoner.title
+ajax.processing: __ajax.processing
+link.summoner.help: __link.summoner.help
+button.copy: __button.copy
+summoner.to.link: __summoner.to.link
+link.summoner.button: __link.summoner.button
+button.close: __button.close
+unlink.summoner.title: __unlink.summoner.title
+summoner.to.unlink: __summoner.to.unlink
+unlink.summoner.button: __unlink.summoner.button
+search.summoner.placeholder: 'Chercher invocateur'
+summoners.found: '{0} Aucun summoner remplissant les critères|{1} Un seul invocateur correspond à ces critères|]1,Inf[ %count% invocateurs trouvés'
+profile.of.user: 'Profil de %name%'

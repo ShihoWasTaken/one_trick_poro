@@ -50,6 +50,26 @@ class SummonerRepository extends EntityRepository
 			->getResult()
 			;
 	}
+
+	// TODO: retirer le summoner lui même
+	public function findAllSummonersByRegionAndMinEloAndMaxElo ($region, $summonerId, $minElo, $maxElo)
+	{
+		return $this->_em->createQuery("
+		select s, t
+		from AppBundle:Summoner\Summoner s
+		join s.tier t
+		WHERE s.region = :region
+		AND s.id != :summonerId
+		AND t.id >= :minElo
+		AND t.id <= :maxElo
+		")
+			->setParameter('region', $region)
+			->setParameter('summonerId', $summonerId)
+			->setParameter('minElo', $minElo)
+			->setParameter('maxElo', $maxElo)
+			->getResult()
+			;
+	}
 /*
 
 	public function getStatusesAndUsers ($deleted) 

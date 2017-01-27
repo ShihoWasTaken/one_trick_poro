@@ -36,9 +36,12 @@ class LoLAPIController extends Controller
     public function editProfileAction($userId)
     {
         $static_data_version = $this->container->getParameter('static_data_version');
+        $api = $this->container->get('app.lolapi');
+        $sum = $this->container->get('app.lolsummoner');
         $user = $this->get('security.token_storage')->getToken()->getUser();
         $api = $this->container->get('app.lolapi');
-        $data = $api->getSummonerByNames(array('Shiho', 'Mikami Teru'));
+        $region = $sum->getRegionBySlug('euw');
+        $data = $api->getSummonerByNames($region, array('Shiho', 'Mikami Teru'));
         $sum = $this->container->get('app.lolsummoner');
         return $this->render('AppBundle:Account:profile_edit.html.twig',
             array(

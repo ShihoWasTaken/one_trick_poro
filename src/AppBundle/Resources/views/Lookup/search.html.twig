@@ -1,0 +1,28 @@
+{% extends 'AppBundle::layout.html.twig' %}
+
+
+{% block title %}{{ 'sitename' | trans }} | {{ 'search.page.title'|trans }}{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-xs-12 col-md-12 white-bg">
+        <form>
+            <select>
+                {%  for summoner in summoners %}
+                    <option value="{{ summoner.name }}">{{ summoner.name }}</option>
+                {%  endfor %}
+            </select>
+        </form>
+        <div>{{ 'summoners.found'|transchoice(search|length) }}
+        {%  for summoner in search %}
+            <div>
+                <h2>{{ summoner.name }}</h2>
+                <img src="{{ asset('bundles/app/images/leagues/' ~ summoner.tier.image ~ '.png') }}" />
+                <div>{{ summoner.tier.name }}</div>
+            </div>
+        {%  endfor %}
+        </div>
+    </div>
+</div>
+{% endblock content %}

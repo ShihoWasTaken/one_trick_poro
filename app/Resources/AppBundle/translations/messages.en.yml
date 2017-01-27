@@ -32,8 +32,25 @@ navbar.login: 'Log in'
 navbar.account: 'My profile'
 home_page.title: Home
 about_page.title: About
-about_page.content: 'about'
+about_page.content: about
 match.history: 'Match history'
 masteries.page.choice: 'Choose a masteries page please'
-live.game.played: 'played'
-navbar.contact: 'Contact'
+live.game.played: played
+navbar.contact: Contact
+search.page.title: __search.page.title
+edit.infos: __edit.infos
+link.summoner: __link.summoner
+unlink.summoner: __unlink.summoner
+link.summoner.title: __link.summoner.title
+ajax.processing: __ajax.processing
+link.summoner.help: __link.summoner.help
+button.copy: __button.copy
+summoner.to.link: __summoner.to.link
+link.summoner.button: __link.summoner.button
+button.close: __button.close
+unlink.summoner.title: __unlink.summoner.title
+summoner.to.unlink: __summoner.to.unlink
+unlink.summoner.button: __unlink.summoner.button
+search.summoner.placeholder: 'Search summoner'
+summoners.found: '{0} No summoners found|{1} Only one summoner found|]1,Inf[ %count% summoners found'
+profile.of.user: "%name%'s profile"

@@ -11,6 +11,48 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class SummonerController extends Controller
 {
+
+    public function searchAction(Request $request)
+    {
+        $em = $this->get('doctrine')->getManager();
+        $sum = $this->container->get('app.lolsummoner');
+        $static_data_version = $this->container->getParameter('static_data_version');
+
+        $user = $user = $this->getUser();
+        // Si l'utilisateur n'est pas connecté
+        if(empty($user))
+        {
+            return $this->render('AppBundle:Lookup:search_error_not_logged_in.html.twig',
+                array(
+                    'static_data_version' => $static_data_version,
+                ));
+        }
+        // Si l'utilisateur n'a pas de summoner enregistré
+        else if(count($user->getSummoners()) == 0)
+        {
+            return $this->render('AppBundle:Lookup:search_error_no_summoner_registered.html.twig',
+                array(
+                    'static_data_version' => $static_data_version,
+                ));
+        }
+        // Cas normal
+        else
+        {
+            $region = $sum->getRegionBySlug('euw');
+            $minElo = 1;
+            $maxElo = 25;
+            $sumonnerId = 29233320;
+            $search = $em->getRepository('AppBundle:Summoner\Summoner')->findAllSummonersByRegionAndMinEloAndMaxElo($region, $sumonnerId, $minElo, $maxElo);
+
+            return $this->render('AppBundle:Lookup:search.html.twig',
+                array(
+                    'static_data_version' => $static_data_version,
+                    'summoners' => $user->getSummoners(),
+                    'search' => $search
+                ));
+        }
+    }
+
     public function ajaxCreateAction($region, $summonerId)
     {
         $sum = $this->container->get('app.lolsummoner');
