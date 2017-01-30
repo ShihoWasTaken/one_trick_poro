@@ -211,6 +211,21 @@ class SummonerService
             'division' => $divisionId
         ]);
         $summoner->setTier($databaseTier);
+        // Autres infos
+        $summoner->setLeaguePoints($soloq['entries'][0]['leaguePoints']);
+        $summoner->setWins($soloq['entries'][0]['wins']);
+        $summoner->setLosses($soloq['entries'][0]['losses']);
+        $summoner->setFreshBlood($soloq['entries'][0]['isFreshBlood']);
+        $summoner->setHotStreak($soloq['entries'][0]['isHotStreak']);
+        $summoner->setInactive($soloq['entries'][0]['isInactive']);
+        $summoner->setVeteran($soloq['entries'][0]['isVeteran']);
+
+        // Mini series
+        if(isset($soloq['entries'][0]['miniSeries']))
+        {
+            $summoner->setMiniSeries($soloq['entries'][0]['miniSeries']['progress']);
+        }
+
         $this->em->persist($summoner);
         $this->em->flush();
     }    

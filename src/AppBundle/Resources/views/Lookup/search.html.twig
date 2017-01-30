@@ -15,11 +15,28 @@
             </select>
         </form>
         <div>{{ 'summoners.found'|transchoice(search|length) }}
+            <br>trier par nom | elo + LP | wins | dernière game | dernière fois connecté
         {%  for summoner in search %}
             <div>
                 <h2>{{ summoner.name }}</h2>
+                <img src="http://ddragon.leagueoflegends.com/cdn/{{ static_data_version }}/img/profileicon/{{ summoner.profileIconId }}.png" />
                 <img src="{{ asset('bundles/app/images/leagues/' ~ summoner.tier.image ~ '.png') }}" />
                 <div>{{ summoner.tier.name }}</div>
+                <div>LP</div>
+                <div>Series</div>
+                <div>
+                    {% if summoner.miniSeries is not empty %}
+                        "mini Series": {{ summoner.miniSeries }}<br>
+                    {%  else %}
+                        "leaguePoints": {{ summoner.leaguePoints }}<br>
+                    {% endif %}
+                    "isFreshBlood": {{ summoner.isFreshBlood }},<br>
+                    "isHotStreak": {{ summoner.isHotStreak }},<br>
+                    "isInactive": {{ summoner.isInactive }},<br>
+                    "isVeteran": {{ summoner.isVeteran }},<br>
+                    "losses": {{ summoner.losses }},<br>
+                    "wins": {{ summoner.wins }}</div>
+
             </div>
         {%  endfor %}
         </div>
