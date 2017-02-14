@@ -226,6 +226,30 @@ class Summoner
         return $this->profileIconId;
     }
 
+    public function getProfileIconURL()
+    {
+        $url = "http://ddragon.leagueoflegends.com/cdn/" . "6.24.1" . "/img/profileicon/" . $this->getProfileIconId() . ".png";
+        $curl = curl_init($url);
+        curl_setopt($curl, CURLOPT_NOBODY, true);
+        $result = curl_exec($curl);
+        if ($result !== false)
+        {
+            $statusCode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+            if ($statusCode == 404)
+            {
+                return "http://ddragon.leagueoflegends.com/cdn/" . "6.24.1" . "/img/profileicon/" . 0 . ".png";
+            }
+            else
+            {
+                return "http://ddragon.leagueoflegends.com/cdn/" . "6.24.1" . "/img/profileicon/" . $this->getProfileIconId() . ".png";
+            }
+        }
+        else
+        {
+            return "http://ddragon.leagueoflegends.com/cdn/" . "6.24.1" . "/img/profileicon/" . 0 . ".png";
+        }
+    }
+
     /**
      * Set revisionDate
      *

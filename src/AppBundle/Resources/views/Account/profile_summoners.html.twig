@@ -6,7 +6,7 @@
 					<h3>{{ summoner.name }}</h3>
 					<div>niveau {{ summoner.level }}</div>
 					<img src="{{ asset('bundles/app/images/leagues/' ~ summoner.tier.image ~ '.png') }}" />
-					<img src="http://ddragon.leagueoflegends.com/cdn/{{ static_data_version }}/img/profileicon/{{ summoner.profileIconId }}.png" />
+					<img src="{{ summoner.ProfileIconURL }}" />
 				</div>
 			</a>
 		{% endfor %}

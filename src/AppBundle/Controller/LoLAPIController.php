@@ -24,7 +24,7 @@ class LoLAPIController extends Controller
             $em = $this->container->get('doctrine')->getManager();
             $user =  $em->getRepository('AppBundle:User')->findOneById($userId);
         }
-        $gravatar = $this->get_gravatar("kenny.guiougou@gmail.com");
+        $gravatar = $this->getGravatar("kenny.guiougou@gmail.com");
         return $this->render('AppBundle:Account:profile.html.twig',
             array(
                 'user' => $user,
@@ -63,7 +63,7 @@ class LoLAPIController extends Controller
      * @return String containing either just a URL or a complete image tag
      * @source https://gravatar.com/site/implement/images/php/
      */
-    private function get_gravatar( $email, $s = 80, $d = 'mm', $r = 'g', $img = false, $atts = array() ) {
+    private function getGravatar( $email, $s = 80, $d = 'mm', $r = 'g', $img = false, $atts = array() ) {
         $url = 'https://www.gravatar.com/avatar/';
         $url .= md5( strtolower( trim( $email ) ) );
         $url .= "?s=$s&d=$d&r=$r";
