@@ -226,9 +226,21 @@ class Summoner
         return $this->profileIconId;
     }
 
-    public function getProfileIconURL()
+    private function testIfURLExists($url)
     {
-        $url = "http://ddragon.leagueoflegends.com/cdn/" . "6.24.1" . "/img/profileicon/" . $this->getProfileIconId() . ".png";
+        $headers = @get_headers($url);
+        if(strpos($headers[0],'404') === false)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    private function testIfURLExistsWithCURL($url)
+    {
         $curl = curl_init($url);
         curl_setopt($curl, CURLOPT_NOBODY, true);
         $result = curl_exec($curl);
@@ -237,12 +249,24 @@ class Summoner
             $statusCode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
             if ($statusCode == 404)
             {
-                return "http://ddragon.leagueoflegends.com/cdn/" . "6.24.1" . "/img/profileicon/" . 0 . ".png";
+                return false;
             }
             else
             {
-                return "http://ddragon.leagueoflegends.com/cdn/" . "6.24.1" . "/img/profileicon/" . $this->getProfileIconId() . ".png";
+                return true;
             }
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    public function getProfileIconURL()
+    {
+        if($this->testIfURLExists("http://ddragon.leagueoflegends.com/cdn/" . "6.24.1" . "/img/profileicon/" . $this->getProfileIconId() . ".png"))
+        {
+            return "http://ddragon.leagueoflegends.com/cdn/" . "6.24.1" . "/img/profileicon/" . $this->getProfileIconId() . ".png";
         }
         else
         {
