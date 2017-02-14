@@ -13,6 +13,8 @@
 	<div class="container">
 		<div class="col-xs-12 col-md-12 white-bg">
 			<h1>{{ 'profile.of.user'|trans({'%name%': user.username}) }}</h1>
+			<img src="{{ gravatar }}" />
+			<div><a href="https://{{ app.request.locale }}.gravatar.com/emails/">{{ 'gravatar.modify'|trans }}</a></div>
 			{% if app.user and app.user == user %}
 				{# Utilisateur connecté et sur son profil #}
 				<div class="btn-group btn-group-justified" role="group" aria-label="...">
