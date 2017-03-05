@@ -24,3 +24,5 @@ log/
 *.yml~
 sonar-project.properties
 database.sh
+translate.sh
+
