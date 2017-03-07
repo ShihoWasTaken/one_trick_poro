@@ -10,17 +10,94 @@
             </div>
             <div class="modal-body">
                 <div class="row">
-                    <a href="{{ path(app.request.attributes.get('_route'), app.request.attributes.get('_route_params')|merge({'_locale':'en'}) ) }}"><div class="col-md-6"><img class='flag' src='{{ asset('bundles/app/images/flags/EN.png' ) }}' /> Europe West</div></a>
-                    <a href="{{ path(app.request.attributes.get('_route'), app.request.attributes.get('_route_params')|merge({'_locale':'fr'}) ) }}"><div class="col-md-6"><img class='flag' src='{{ asset('bundles/app/images/flags/FR.png' ) }}' /> Korea</div></a>
-                    <a href="{{ path(app.request.attributes.get('_route'), app.request.attributes.get('_route_params')|merge({'_locale':'en'}) ) }}"><div class="col-md-6"><img class='flag' src='{{ asset('bundles/app/images/flags/EN.png' ) }}' /> North America</div></a>
-                    <a href="{{ path(app.request.attributes.get('_route'), app.request.attributes.get('_route_params')|merge({'_locale':'fr'}) ) }}"><div class="col-md-6"><img class='flag' src='{{ asset('bundles/app/images/flags/FR.png' ) }}' /> Japan</div></a>
-                    <a href="{{ path(app.request.attributes.get('_route'), app.request.attributes.get('_route_params')|merge({'_locale':'en'}) ) }}"><div class="col-md-6"><img class='flag' src='{{ asset('bundles/app/images/flags/EN.png' ) }}' /> Europe Nordic & East</div></a>
-                    <a href="{{ path(app.request.attributes.get('_route'), app.request.attributes.get('_route_params')|merge({'_locale':'fr'}) ) }}"><div class="col-md-6"><img class='flag' src='{{ asset('bundles/app/images/flags/FR.png' ) }}' /> Oceania</div></a>
-                    <a href="{{ path(app.request.attributes.get('_route'), app.request.attributes.get('_route_params')|merge({'_locale':'en'}) ) }}"><div class="col-md-6"><img class='flag' src='{{ asset('bundles/app/images/flags/EN.png' ) }}' /> Brazil</div></a>
-                    <a href="{{ path(app.request.attributes.get('_route'), app.request.attributes.get('_route_params')|merge({'_locale':'fr'}) ) }}"><div class="col-md-6"><img class='flag' src='{{ asset('bundles/app/images/flags/FR.png' ) }}' /> Latin America South</div></a>
-                    <a href="{{ path(app.request.attributes.get('_route'), app.request.attributes.get('_route_params')|merge({'_locale':'en'}) ) }}"><div class="col-md-6"><img class='flag' src='{{ asset('bundles/app/images/flags/EN.png' ) }}' /> Latin America North</div></a>
-                    <a href="{{ path(app.request.attributes.get('_route'), app.request.attributes.get('_route_params')|merge({'_locale':'fr'}) ) }}"><div class="col-md-6"><img class='flag' src='{{ asset('bundles/app/images/flags/FR.png' ) }}' /> Russia</div></a>
-                    <a href="{{ path(app.request.attributes.get('_route'), app.request.attributes.get('_route_params')|merge({'_locale':'fr'}) ) }}"><div class="col-md-6"><img class='flag' src='{{ asset('bundles/app/images/flags/FR.png' ) }}' /> Turkey</div></a>
+
+                    <div class="region-div col-md-6">
+                        <span class="hidden">euw</span>
+                        <div>
+                            Europe West
+                        </div>
+                    </div>
+
+
+                    <div class="region-div col-md-6">
+                        <span class="hidden">kr</span>
+                        <div>
+                            Korea
+                        </div>
+                    </div>
+
+
+                    <div class="region-div col-md-6">
+                        <span class="hidden">na</span>
+                        <div>
+                            North America
+                        </div>
+                    </div>
+
+
+                    <div class="region-div col-md-6">
+                        <span class="hidden">jp</span>
+                        <div>
+                            Japan
+                        </div>
+                    </div>
+
+
+                    <div class="region-div col-md-6">
+                        <span class="hidden">eune</span>
+                        <div>
+                            Europe Nordic & East
+                        </div>
+                    </div>
+
+
+                    <div class="region-div col-md-6">
+                        <span class="hidden">oce</span>
+                        <div>
+                            Oceania
+                        </div>
+                    </div>
+
+
+                    <div class="region-div col-md-6">
+                        <span class="hidden">br</span>
+                        <div>
+                            Brazil
+                        </div>
+                    </div>
+
+
+                    <div class="region-div col-md-6">
+                        <span class="hidden">las</span>
+                        <div>
+                            Latin America South
+                        </div>
+                    </div>
+
+
+                    <div class="region-div col-md-6">
+                        <span class="hidden">lan</span>
+                        <div>
+                            Latin America North
+                        </div>
+                    </div>
+
+
+                    <div class="region-div col-md-6">
+                        <span class="hidden">ru</span>
+                        <div>
+                            Russia
+                        </div>
+                    </div>
+
+
+                    <div class="region-div col-md-6">
+                        <span class="hidden">tr</span>
+                        <div>
+                            Turkey
+                        </div>
+                    </div>
+
                 </div>
             </div>
             <div class="modal-footer">

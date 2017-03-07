@@ -1,5 +1,4 @@
-body
-{
+body {
     padding-top: 70px;
     background-color: #eee;
     background-image: url('../images/backgrounds/teambuilder-wallpaper.jpg');
@@ -8,41 +7,34 @@ body
     padding-bottom: 60px;
 }
 
-.white-bg
-{
+.white-bg {
     background-color: white;
     padding-bottom: 20px;
 }
 
-.modal-content
-{
+.modal-content {
     border-radius: 0;
 }
 
-.btn
-{
+.btn {
     border-radius: 0
 }
 
-.btn-primary
-{
+.btn-primary {
     background-color: red;
 }
 
-.navbar-form .form-control
-{
+.navbar-form .form-control {
     border-radius: 0;
 }
 
-.navbar-default
-{
+.navbar-default {
     background-color: #008cba;
     border-color: #006687;
     background-image: none;
 }
 
-.navbar-default .navbar-nav>li>a, .navbar-default .navbar-brand, .navbar-default .navbar-text
-{
+.navbar-default .navbar-nav > li > a, .navbar-default .navbar-brand, .navbar-default .navbar-text {
     color: white;
 }
 
@@ -51,36 +43,29 @@ body
     background-color: #006687;
 }
 
-.navbar-default .navbar-brand:focus, .navbar-default .navbar-brand:hover
-{
+.navbar-default .navbar-brand:focus, .navbar-default .navbar-brand:hover {
     color: #ffffff;
     background-color: #006687;
 }
 
-.navbar-default .navbar-text a
-{
+.navbar-default .navbar-text a {
     color: darkseagreen;
     font-weight: bold;
 }
 
-
-.navbar-default .navbar-text a:hover, .navbar-default .navbar-text a:active, .navbar-default .navbar-text a:focus
-{
+.navbar-default .navbar-text a:hover, .navbar-default .navbar-text a:active, .navbar-default .navbar-text a:focus {
     text-decoration: none;
 }
 
-.positive-color
-{
+.positive-color {
     color: #34ba1c;
 }
 
-.negative-color
-{
+.negative-color {
     color: #ff0000;
 }
 
-.region-badge
-{
+.region-badge {
     font-size: 20px;
     text-transform: uppercase;
     background-color: #d79922;
@@ -89,18 +74,27 @@ body
     margin: 0 10px;
 }
 
-button.btn > .loader
-{
+button.btn > .loader {
     width: 24px;
     margin: 0 5px;
 }
 
-.champion-mastery-level-icon
-{
+.champion-mastery-level-icon {
     width: 100px;
 }
 
-.champion-mastery-div
-{
+.champion-mastery-div {
     height: 320px;
+}
+
+.region-div > div {
+    background: aliceblue;
+    height: 50px;
+    padding: 0 20px;
+    cursor: pointer;
+}
+
+.region-div {
+    padding: 5px;
+    line-height: 50px;
 }

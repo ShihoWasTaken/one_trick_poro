@@ -1,46 +1,55 @@
 <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
-	<div class="container">
-		<div class="navbar-header">
-			<a class="navbar-brand" href="{{ url('app_homepage') }}">{{ 'sitename' | trans }}</a>
-			<ul class="nav navbar-nav">
+    <div class="container">
+        <div class="navbar-header">
+            <a class="navbar-brand" href="{{ url('app_homepage') }}">{{ 'sitename' | trans }} <sub>Beta</sub></a>
+            <ul class="nav navbar-nav">
                 {% if not is_granted('IS_AUTHENTICATED_REMEMBERED') %}
                     <li><a href="{{ path('fos_user_registration_register') }}">{{ 'navbar.register' | trans }}</a></li>
                     <li><a href="{{ path('fos_user_security_login') }}">{{ 'navbar.login' | trans }}</a></li>
                 {% else %}
-					<li><a href="{{ path('app_profile',  {'userId':app.user.id}) }}">{{ 'navbar.account' | trans }}</a></li>
+                    <li><a href="{{ path('app_profile',  {'userId':app.user.id}) }}">{{ 'navbar.account' | trans }}</a>
+                    </li>
                     <li><a href="{{ path('fos_user_security_logout') }}">Se déconnecter</a></li>
                 {% endif %}
-				<li><a href="#" type="button" data-toggle="modal" data-target="#modalChooseLanguage">Langage: {{ app.request.locale | upper }} <span class="caret"></span></a></li>
-				{% if app.environment == 'dev'  %}
-					<li><a href="{{ path('app_dev_featured') }}">Featured</a></li>
-				{% endif %}
-				<li><a href="{{ path('app_search_summoners') }}">search</a></li>
-			</ul>
-			<form class="navbar-form navbar-left" role="search" action="{{ path('app_searchbar') }}" method="post">
-				<div class="input-group">
-					{#
-					<div class="input-group-btn">
-						<select name="region" class="form-control">
-							<option value="euw">EUW</option>
-							<option value="na">NA</option>
-							<option value="kr">KR</option>
-							<option value="oce">OCE</option>
-							<option value="eune">EUNE</option>
-						</select>
-					</div>
-					#}
-					<span class="input-group-btn">
-						<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modalChooseRegion">EUW <span class="caret"></span></button>
+                <li><a href="#" type="button" data-toggle="modal"
+                       data-target="#modalChooseLanguage">Langage: {{ app.request.locale | upper }} <span
+                                class="caret"></span></a></li>
+                {% if app.environment == 'dev' %}
+                    <li><a href="{{ path('app_dev_featured') }}">Featured</a></li>
+                {% endif %}
+                <li><a href="{{ path('app_search_summoners') }}">search</a></li>
+            </ul>
+            <form class="navbar-form navbar-left" role="search" action="{{ path('app_searchbar') }}" method="post">
+                <div class="input-group">
+                    {#
+                    <div class="input-group-btn">
+                        <select name="region" class="form-control">
+                            <option value="euw">EUW</option>
+                            <option value="na">NA</option>
+                            <option value="kr">KR</option>
+                            <option value="oce">OCE</option>
+                            <option value="eune">EUNE</option>
+                        </select>
+                    </div>
+                    #}
+                    <span class="input-group-btn">
+						<button id="button-region" type="button" class="btn btn-primary" data-toggle="modal"
+                                data-target="#modalChooseRegion">
+                            <span id="button-region-text">EUW </span>
+                            <span class="caret"></span>
+                        </button>
 					</span>
-					<input name="searchbar-region" type="hidden" value="euw">
-					<input name="searchbar-summonerName" type="text" class="form-control" placeholder="{{ 'search.summoner.placeholder'|trans }}">
-					<span class="input-group-btn">
-						<button class="btn btn-primary" type="submit"><i class="fa fa-search" aria-hidden="true"></i></button>
+                    <input id="searchbar-region" name="searchbar-region" type="hidden" value="euw">
+                    <input name="searchbar-summonerName" type="text" class="form-control"
+                           placeholder="{{ 'search.summoner.placeholder'|trans }}">
+                    <span class="input-group-btn">
+						<button class="btn btn-primary" type="submit"><i class="fa fa-search"
+                                                                         aria-hidden="true"></i></button>
 					</span>
-				</div>
-			</form>
-		</div>
-	</div>
+                </div>
+            </form>
+        </div>
+    </div>
 </nav>
 {% include 'AppBundle:_shared:_language_modal.html.twig' %}
 {% include 'AppBundle:_shared:_region_modal.html.twig' %}
