@@ -35,11 +35,11 @@
                     <span class="input-group-btn">
 						<button id="button-region" type="button" class="btn btn-primary" data-toggle="modal"
                                 data-target="#modalChooseRegion">
-                            <span id="button-region-text">EUW </span>
+                            <span id="button-region-text">{{ favorite_region|upper }} </span>
                             <span class="caret"></span>
                         </button>
 					</span>
-                    <input id="searchbar-region" name="searchbar-region" type="hidden" value="euw">
+                    <input id="searchbar-region" name="searchbar-region" type="hidden" value="{{ favorite_region }}">
                     <input name="searchbar-summonerName" type="text" class="form-control"
                            placeholder="{{ 'search.summoner.placeholder'|trans }}">
                     <span class="input-group-btn">

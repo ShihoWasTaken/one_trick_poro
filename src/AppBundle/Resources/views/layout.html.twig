@@ -30,6 +30,7 @@
     {% javascripts '@bootstrap_js' output='js/bootstrap.js' %}
     <script src="{{ asset_url }}"></script>
     {% endjavascripts %}
+    <script src="{{ asset('bundles/app/js/external/js-cookie.js') }}"></script>
     <script src="{{ asset('bundles/app/js/main.js') }}"></script>
 {% endblock javascripts_body %}
 
