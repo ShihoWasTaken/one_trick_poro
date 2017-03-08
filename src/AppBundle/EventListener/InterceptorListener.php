@@ -17,7 +17,7 @@ class InterceptorListener
         $request = $event->getRequest();
         $cookies = $request->cookies;
         if (!$cookies->has('favorite_region')) {
-            $favoriteRegionCookie = DEFAULT_REGION;
+            $favoriteRegionCookie = self::DEFAULT_REGION;
         } else {
             $favoriteRegionCookie = $cookies->get('favorite_region');
         }

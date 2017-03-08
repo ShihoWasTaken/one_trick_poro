@@ -6,7 +6,7 @@
                 {% if not is_granted('IS_AUTHENTICATED_REMEMBERED') %}
                     <li><a href="{{ path('fos_user_registration_register') }}">{{ 'navbar.register' | trans }}</a></li>
                     <li><a href="{{ path('fos_user_security_login') }}">{{ 'navbar.login' | trans }}</a></li>
-                    <li><a href="{{ path('fos_user_security_login') }}" data-toggle="modal"
+                    <li><a href="#" data-toggle="modal"
                            data-target="#loginModal">{{ 'navbar.login' | trans }}</a></li>
                 {% else %}
                     <li><a href="{{ path('app_profile',  {'userId':app.user.id}) }}">{{ 'navbar.account' | trans }}</a>
@@ -23,17 +23,6 @@
             </ul>
             <form class="navbar-form navbar-left" role="search" action="{{ path('app_searchbar') }}" method="post">
                 <div class="input-group">
-                    {#
-                    <div class="input-group-btn">
-                        <select name="region" class="form-control">
-                            <option value="euw">EUW</option>
-                            <option value="na">NA</option>
-                            <option value="kr">KR</option>
-                            <option value="oce">OCE</option>
-                            <option value="eune">EUNE</option>
-                        </select>
-                    </div>
-                    #}
                     <span class="input-group-btn">
 						<button id="button-region" type="button" class="btn btn-primary" data-toggle="modal"
                                 data-target="#modalChooseRegion">
