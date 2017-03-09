@@ -5,7 +5,6 @@
             <ul class="nav navbar-nav">
                 {% if not is_granted('IS_AUTHENTICATED_REMEMBERED') %}
                     <li><a href="{{ path('fos_user_registration_register') }}">{{ 'navbar.register' | trans }}</a></li>
-                    <li><a href="{{ path('fos_user_security_login') }}">{{ 'navbar.login' | trans }}</a></li>
                     <li><a href="#" data-toggle="modal"
                            data-target="#loginModal">{{ 'navbar.login' | trans }}</a></li>
                 {% else %}
@@ -44,4 +43,6 @@
 </nav>
 {% include 'AppBundle:_shared:_modal_language.html.twig' %}
 {% include 'AppBundle:_shared:_modal_region.html.twig' %}
-{% include 'AppBundle:_shared:_modal_login.html.twig' %}
+{% if not is_granted('IS_AUTHENTICATED_REMEMBERED') %}
+    {% include 'AppBundle:_shared:_modal_login.html.twig' %}
+{% endif %}

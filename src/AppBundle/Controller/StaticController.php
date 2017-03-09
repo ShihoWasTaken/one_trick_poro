@@ -13,6 +13,11 @@ class StaticController extends Controller
         return $this->render('AppBundle:Static:homepage.html.twig');
     }
 
+    public function notFoundAction()
+    {
+        throw new NotFoundHttpException("Page not found");
+    }
+
     public function aboutAction()
     {
         return $this->render('AppBundle:Static:about.html.twig');

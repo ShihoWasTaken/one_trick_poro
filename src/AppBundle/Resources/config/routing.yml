@@ -106,3 +106,7 @@ app_search_summoners:
     defaults: { _controller: AppBundle:Summoner:search }
     methods:  [GET]
     requirements: { method: GET }
+
+app_deny_login:
+    path:     /login
+    defaults: { _controller: AppBundle:Static:notFound }

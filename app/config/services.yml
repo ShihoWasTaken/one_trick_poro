@@ -21,3 +21,6 @@ services:
         arguments: ['@twig']
         tags:
             - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
+    app.authentication_handler:
+        class:        AppBundle\Handler\AuthenticationHandler
+        arguments:    ['@service_container']

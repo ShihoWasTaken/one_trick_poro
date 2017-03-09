@@ -1,17 +1,14 @@
+{% trans_default_domain 'FOSUserBundle' %}
+
 <div class="modal" id="loginModal" tabindex="-1" role="dialog" aria-labelledby="loginModalLabel">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
-                            aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title" id="myModalLabel">Login title</h4>
-            </div>
-            <div class="modal-body">
+            <div class="mo dal-body">
 
 
                 <div class="login-container animated fadeInDown bootstrap snippets">
                     <div class="loginbox bg-white">
-                        <div class="loginbox-title">SIGN IN</div>
+                        <div class="loginbox-title">{{ 'security.login.submit'|trans|upper }}</div>
                         <div class="loginbox-social">
                             <div class="social-title ">Connect with Your Social Accounts</div>
                             <div class="social-buttons">
@@ -30,75 +27,69 @@
                             <div class="or-line"></div>
                             <div class="or">OR</div>
                         </div>
-                        <div class="loginbox-textbox">
-                            <input type="text" class="form-control" placeholder="Email">
-                        </div>
-                        <div class="loginbox-textbox">
-                            <input type="text" class="form-control" placeholder="Password">
-                        </div>
-                        <div class="loginbox-forgot">
-                            <a href="">Forgot Password?</a>
-                        </div>
-                        <div class="loginbox-submit">
-                            <input type="button" class="btn btn-primary btn-block" value="Login">
-                        </div>
-                        <div class="loginbox-signup">
-                            <a href="#register.html">Sign Up With Email</a>
-                        </div>
-                    </div>
-                    <div class="logobox">
-                    </div>
-                </div>
+                        <div id="login_error_container" class="loginbox-textbox hidden">
+                            <div id="login_error_alert" class="alert alert-danger">
 
-
-                {% trans_default_domain 'FOSUserBundle' %}
-
-
-                <div class="row">
-                    <div id="form-login" class="col-xs-12 col-md-4 col-md-offset-4 white-bg">
-                        <h2 class="titre">{{ 'security.login.submit'|trans }}</h2>
-                        <hr>
-                        <form role="form" action="{{ path("fos_user_security_check") }}" method="post">
-                            <input type="hidden" name="_csrf_token" value=""/>
-                            <div class="form-group">
-                                <label for="username">{{ 'security.login.username'|trans }}</label>
-                                <input class="form-control" type="text" id="username" name="_username"
-                                       value="" required="required"/>
                             </div>
-                            <div class="form-group">
-                                <label for="password">{{ 'security.login.password'|trans }}</label>
-                                <input class="form-control" type="password" id="password" name="_password"
-                                       required="required"/>
+                        </div>
+                        <form id="login_form" role="form" action="{{ path("fos_user_security_check") }}" method="post">
+                            <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}"/>
+                            <div class="loginbox-textbox">
+                                <input id="username" name="_username" value="" required="required" type="text"
+                                       class="form-control" placeholder="Username">
                             </div>
-                            <div class="checkbox">
+                            <div class="loginbox-textbox">
+                                <input id="password" name="_password" required="required" type="password"
+                                       class="form-control" placeholder="Password">
+                            </div>
+                            <div class="loginbox-textbox">
                                 <label for="remember_me"><input type="checkbox" id="remember_me" name="_remember_me"
                                                                 value="on"/> {{ 'security.login.remember_me'|trans }}
                                 </label>
                             </div>
-                            <input class="btn btn-primary btn-block" type="submit" id="_submit" name="_submit"
-                                   value="{{ 'security.login.submit'|trans }}"/>
-                            <hr>
-                            <div class="form-group">
-                                <a href="{{ path('fos_user_registration_register') }}">{{ 'layout.register'|trans }}</a>
-                                <br>
+                            <div class="loginbox-forgot">
                                 <a href="{{ path('fos_user_resetting_request') }}">{{ 'custom.forgot_password'|trans }}</a>
                             </div>
+                            <div class="loginbox-submit">
+                                <input class="btn btn-primary btn-block" type="submit" id="_submit" name="_submit"
+                                       value="{{ 'security.login.submit'|trans }}"/>
+                            </div>
                         </form>
+                        <div class="loginbox-signup">
+                            <a href="{{ path('fos_user_registration_register') }}">{{ 'layout.register'|trans }}</a>
+                        </div>
                     </div>
                 </div>
-
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
             </div>
         </div>
     </div>
 </div>
+<script>
+    $(document).ready(function () {
+        $('#login_form').submit(function (e) {
+            e.preventDefault();
+            $.ajax({
+                type: $('form').attr('method'),
+                url: '{{ path("fos_user_security_check") }}',
+                data: $('form').serialize(),
+                dataType: "json",
+                success: function (data, status, object) {
+                    if (data.error) {
+                        $('#login_error_alert').html(data.message);
+                        $('#login_error_container').removeClass('hidden');
+                    }
+                    else {
+                        window.location.reload();
+                    }
+                },
+                error: function (data, status, object) {
+                    console.log(data.message);
+                }
+            });
+        });
+    });
+</script>
 <style>
-
-    body {
-        margin-top: 20px;
-    }
 
     .login-container {
         position: relative;
