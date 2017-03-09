@@ -1,27 +1,45 @@
 <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
     <div class="container">
         <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
             <a class="navbar-brand" href="{{ url('app_homepage') }}">{{ 'sitename' | trans }} <sub>Beta</sub></a>
-            <ul class="nav navbar-nav">
+        </div>
+        <div class="navbar-collapse collapse">
+
+            <ul class="nav navbar-nav navbar-left">
                 {% if not is_granted('IS_AUTHENTICATED_REMEMBERED') %}
                     <li><a href="{{ path('fos_user_registration_register') }}">{{ 'navbar.register' | trans }}</a></li>
                     <li><a href="#" data-toggle="modal"
                            data-target="#loginModal">{{ 'navbar.login' | trans }}</a></li>
                 {% else %}
-                    <li><a href="{{ path('app_profile',  {'userId':app.user.id}) }}">{{ 'navbar.account' | trans }}</a>
+                    <li class="dropdown "><a href="#" id="userNavbarDropdown" data-toggle="dropdown"
+                                             class="dropdown-toggle"
+                                             role="button">{{ 'hello.username'|trans({'%user%': app.user.username}) }}
+                            <i class="caret"></i></a>
+                        <ul role="menu" class="dropdown-menu" aria-labelledby="userNavbarDropdown">
+                            <li role="presentation">
+                                <a href="{{ path('app_profile',  {'userId':app.user.id}) }}">{{ 'navbar.account' | trans }}</a>
+                            </li>
+                            <li role="presentation">
+                                <a href="{{ path('fos_user_security_logout') }}">Se déconnecter</a>
+                            </li>
+                        </ul>
                     </li>
-                    <li><a href="{{ path('fos_user_security_logout') }}">Se déconnecter</a></li>
                 {% endif %}
-                <li><a href="#" type="button" data-toggle="modal"
-                       data-target="#modalChooseLanguage">Langage: {{ app.request.locale | upper }} <span
-                                class="caret"></span></a></li>
+                <li><a href="{{ path('app_search_summoners') }}">{{ 'navbar.lookup'|trans }}</a></li>
                 {% if app.environment == 'dev' %}
                     <li><a href="{{ path('app_dev_featured') }}">Featured</a></li>
                 {% endif %}
-                <li><a href="{{ path('app_search_summoners') }}">search</a></li>
             </ul>
-            <form class="navbar-form navbar-left" role="search" action="{{ path('app_searchbar') }}" method="post">
-                <div class="input-group">
+            <ul class="nav navbar-nav navbar-right">
+                <li>
+                    <form class="navbar-form navbar-left" role="search" action="{{ path('app_searchbar') }}"
+                          method="post">
+                        <div class="input-group">
                     <span class="input-group-btn">
 						<button id="button-region" type="button" class="btn btn-primary" data-toggle="modal"
                                 data-target="#modalChooseRegion">
@@ -29,16 +47,27 @@
                             <span class="caret"></span>
                         </button>
 					</span>
-                    <input id="searchbar-region" name="searchbar-region" type="hidden" value="{{ favorite_region }}">
-                    <input name="searchbar-summonerName" type="text" class="form-control"
-                           placeholder="{{ 'search.summoner.placeholder'|trans }}">
-                    <span class="input-group-btn">
+                            <input id="searchbar-region" name="searchbar-region" type="hidden"
+                                   value="{{ favorite_region }}">
+                            <input name="searchbar-summonerName" type="text" class="form-control"
+                                   placeholder="{{ 'search.summoner.placeholder'|trans }}">
+                            <span class="input-group-btn">
 						<button class="btn btn-primary" type="submit"><i class="fa fa-search"
                                                                          aria-hidden="true"></i></button>
 					</span>
-                </div>
-            </form>
-        </div>
+                        </div>
+                    </form>
+                </li>
+                <li><a href="#" type="button" data-toggle="modal"
+                       data-target="#modalChooseLanguage">
+                        <img class='flag'
+                             src='{{ asset('bundles/app/images/flags/' ~ app.request.locale|upper ~ '.png' ) }}'/>
+                        <span class="caret"></span></a>
+                </li>
+            </ul>
+
+
+        </div><!--/.nav-collapse -->
     </div>
 </nav>
 {% include 'AppBundle:_shared:_modal_language.html.twig' %}

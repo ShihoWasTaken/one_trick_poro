@@ -1,4 +1,5 @@
 title.summoner.profile: '%summonerName%''s profile'
+hello.username: 'Hello %user%'
 summoner.update: Update
 league.points: LP
 unranked: Unranked
@@ -54,3 +55,5 @@ unlink.summoner.button: __unlink.summoner.button
 search.summoner.placeholder: 'Search summoner'
 summoners.found: '{0} No summoners found|{1} Only one summoner found|]1,Inf[ %count% summoners found'
 profile.of.user: "%name%'s profile"
+modal.language.title: "Choose a language"
+navbar.lookup: Lookup

@@ -1,4 +1,5 @@
 title.summoner.profile: 'Profil de %summonerName%'
+hello.username: 'Bonjour %user%'
 summoner.update: 'Mettre à jour'
 league.points: PL
 unranked: 'Non classé'
@@ -54,3 +55,5 @@ unlink.summoner.button: __unlink.summoner.button
 search.summoner.placeholder: 'Chercher invocateur'
 summoners.found: '{0} Aucun summoner remplissant les critères|{1} Un seul invocateur correspond à ces critères|]1,Inf[ %count% invocateurs trouvés'
 profile.of.user: 'Profil de %name%'
+modal.language.title: 'Choisissez une langue'
+navbar.lookup: Recherche
