@@ -35,8 +35,10 @@
 {% endblock javascripts_body %}
 
 {% block body %}
-    {% include 'AppBundle:_shared:_navigation.html.twig' %}
-    {% block content %}
-    {% endblock content %}
+    <div id="wrapper">
+        {% include 'AppBundle:_shared:_navigation.html.twig' %}
+        {% block content %}
+        {% endblock content %}
+    </div>
     {% include 'AppBundle:_shared:_footer.html.twig' %}
 {% endblock body %}
