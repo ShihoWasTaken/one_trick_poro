@@ -569,4 +569,20 @@ class SummonerService
         ]);
         return $language;
     }
+
+    public function getSummonerByNameForAllRegions($name)
+    {
+        $regions = $this->em->getRepository('AppBundle:StaticData\Region')->findAll();
+        $data = array();
+        $summoners = array();
+        foreach ($regions as $region) {
+            $summoner = $this->api->getSummonerByNames($region, array($name));
+            if ($this->api->getResponseCode() != 404) {
+                $summoners[$region->getSlug()] = $summoner;
+            }
+        }
+        $data['regions'] = $regions;
+        $data['summoners'] = $summoners;
+        return $data;
+    }
 }

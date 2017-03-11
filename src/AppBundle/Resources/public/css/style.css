@@ -116,16 +116,19 @@ body {
     min-height: 100%;
     height: auto;
     /* Negative indent footer by its height */
-    margin: 0 auto -391px;
+    margin: 0 auto -411px;
     /* Pad bottom by footer height */
-    padding: 0 0 391px;
+    padding: 0 0 411px;
 }
+
+/* 350 + 41 +20 */
 
 /* Set the fixed height of the footer here */
 #footer {
     height: 350px;
     min-height: 350px;
     margin-bottom: 0;
+    margin-top: 20px;
 }
 
 .navbar-default .navbar-nav > li > a, .navbar-default .navbar-brand, .navbar-default .navbar-text {

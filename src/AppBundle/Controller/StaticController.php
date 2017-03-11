@@ -26,14 +26,25 @@ class StaticController extends Controller
     public function searchbarAction(Request $request)
     {
         $api = $this->container->get('app.lolapi');
+        $sum = $this->container->get('app.lolsummoner');
         // On doit traiter le nom du summoner
-        $summonerName = $api->toSafeLowerCase($request->request->get('searchbar-summonerName', 'UTF-8'));
+        $originalName = $request->request->get('searchbar-summonerName', 'UTF-8');
+        $summonerName = $api->toSafeLowerCase($originalName);
 
         $sum = $this->container->get('app.lolsummoner');
         $region = $sum->getRegionBySlug($request->request->get('searchbar-region'));
         $summoner = $api->getSummonerByNames($region, array($summonerName));
         if ($api->getResponseCode() == 404) {
-            throw new NotFoundHttpException('Summoner not existing');
+            $data = $sum->getSummonerByNameForAllRegions($summonerName);
+            return $this->render('AppBundle:Summoner:not_existing.html.twig',
+                array(
+                    'region' => $request->request->get('searchbar-region'),
+                    'name' => $originalName,
+                    'data' => $data,
+                    'region' => $region,
+                    'formattedName' => $summonerName
+                )
+            );
         }
         return $this->redirectToRoute('app_summoner',
             array(
