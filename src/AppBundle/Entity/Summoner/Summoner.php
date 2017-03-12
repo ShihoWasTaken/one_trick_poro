@@ -15,7 +15,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 class Summoner
 {
     //TODO: Rajouter league points
-    const UPDATE_INTERVAL = 60*30; // 30 min
+    const UPDATE_INTERVAL = 60 * 30; // 30 min
 
     public function __construct($summonerId, \AppBundle\Entity\StaticData\Region $region)
     {
@@ -225,55 +225,7 @@ class Summoner
     {
         return $this->profileIconId;
     }
-
-    private function testIfURLExists($url)
-    {
-        $headers = @get_headers($url);
-        if(strpos($headers[0],'404') === false)
-        {
-            return true;
-        }
-        else
-        {
-            return false;
-        }
-    }
-
-    private function testIfURLExistsWithCURL($url)
-    {
-        $curl = curl_init($url);
-        curl_setopt($curl, CURLOPT_NOBODY, true);
-        $result = curl_exec($curl);
-        if ($result !== false)
-        {
-            $statusCode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
-            if ($statusCode == 404)
-            {
-                return false;
-            }
-            else
-            {
-                return true;
-            }
-        }
-        else
-        {
-            return false;
-        }
-    }
-
-    public function getProfileIconURL()
-    {
-        if($this->testIfURLExists("http://ddragon.leagueoflegends.com/cdn/" . "6.24.1" . "/img/profileicon/" . $this->getProfileIconId() . ".png"))
-        {
-            return "http://ddragon.leagueoflegends.com/cdn/" . "6.24.1" . "/img/profileicon/" . $this->getProfileIconId() . ".png";
-        }
-        else
-        {
-            return "http://ddragon.leagueoflegends.com/cdn/" . "6.24.1" . "/img/profileicon/" . 0 . ".png";
-        }
-    }
-
+    
     /**
      * Set revisionDate
      *

@@ -194,8 +194,7 @@
                                         {% for summoner in search %}
                                         <tr>
                                             <td class="number text-center">{{ summoner.name }}</td>
-                                            <td class="image"><img
-                                                        src="http://ddragon.leagueoflegends.com/cdn/{{ static_data_version }}/img/profileicon/{{ summoner.profileIconId }}.png"/>
+                                            <td class="image"><img src="{{ summoner.profileIconId|sumIcon }}"/>
                                             </td>
                                             <td class="product">                                            {% if summoner.miniSeries is not empty %}
                                                     "mini Series": {{ summoner.miniSeries }}<br>

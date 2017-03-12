@@ -57,3 +57,5 @@ summoners.found: '{0} Aucun summoner remplissant les critères|{1} Un seul invoc
 profile.of.user: 'Profil de %name%'
 modal.language.title: 'Choisissez une langue'
 navbar.lookup: Recherche
+summoner.not.found.for.this.region: "L'invocateur %name% n'a pas été trouvé pour la region %region%."
+try.another.region: "Essayez une autre région ci-dessous"

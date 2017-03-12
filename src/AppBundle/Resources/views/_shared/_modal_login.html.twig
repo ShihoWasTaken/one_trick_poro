@@ -1,9 +1,9 @@
 {% trans_default_domain 'FOSUserBundle' %}
 
 <div class="modal" id="loginModal" tabindex="-1" role="dialog" aria-labelledby="loginModalLabel">
-    <div class="modal-dialog" role="document">
+    <div class="modal-dialog modal-sm" role="document">
         <div class="modal-content">
-            <div class="mo dal-body">
+            <div class="modal-body">
 
 
                 <div class="login-container animated fadeInDown bootstrap snippets">
@@ -36,7 +36,7 @@
                             <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}"/>
                             <div class="loginbox-textbox">
                                 <input id="username" name="_username" value="" required="required" type="text"
-                                       class="form-control" placeholder="Username">
+                                       class="form-control" placeholder="Username" autofocus>
                             </div>
                             <div class="loginbox-textbox">
                                 <input id="password" name="_password" required="required" type="password"
@@ -266,5 +266,15 @@
         text-align: left;
     }
 
+    #loginModal .modal-content {
+        border: none;
+    }
 
+    #loginModal .modal-sm {
+        width: 345px;
+    }
+
+    #loginModal .modal-body {
+        padding: 0;
+    }
 </style>

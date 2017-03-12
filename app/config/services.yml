@@ -24,3 +24,9 @@ services:
     app.authentication_handler:
         class:        AppBundle\Handler\AuthenticationHandler
         arguments:    ['@service_container']
+    app.twig_extension:
+        class: AppBundle\Twig\AppExtension
+        public: false
+        arguments: [ "@service_container" ]
+        tags:
+            - { name: twig.extension }

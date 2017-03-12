@@ -35,12 +35,12 @@ class StaticController extends Controller
         $region = $sum->getRegionBySlug($request->request->get('searchbar-region'));
         $summoner = $api->getSummonerByNames($region, array($summonerName));
         if ($api->getResponseCode() == 404) {
-            $data = $sum->getSummonerByNameForAllRegions($summonerName);
+            //$data = $sum->getSummonerByNameForAllRegions($summonerName);
             return $this->render('AppBundle:Summoner:not_existing.html.twig',
                 array(
                     'region' => $request->request->get('searchbar-region'),
                     'name' => $originalName,
-                    'data' => $data,
+                    //'data' => $data,
                     'region' => $region,
                     'formattedName' => $summonerName
                 )

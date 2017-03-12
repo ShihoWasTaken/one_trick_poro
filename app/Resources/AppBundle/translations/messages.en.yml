@@ -57,3 +57,5 @@ summoners.found: '{0} No summoners found|{1} Only one summoner found|]1,Inf[ %co
 profile.of.user: "%name%'s profile"
 modal.language.title: "Choose a language"
 navbar.lookup: Lookup
+summoner.not.found.for.this.region: "The summoner %name% was not found for the region %region%."
+try.another.region: "Try another region below"

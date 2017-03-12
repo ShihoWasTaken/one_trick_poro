@@ -7,19 +7,20 @@
 {% block stylesheets %}
     {{ parent() }}
     {% stylesheets 'bundles/app/css/Summoner/chests.css' %}
-        <link rel="stylesheet" href="{{ asset_url }}" />
+    <link rel="stylesheet" href="{{ asset_url }}"/>
     {% endstylesheets %}
     {% stylesheets 'bundles/app/css/Summoner/ranked_stats.css' %}
-        <link rel="stylesheet" href="{{ asset_url }}" />
+    <link rel="stylesheet" href="{{ asset_url }}"/>
     {% endstylesheets %}
     {% stylesheets 'bundles/app/css/Summoner/live_game.css' %}
-        <link rel="stylesheet" href="{{ asset_url }}" />
+    <link rel="stylesheet" href="{{ asset_url }}"/>
     {% endstylesheets %}
     {% stylesheets 'bundles/app/css/Summoner/history.css' %}
-    <link rel="stylesheet" href="{{ asset_url }}" />
+    <link rel="stylesheet" href="{{ asset_url }}"/>
     {% endstylesheets %}
-    <link rel="stylesheet" src="https://cdn.datatables.net/1.10.13/css/jquery.dataTables.min.css" />
-    <link rel="stylesheet" src="https://cdn.datatables.net/plug-ins/1.10.13/integration/font-awesome/dataTables.fontAwesome.css" />
+    <link rel="stylesheet" src="https://cdn.datatables.net/1.10.13/css/jquery.dataTables.min.css"/>
+    <link rel="stylesheet"
+          src="https://cdn.datatables.net/plug-ins/1.10.13/integration/font-awesome/dataTables.fontAwesome.css"/>
 {% endblock stylesheets %}
 
 {% block javascripts_body %}
@@ -29,11 +30,11 @@
     <script src="{{ asset('bundles/app/js/jquery.filterizr.min.js') }}"></script>
     <script src="https://cdn.datatables.net/1.10.13/js/jquery.dataTables.min.js"></script>
     <script>
-        $(document).ready(function(){
+        $(document).ready(function () {
             // Ranked stats datatable
             $('.rankedStatsTable').DataTable({
                 "paging": false,
-                "order": [[ 0, 'asc' ]]
+                "order": [[0, 'asc']]
             });
 
             var isChestsAndMasteriesLoaded = false;
@@ -41,63 +42,65 @@
                 var target = $(e.target).attr("href") // activated tab
                 //alert(target);
                 /*
-                switch(target)
-                {
-                        //case "#championMasteries":
-                    case "#chests":
-                        if(!isChestsAndMasteriesLoaded)
-                        {
-                            // Chests
-                            $( "#nav-filter li a" ).click(function() {
-                                $('#nav-filter > li').each(function () {
-                                    $(this).removeClass("active")
-                                });
-                                $(this).parent().addClass("active");
-                            });
-                            var filterizd = $('.filtr-container').filterizr({
-                                //options object
-                            });
-                            // On met les champions avec les coffres en valeur
-                            //$( "li[data-filter='1']" ).click();
-                            isChestsAndMasteriesLoaded = true;
-                        }
-                        break;
-                    default:
-                        break;
-                }*/
+                 switch(target)
+                 {
+                 //case "#championMasteries":
+                 case "#chests":
+                 if(!isChestsAndMasteriesLoaded)
+                 {
+                 // Chests
+                 $( "#nav-filter li a" ).click(function() {
+                 $('#nav-filter > li').each(function () {
+                 $(this).removeClass("active")
+                 });
+                 $(this).parent().addClass("active");
+                 });
+                 var filterizd = $('.filtr-container').filterizr({
+                 //options object
+                 });
+                 // On met les champions avec les coffres en valeur
+                 //$( "li[data-filter='1']" ).click();
+                 isChestsAndMasteriesLoaded = true;
+                 }
+                 break;
+                 default:
+                 break;
+                 }*/
             });
 
-            $('#update-summoner-btn').click(function() {
-                $(this).attr("disabled","disabled");
+            $('#update-summoner-btn').click(function () {
+                $(this).attr("disabled", "disabled");
                 $(this).text('updating');
                 /*
-                var summonerId = {{ summoner.id }};
-                var region = '{{ summoner.region.slug }}';
-                $.ajax({
-                    url: '{{	path('app_summoner_chests_ajax', {'region': summoner.region.slug, 'summonerId': summoner.id}) }}',
-                    type: 'POST',
-                    data: {'summonerId': summonerId, 'region': region},
-                    dataType: 'html',
-                    success: function(data) {
-                        $('#chests').html(data);
-                        $( "#nav-filter li a" ).click(function() {
-                            $('#nav-filter > li').each(function () {
-                                $(this).removeClass("active")
-                            });
-                            $(this).parent().addClass("active");
-                        });
-                        var filterizd_chests = $('#filtr-container-chests').filterizr({
-                            //options object
-                        });
-                    }
-                });
-                */
+                 var summonerId = {{ summoner.id }};
+                 var region = '{{ summoner.region.slug }}';
+                 $.ajax({
+                 url: '{{ path('app_summoner_chests_ajax', {'region': summoner.region.slug, 'summonerId': summoner.id}) }}',
+                 type: 'POST',
+                 data: {'summonerId': summonerId, 'region': region},
+                 dataType: 'html',
+                 success: function(data) {
+                 $('#chests').html(data);
+                 $( "#nav-filter li a" ).click(function() {
+                 $('#nav-filter > li').each(function () {
+                 $(this).removeClass("active")
+                 });
+                 $(this).parent().addClass("active");
+                 });
+                 var filterizd_chests = $('#filtr-container-chests').filterizr({
+                 //options object
+                 });
+                 }
+                 });
+                 */
             });
 
             // Bootstrap Tab URL
-            $(document).ready(function() {
+            $(document).ready(function () {
                 if (location.hash !== '') $('a[href="' + location.hash + '"]').tab('show');
-                $('a[data-toggle="tab"]').on('shown.bs.tab', function(e) { if(history.pushState) history.pushState(null, null, '#'+$(e.target).attr('href').substr(1)); else location.hash = '#'+$(e.target).attr('href').substr(1); });
+                $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+                    if (history.pushState) history.pushState(null, null, '#' + $(e.target).attr('href').substr(1)); else location.hash = '#' + $(e.target).attr('href').substr(1);
+                });
             });
 
         });
@@ -110,17 +113,21 @@
             <div class="col-xs-12 col-md-12 white-bg">
                 <div class="row">
                     <div class="col-md-2">
-                        <img src="{{ summoner.profileIconURL }}" />
+                        <figure>
+                            <img src="{{ summoner.profileIconId|sumIcon }}"/>
+                            <figcaption>{{ summoner.level }}</figcaption>
+                        </figure>
                         {#
                         <img src="http://ddragon.leagueoflegends.com/cdn/img/champion/splash/{{ topChampionsMastery.0.championKey }}_0.jpg" />
                         #}
                     </div>
                     <div class="col-md-5">
                         <h1>{{ summoner.name }}<span class="badge region-badge"> {{ summoner.region.slug }}</span></h1>
-                        <button class="btn btn-default btn-lg" id="update-summoner-btn">{{ 'summoner.update'|trans }}</button>
+                        <button class="btn btn-default btn-lg"
+                                id="update-summoner-btn">{{ 'summoner.update'|trans }}</button>
                     </div>
                     <div class="col-md-5">
-                        <img src="{{ asset('bundles/app/images/leagues/' ~ soloqimg ~ '.png') }}" />
+                        <img src="{{ asset('bundles/app/images/leagues/' ~ soloqimg ~ '.png') }}"/>
                         {% if soloq is not null %}
                             <div class="row">
                                 <div class="col-md-12">
@@ -141,7 +148,11 @@
                                 </div>
                             </div>
                         {% else %}
-                            {{ 'unranked'|trans }}
+                            <div class="row">
+                                <div class="col-md-12">
+                                    {{ 'unranked'|trans }}
+                                </div>
+                            </div>
                         {% endif %}
                     </div>
                 </div>
@@ -211,154 +222,149 @@
             font-size: 0.8em;
             padding-top: 0.12em;
         }
+
         table.dataTable thead th.sorting_asc:after {
             content: "\f0de";
         }
+
         table.dataTable thead th.sorting_desc:after {
             content: "\f0dd";
         }
     </style>
     <script>
 
-         $( document ).ready(function() {
-             var isChestsLoaded = false;
-             var isLiveGameLoaded = false;
-             var isRuneLoaded = false;
-             var isMasteriesPagesLoaded = false;
-             var isChampionMasteriesLoaded = false;
-             var isHistoryLoaded = false;
-             var isFilterizdLoaded = false;
+        $(document).ready(function () {
+            var isChestsLoaded = false;
+            var isLiveGameLoaded = false;
+            var isRuneLoaded = false;
+            var isMasteriesPagesLoaded = false;
+            var isChampionMasteriesLoaded = false;
+            var isHistoryLoaded = false;
+            var isFilterizdLoaded = false;
 
-             $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
-                 var target = $(e.target).attr("href") // activated tab
-                     switch(target)
-                     {
-                         case "#liveGame":
-                             if(!isLiveGameLoaded)
-                             {
-                                 var summonerId = {{ summoner.id }};
-                                 var region = '{{ summoner.region.slug }}';
-                                 $.ajax({
-                                     url: '{{	path('app_summoner_live_game_ajax', {'region': summoner.region.slug, 'summonerId': summoner.id}) }}',
-                                     type: 'POST',
-                                     data: {'summonerId': summonerId, 'region': region},
-                                     dataType: 'html',
-                                     success: function(data) {
-                                         $('#liveGame').html(data);
-                                     }
-                                 });
-                                 isLiveGameLoaded = true;
-                             }
-                             break;
-                         case "#history":
-                             if(!isHistoryLoaded)
-                             {
-                                 var summonerId = {{ summoner.id }};
-                                 var region = '{{ summoner.region.slug }}';
-                                 $.ajax({
-                                     url: '{{	path('app_summoner_history_ajax', {'region': summoner.region.slug, 'summonerId': summoner.id}) }}',
-                                     type: 'POST',
-                                     data: {'summonerId': summonerId, 'region': region},
-                                     dataType: 'html',
-                                     success: function(data) {
-                                         $('#history').html(data);
-                                     }
-                                 });
-                                 isHistoryLoaded = true;
-                             }
-                             break;
-                         case "#runes":
-                             if(!isRuneLoaded)
-                             {
-                                 var summonerId = {{ summoner.id }};
-                                 var region = '{{ summoner.region.slug }}';
-                                 $.ajax({
-                                     url: '{{	path('app_summoner_runes_ajax', {'region': summoner.region.slug, 'summonerId': summoner.id}) }}',
-                                     type: 'POST',
-                                     data: {'summonerId': summonerId, 'region': region},
-                                     dataType: 'html',
-                                     success: function(data) {
-                                         $('#runes').html(data);
-                                     }
-                                 });
-                                 isRuneLoaded = true;
-                             }
-                             break;
-                         case "#masteries":
-                             if(!isMasteriesPagesLoaded)
-                             {
-                                 var summonerId = {{ summoner.id }};
-                                 var region = '{{ summoner.region.slug }}';
-                                 $.ajax({
-                                     url: '{{	path('app_summoner_masteries_ajax', {'region': summoner.region.slug, 'summonerId': summoner.id}) }}',
-                                     type: 'POST',
-                                     data: {'summonerId': summonerId, 'region': region},
-                                     dataType: 'html',
-                                     success: function(data) {
-                                         $('#masteries').html(data);
-                                     }
-                                 });
-                                 isMasteriesPagesLoaded = true;
-                             }
-                             break;
-                         case "#championMasteries":
-                             if(!isChampionMasteriesLoaded)
-                             {
-                                 var summonerId = {{ summoner.id }};
-                                 var region = '{{ summoner.region.slug }}';
-                                 $.ajax({
-                                     url: '{{	path('app_summoner_champion_masteries_ajax', {'region': summoner.region.slug, 'summonerId': summoner.id}) }}',
-                                     type: 'POST',
-                                     data: {'summonerId': summonerId, 'region': region},
-                                     dataType: 'html',
-                                     success: function(data) {
-                                         $('#championMasteries').html(data);
-                                         $( "#nav-filter li a" ).click(function() {
-                                             $('#nav-filter > li').each(function () {
-                                                 $(this).removeClass("active")
-                                             });
-                                             $(this).parent().addClass("active");
-                                         });
-                                         var filterizd_chapion_masteries = $('#filtr-container-champion-masteries').filterizr({
-                                             //options object
-                                         });
+            $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+                var target = $(e.target).attr("href") // activated tab
+                switch (target) {
+                    case "#liveGame":
+                        if (!isLiveGameLoaded) {
+                            var summonerId = {{ summoner.id }};
+                            var region = '{{ summoner.region.slug }}';
+                            $.ajax({
+                                url: '{{ path('app_summoner_live_game_ajax', {'region': summoner.region.slug, 'summonerId': summoner.id}) }}',
+                                type: 'POST',
+                                data: {'summonerId': summonerId, 'region': region},
+                                dataType: 'html',
+                                success: function (data) {
+                                    $('#liveGame').html(data);
+                                }
+                            });
+                            isLiveGameLoaded = true;
+                        }
+                        break;
+                    case "#history":
+                        if (!isHistoryLoaded) {
+                            var summonerId = {{ summoner.id }};
+                            var region = '{{ summoner.region.slug }}';
+                            $.ajax({
+                                url: '{{ path('app_summoner_history_ajax', {'region': summoner.region.slug, 'summonerId': summoner.id}) }}',
+                                type: 'POST',
+                                data: {'summonerId': summonerId, 'region': region},
+                                dataType: 'html',
+                                success: function (data) {
+                                    $('#history').html(data);
+                                }
+                            });
+                            isHistoryLoaded = true;
+                        }
+                        break;
+                    case "#runes":
+                        if (!isRuneLoaded) {
+                            var summonerId = {{ summoner.id }};
+                            var region = '{{ summoner.region.slug }}';
+                            $.ajax({
+                                url: '{{ path('app_summoner_runes_ajax', {'region': summoner.region.slug, 'summonerId': summoner.id}) }}',
+                                type: 'POST',
+                                data: {'summonerId': summonerId, 'region': region},
+                                dataType: 'html',
+                                success: function (data) {
+                                    $('#runes').html(data);
+                                }
+                            });
+                            isRuneLoaded = true;
+                        }
+                        break;
+                    case "#masteries":
+                        if (!isMasteriesPagesLoaded) {
+                            var summonerId = {{ summoner.id }};
+                            var region = '{{ summoner.region.slug }}';
+                            $.ajax({
+                                url: '{{ path('app_summoner_masteries_ajax', {'region': summoner.region.slug, 'summonerId': summoner.id}) }}',
+                                type: 'POST',
+                                data: {'summonerId': summonerId, 'region': region},
+                                dataType: 'html',
+                                success: function (data) {
+                                    $('#masteries').html(data);
+                                }
+                            });
+                            isMasteriesPagesLoaded = true;
+                        }
+                        break;
+                    case "#championMasteries":
+                        if (!isChampionMasteriesLoaded) {
+                            var summonerId = {{ summoner.id }};
+                            var region = '{{ summoner.region.slug }}';
+                            $.ajax({
+                                url: '{{ path('app_summoner_champion_masteries_ajax', {'region': summoner.region.slug, 'summonerId': summoner.id}) }}',
+                                type: 'POST',
+                                data: {'summonerId': summonerId, 'region': region},
+                                dataType: 'html',
+                                success: function (data) {
+                                    $('#championMasteries').html(data);
+                                    $("#nav-filter li a").click(function () {
+                                        $('#nav-filter > li').each(function () {
+                                            $(this).removeClass("active")
+                                        });
+                                        $(this).parent().addClass("active");
+                                    });
+                                    var filterizd_chapion_masteries = $('#filtr-container-champion-masteries').filterizr({
+                                        //options object
+                                    });
 
-                                     }
-                                 });
-                                 isChampionMasteriesLoaded = true;
-                             }
-                             break;
-                         case "#chests":
-                             if(!isChestsLoaded)
-                             {
-                                 var summonerId = {{ summoner.id }};
-                                 var region = '{{ summoner.region.slug }}';
-                                 $.ajax({
-                                     url: '{{	path('app_summoner_chests_ajax', {'region': summoner.region.slug, 'summonerId': summoner.id}) }}',
-                                     type: 'POST',
-                                     data: {'summonerId': summonerId, 'region': region},
-                                     dataType: 'html',
-                                     success: function(data) {
-                                         $('#chests').html(data);
-                                         $( "#nav-filter li a" ).click(function() {
-                                             $('#nav-filter > li').each(function () {
-                                                $(this).removeClass("active")
-                                             });
-                                             $(this).parent().addClass("active");
-                                         });
-                                         var filterizd_chests = $('#filtr-container-chests').filterizr({
-                                             //options object
-                                         });
-                                     }
-                                 });
-                                 isChestsLoaded = true;
-                             }
-                             break;
-                         default:
-                         break;
-                     }
-             });
-         });
+                                }
+                            });
+                            isChampionMasteriesLoaded = true;
+                        }
+                        break;
+                    case "#chests":
+                        if (!isChestsLoaded) {
+                            var summonerId = {{ summoner.id }};
+                            var region = '{{ summoner.region.slug }}';
+                            $.ajax({
+                                url: '{{ path('app_summoner_chests_ajax', {'region': summoner.region.slug, 'summonerId': summoner.id}) }}',
+                                type: 'POST',
+                                data: {'summonerId': summonerId, 'region': region},
+                                dataType: 'html',
+                                success: function (data) {
+                                    $('#chests').html(data);
+                                    $("#nav-filter li a").click(function () {
+                                        $('#nav-filter > li').each(function () {
+                                            $(this).removeClass("active")
+                                        });
+                                        $(this).parent().addClass("active");
+                                    });
+                                    var filterizd_chests = $('#filtr-container-chests').filterizr({
+                                        //options object
+                                    });
+                                }
+                            });
+                            isChestsLoaded = true;
+                        }
+                        break;
+                    default:
+                        break;
+                }
+            });
+        });
 
     </script>
 {% endblock content %}
