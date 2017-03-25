@@ -20,24 +20,19 @@ class SummonerController extends Controller
 
         $user = $user = $this->getUser();
         // Si l'utilisateur n'est pas connecté
-        if(empty($user))
-        {
+        if (empty($user)) {
             return $this->render('AppBundle:Lookup:search_error_not_logged_in.html.twig',
                 array(
                     'static_data_version' => $static_data_version,
                 ));
-        }
-        // Si l'utilisateur n'a pas de summoner enregistré
-        else if(count($user->getSummoners()) == 0)
-        {
+        } // Si l'utilisateur n'a pas de summoner enregistré
+        else if (count($user->getSummoners()) == 0) {
             return $this->render('AppBundle:Lookup:search_error_no_summoner_registered.html.twig',
                 array(
                     'static_data_version' => $static_data_version,
                 ));
-        }
-        // Cas normal
-        else
-        {
+        } // Cas normal
+        else {
             $region = $sum->getRegionBySlug('euw');
             $minElo = 1;
             $maxElo = 25;
@@ -60,16 +55,13 @@ class SummonerController extends Controller
         $response = new Response();
         $response->headers->set('Content-Type', 'application/json');
 
-        try
-        {
+        try {
             $region = $sum->getRegionBySlug($region);
             $sum->firstUpdateSummoner($region, $summonerId);
             $response->setContent(json_encode(array(
                 'status' => 'OK',
             )));
-        }
-        catch(\Exception $e)
-        {
+        } catch (\Exception $e) {
             $response->setStatusCode(500);
             $response->setContent(json_encode(array(
                 'error' => $e->getMessage(),
@@ -96,11 +88,9 @@ class SummonerController extends Controller
 
         // Si le summoner n'existe pas encore en BDD, on le crée
         //TODO: Faire ça dans une méthode POST
-        if (empty($summoner))
-        {
+        if (empty($summoner)) {
             $summonerData = $api->getSummonerByIds($region, array($summonerId));
-            if($api->getResponseCode() == 404)
-            {
+            if ($api->getResponseCode() == 404) {
                 //TODO: exception summoner not found
                 throw new NotFoundHttpException('Summoner not existing');
             }
@@ -110,17 +100,14 @@ class SummonerController extends Controller
             $newSummoner->setLevel($summonerData[$summonerId]['summonerLevel']);
             $newSummoner->setProfileIconId($summonerData[$summonerId]['profileIconId']);
             $date = date_create();
-            date_timestamp_set($date, ($summonerData[$summonerId]['revisionDate']/1000));
+            date_timestamp_set($date, ($summonerData[$summonerId]['revisionDate'] / 1000));
             $newSummoner->setRevisionDate($date);
             $em->persist($newSummoner);
             $em->flush();
-        }
-        else
-        {
+        } else {
             $newSummoner = $summoner;
         }
-        if (empty($summoner) ||(!empty($summoner) && !$summoner->isFirstUpdated()))
-        {
+        if (empty($summoner) || (!empty($summoner) && !$summoner->isFirstUpdated())) {
             return $this->render('AppBundle:Summoner:creating_summoner.html.twig',
                 array(
                     'static_data_version' => $static_data_version,
@@ -140,8 +127,7 @@ class SummonerController extends Controller
         $safeRegion = $em->getRepository('AppBundle:StaticData\Region')->findOneBy([
             'slug' => $region
         ]);
-        if(empty($safeRegion))
-        {
+        if (empty($safeRegion)) {
             //TODO: lancer exception
             throw new NotFoundHttpException('Region not existing');
         }
@@ -153,11 +139,9 @@ class SummonerController extends Controller
         ]);
 
         // Si le summoner n'existe pas encore en BDD, on le crée
-        if (empty($summoner))
-        {
+        if (empty($summoner)) {
             $summoner = $api->getSummonerByIds($safeRegion, array($summonerId));
-            if($api->getResponseCode() == 404)
-            {
+            if ($api->getResponseCode() == 404) {
                 //TODO: exception summoner not found
                 throw new NotFoundHttpException('Summoner not existing');
             }
@@ -169,7 +153,7 @@ class SummonerController extends Controller
             $newSummoner->setLevel($summoner[$summonerId]['summonerLevel']);
             $newSummoner->setProfileIconId($summoner[$summonerId]['profileIconId']);
             $date = date_create();
-            date_timestamp_set($date, ($summoner[$summonerId]['revisionDate']/1000));
+            date_timestamp_set($date, ($summoner[$summonerId]['revisionDate'] / 1000));
             $newSummoner->setRevisionDate($date);
 
             $em->persist($newSummoner);
@@ -179,12 +163,9 @@ class SummonerController extends Controller
         $rankedStats = $sum->getRankedStats($summoner);
 
         $soloq = $sum->getSummonerRank($safeRegion, $summonerId);
-        if(!isset($soloq))
-        {
+        if (!isset($soloq)) {
             $soloqimg = "unranked_";
-        }
-        else
-        {
+        } else {
             $soloqimg = strtolower($soloq['tier']) . '_' . $soloq['entries'][0]['division'];
         }
 
@@ -225,10 +206,8 @@ class SummonerController extends Controller
             }
         }*/
         $topChampionsMastery = $api->getMasteryTopChampions($safeRegion, $summonerId);
-        if(!empty($topChampionsMastery))
-        {
-            for($i = 0; $i < count($topChampionsMastery); $i++)
-            {
+        if (!empty($topChampionsMastery) && (count($topChampionsMastery) > 2)) {
+            for ($i = 0; $i < count($topChampionsMastery); $i++) {
                 $arr = array('championKey' => $champions[$topChampionsMastery[$i]['championId']]['key']);
                 $topChampionsMastery[$i] = array_merge($topChampionsMastery[$i], $arr);
             }
