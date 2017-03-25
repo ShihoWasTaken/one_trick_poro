@@ -9,7 +9,7 @@ services:
 #        arguments: ["@another_service_name", "plain_value", "%parameter_name%"]
     app.lolapi:
         class:        AppBundle\Services\LoLAPI\LoLAPIService
-        arguments:    ['@service_container']
+        arguments:    ['%riot_api_key%']
     app.lolsummoner:
         class:        AppBundle\Services\SummonerService
         arguments:    ['@logger', '@doctrine.orm.entity_manager', '@app.lolapi', '%current_season%']
@@ -18,15 +18,15 @@ services:
         arguments:    ['@service_container','@app.lolapi']
     app.interceptor.action_listener:
         class: AppBundle\EventListener\InterceptorListener
-        arguments: ['@twig','@service_container']
+        arguments: ['@twig', '%static_data_version%']
         tags:
             - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
     app.authentication_handler:
         class:        AppBundle\Handler\AuthenticationHandler
-        arguments:    ['@service_container']
+        arguments:    ['@translator.default']
     app.twig_extension:
         class: AppBundle\Twig\AppExtension
         public: false
-        arguments: [ "@service_container" ]
+        arguments: ['%static_data_version%']
         tags:
             - { name: twig.extension }

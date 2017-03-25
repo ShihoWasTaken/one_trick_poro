@@ -2,8 +2,6 @@
 
 namespace AppBundle\Services\LoLAPI;
 
-use Symfony\Component\DependencyInjection\ContainerInterface as Container;
-
 class RequestService
 {
     protected $responseCode;

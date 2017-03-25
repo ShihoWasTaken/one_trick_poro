@@ -5,20 +5,19 @@ namespace AppBundle\Handler;
 use Symfony\Component\Security\Http\Authentication\AuthenticationFailureHandlerInterface;
 use Symfony\Component\Security\Http\Authentication\AuthenticationSuccessHandlerInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
-use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Security\Core\Authorization\AuthorizationChecker;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\Translation\Translator;
 
 class AuthenticationHandler implements AuthenticationSuccessHandlerInterface, AuthenticationFailureHandlerInterface
 {
-    protected $service_container;
+    protected $translator;
 
-    public function __construct($service_container)
+    public function __construct(Translator $translator)
     {
-        $this->service_container = $service_container;
+        $this->translator = $translator;
 
     }
 
@@ -43,7 +42,7 @@ class AuthenticationHandler implements AuthenticationSuccessHandlerInterface, Au
                 'success' => false,
                 'function' => 'onAuthenticationFailure',
                 'error' => true,
-                'message' => $this->service_container->get('translator')->trans($exception->getMessage(), array(), 'FOSUserBundle')
+                'message' => $this->translator->trans($exception->getMessage(), array(), 'FOSUserBundle')
             );
             $response = new Response(json_encode($result));
             $response->headers->set('Content-Type', 'application/json');

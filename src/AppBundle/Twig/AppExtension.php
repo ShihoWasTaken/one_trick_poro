@@ -2,18 +2,13 @@
 
 namespace AppBundle\Twig;
 
-use Symfony\Component\DependencyInjection\ContainerInterface;
-
 class AppExtension extends \Twig_Extension
 {
+    protected $static_data_version;
 
-    /** @var ContainerInterface */
-    protected $container;
-
-    /** @param ContainerInterface $container */
-    public function __construct(ContainerInterface $container)
+    public function __construct($static_data_version)
     {
-        $this->container = $container;
+        $this->static_data_version = $static_data_version;
     }
 
     public function getFilters()
@@ -52,11 +47,10 @@ class AppExtension extends \Twig_Extension
 
     public function summonerIcon($id)
     {
-        $static_data_version = $this->container->getParameter('static_data_version');
-        if ($this->testIfURLExists("http://ddragon.leagueoflegends.com/cdn/" . $static_data_version . "/img/profileicon/" . $id . ".png")) {
-            return "http://ddragon.leagueoflegends.com/cdn/" . $static_data_version . "/img/profileicon/" . $id . ".png";
+        if ($this->testIfURLExists("http://ddragon.leagueoflegends.com/cdn/" . $this->static_data_version . "/img/profileicon/" . $id . ".png")) {
+            return "http://ddragon.leagueoflegends.com/cdn/" . $this->static_data_version . "/img/profileicon/" . $id . ".png";
         } else {
-            return "http://ddragon.leagueoflegends.com/cdn/" . $static_data_version . "/img/profileicon/" . 0 . ".png";
+            return "http://ddragon.leagueoflegends.com/cdn/" . $this->static_data_version . "/img/profileicon/" . 0 . ".png";
         }
     }
 }

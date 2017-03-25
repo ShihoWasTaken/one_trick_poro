@@ -12,17 +12,13 @@ define('MATCHLIST_API_VERSION', '/v2.2');
 define('STATS_API_VERSION', '/v1.3');
 define('SUMMONER_API_VERSION', '/v1.4');
 
-use Symfony\Component\DependencyInjection\ContainerInterface as Container;
-
 class LoLAPIService extends RequestService
 {
-    private $container;
     private $api_key;
 
-    public function __construct(Container $container)
+    public function __construct($riot_api_key)
     {
-        $this->container = $container;
-        $this->api_key = $this->container->getParameter('riot_api_key');
+        $this->api_key = $riot_api_key;
     }
 
     public function toSafeLowerCase($string)
