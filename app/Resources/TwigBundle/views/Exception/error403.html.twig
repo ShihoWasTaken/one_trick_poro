@@ -1,19 +1,5 @@
-{% extends "AppBundle::layout.html.twig" %}
+{% extends "::error_layout.html.twig" %}
 
-{% block body %}
-    <div class="container">
-        <div class="row white-bg">
-            <div class="col-md-12">
-                <h1>{{ 'error403.title'|trans }}</h1>
-                <div class="row">
-                    <img class="img-responsive col-md-3"
-                         src="http://ddragon.leagueoflegends.com/cdn/{{ static_data_version }}/img/sticker/poro-angry.png"/>
-                    <p class="col-md-9">{{ 'error403.content'|trans }}</p>
-                </div>
-                <a class="btn btn-default btn-lg" href="{{ url('app_homepage') }}"><i class="fa fa-home"
-                                                                                      aria-hidden="true"></i> {{ 'back.to.home'|trans }}
-                </a>
-            </div>
-        </div>
-    </div>
-{% endblock body %}
+{% block page_title %}{{ 'error403.title'|trans }}{% endblock page_title %}
+{% block poro %}angry{% endblock poro %}
+{% block content %}{{ 'error403.content'|trans }}{% endblock content %}

@@ -3,6 +3,11 @@ app_homepage:
     defaults: { _controller: AppBundle:Static:homepage }
     methods:  [GET]
 
+app_contact:
+    path:     /contact
+    defaults: { _controller: AppBundle:Static:contact }
+    methods:  [GET|POST]
+
 app_searchbar:
     path:     /search
     defaults: { _controller: AppBundle:Static:searchbar }
