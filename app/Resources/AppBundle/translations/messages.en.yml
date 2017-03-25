@@ -1,3 +1,9 @@
+error403.title: Error 403 - Forbidden
+error403.content: "You are not authorized to access this page."
+error404.title: Error 404 - Page not found
+error404.content: "Sorry I can't found your page. Make sure you correctly typed the URL."
+error500.title: Error 500 - Internal Server Error
+error500.content: "We are sorry, the server encountered an internal error. You can send a message to the team to explain how you get this message."
 title.summoner.profile: '%summonerName%''s profile'
 hello.username: 'Hello %user%'
 summoner.update: Update
@@ -59,3 +65,4 @@ modal.language.title: "Choose a language"
 navbar.lookup: Lookup
 summoner.not.found.for.this.region: "The summoner %name% was not found for the region %region%."
 try.another.region: "Try another region below"
+back.to.home: "Back to home"

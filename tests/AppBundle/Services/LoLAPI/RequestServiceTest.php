@@ -1,6 +1,6 @@
 <?php
 
-namespace AppBundle\Tests\Services\LoLAPI;
+namespace Tests\AppBundle\Services\LoLAPI;
 
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use AppBundle\Services\LoLAPI\RequestService;

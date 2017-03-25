@@ -1,11 +1,17 @@
 {% extends "AppBundle::layout.html.twig" %}
 
 {% block body %}
-    <div class="jumbotron">
-        <div class="container">
-            <h1>{{ 'error404.title'|trans }}</h1>
-            <p>{{ 'error404.content'|trans }}</p>
-            <a href="{{ url('app_homepage') }}">Retourner à l'accueil</a>
+    <div class="container">
+        <div class="row white-bg">
+            <div class="col-md-12">
+                <h1>{{ 'error404.title'|trans }}</h1>
+                <div class="row">
+                    <img class="img-responsive col-md-3"
+                         src="http://ddragon.leagueoflegends.com/cdn/{{ static_data_version }}/img/sticker/poro-sweat.png"/>
+                    <p class="col-md-9">{{ 'error404.content'|trans }}</p>
+                </div>
+                <a class="btn btn-default btn-lg" href="{{ url('app_homepage') }}"><i class="fa fa-home" aria-hidden="true"></i> {{ 'back.to.home'|trans }}</a>
+            </div>
         </div>
     </div>
 {% endblock body %}

@@ -1,3 +1,9 @@
+error403.title: Error 403 - Interdit
+error403.content: "Vous n'êtes pas autorisé à accéder à cette page."
+error404.title: Erreur 404 - Page non trouvée
+error404.content: "Désolé, je n'ai pas trouvé la page que tu demandes. Elle a peut être été supprimée ou alors tu as peut être mal tapé l'URL"
+error500.title: Erreur 500 - Erreur interne du serveur
+error500.content: "Nous sommes désolé mais le serveur a rencontré une erreur interne. Vous pouvez nous aider en envoyant un message à notre support en expliquant dans quelles circonstances vous avez obtenu ce message."
 title.summoner.profile: 'Profil de %summonerName%'
 hello.username: 'Bonjour %user%'
 summoner.update: 'Mettre à jour'
@@ -59,3 +65,4 @@ modal.language.title: 'Choisissez une langue'
 navbar.lookup: Recherche
 summoner.not.found.for.this.region: "L'invocateur %name% n'a pas été trouvé pour la region %region%."
 try.another.region: "Essayez une autre région ci-dessous"
+back.to.home: "Retour à l'accueil"

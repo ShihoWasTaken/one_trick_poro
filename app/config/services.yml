@@ -18,7 +18,7 @@ services:
         arguments:    ['@service_container','@app.lolapi']
     app.interceptor.action_listener:
         class: AppBundle\EventListener\InterceptorListener
-        arguments: ['@twig']
+        arguments: ['@twig','@service_container']
         tags:
             - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
     app.authentication_handler:
