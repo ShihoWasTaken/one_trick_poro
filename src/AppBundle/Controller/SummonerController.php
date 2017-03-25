@@ -16,7 +16,6 @@ class SummonerController extends Controller
     {
         $em = $this->get('doctrine')->getManager();
         $sum = $this->container->get('app.lolsummoner');
-        $static_data_version = $this->container->getParameter('static_data_version');
 
         $user = $user = $this->getUser();
         // Si l'utilisateur n'est pas connecté
@@ -41,7 +40,6 @@ class SummonerController extends Controller
 
             return $this->render('AppBundle:Lookup:search.html.twig',
                 array(
-                    'static_data_version' => $static_data_version,
                     'summoners' => $user->getSummoners(),
                     'search' => $search
                 ));
@@ -76,7 +74,6 @@ class SummonerController extends Controller
         $em = $this->get('doctrine')->getManager();
         $api = $this->container->get('app.lolapi');
         $sum = $this->container->get('app.lolsummoner');
-        $static_data_version = $this->container->getParameter('static_data_version');
 
         $region = $sum->getRegionBySlug($region);
 
@@ -110,7 +107,6 @@ class SummonerController extends Controller
         if (empty($summoner) || (!empty($summoner) && !$summoner->isFirstUpdated())) {
             return $this->render('AppBundle:Summoner:creating_summoner.html.twig',
                 array(
-                    'static_data_version' => $static_data_version,
                     'summoner' => $newSummoner
                 ));
         }
@@ -122,7 +118,6 @@ class SummonerController extends Controller
         $em = $this->get('doctrine')->getManager();
         $api = $this->container->get('app.lolapi');
         $sum = $this->container->get('app.lolsummoner');
-        $static_data_version = $this->container->getParameter('static_data_version');
 
         $safeRegion = $em->getRepository('AppBundle:StaticData\Region')->findOneBy([
             'slug' => $region
@@ -225,7 +220,6 @@ class SummonerController extends Controller
                 'summoner' => $summoner,
                 'soloq' => $soloq,
                 'soloqimg' => $soloqimg,
-                'static_data_version' => $static_data_version,
                 //'currentGame' => $currentGame,
                 //'summonerSpells' => $summonerSpells,
                 'champions' => $champions,

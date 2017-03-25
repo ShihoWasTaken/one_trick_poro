@@ -66,6 +66,7 @@ profile.of.user: 'Profil de %name%'
 modal.language.title: 'Choisissez une langue'
 navbar.lookup: Recherche
 summoner.not.found.for.this.region: "L'invocateur %name% n'a pas été trouvé pour la region %region%."
+summoner.not.found.error: "L'invocateur %name% n'a pas été trouvé car vous avez entré des caractères illégaux"
 try.another.region: "Essayez une autre région ci-dessous"
 back.to.home: "Retour à l'accueil"
 contact: "Nous contacter"

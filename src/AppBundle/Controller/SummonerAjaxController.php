@@ -21,16 +21,11 @@ class SummonerAjaxController extends Controller
     public function linkSummonerToUserAction(Request $request)
     {
         $authenticatedUser = $this->get('security.token_storage')->getToken()->getUser();
-        if(!$request->isXmlHttpRequest())
-        {
+        if (!$request->isXmlHttpRequest()) {
             return new JsonResponse(array('httpCode' => 400, 'error' => 'Requête non AJAX'));
-        }
-        elseif (!$authenticatedUser)
-        {
+        } elseif (!$authenticatedUser) {
             return new JsonResponse(array('httpCode' => 401, 'error' => 'Authentification nécessaire'));
-        }
-        else
-        {
+        } else {
             $summonerName = $request->request->get('summonerName');
             $region = $request->request->get('region');
             $summonerService = $this->container->get('app.lolsummoner');
@@ -47,13 +42,9 @@ class SummonerAjaxController extends Controller
 
     public function chestsAction(Request $request, $summonerId, $region)
     {
-        $static_data_version = $this->container->getParameter('static_data_version');
-        if(!$request->isXmlHttpRequest())
-        {
+        if (!$request->isXmlHttpRequest()) {
             return new JsonResponse(array('httpCode' => 400, 'error' => 'Requête non AJAX'));
-        }
-        else
-        {
+        } else {
             $em = $this->get('doctrine')->getManager();
             $api = $this->container->get('app.lolapi');
             $sum = $this->container->get('app.lolsummoner');
@@ -62,51 +53,41 @@ class SummonerAjaxController extends Controller
             $chests = $api->getChampionsMastery($region, $summonerId);
             $champions = $sum->getChampionsSortedByIds($language);
 
-            for($i = 0; $i < count($chests); $i++)
-            {
+            for ($i = 0; $i < count($chests); $i++) {
                 $champions[$chests[$i]['championId']] = array_merge($champions[$chests[$i]['championId']], $chests[$i]);
             }
             $owned = 0;
             $remaining = 0;
             $dataCategory = array();
-            foreach($champions as $key => $champion)
-            {
-                if(isset($champion['chestGranted']) && ($champion['chestGranted']))
-                {
+            foreach ($champions as $key => $champion) {
+                if (isset($champion['chestGranted']) && ($champion['chestGranted'])) {
                     $owned = $owned + 1;
                     $dataCategory[$champion['key']] = 1;
-                }
-                else
-                {
+                } else {
                     $remaining = $remaining + 1;
                     $dataCategory[$champion['key']] = 2;
                 }
             }
 
-            $summoner =  $em->getRepository('AppBundle:Summoner\Summoner')->findOneByRegionAndSummonerId($region->getSlug(), $summonerId);
-            $template =  $this->render('AppBundle:Summoner:_chests.html.twig',
+            $summoner = $em->getRepository('AppBundle:Summoner\Summoner')->findOneByRegionAndSummonerId($region->getSlug(), $summonerId);
+            $template = $this->render('AppBundle:Summoner:_chests.html.twig',
                 array(
                     'champions' => $champions,
                     'summoner' => $summoner,
                     'owned' => $owned,
                     'remaining' => $remaining,
-                    'dataCategory' => $dataCategory,
-                    'static_data_version' => $static_data_version
+                    'dataCategory' => $dataCategory
                 ))
-            ->getContent();
+                ->getContent();
             return new Response($template);
         }
     }
 
     public function championMasteriesAction(Request $request, $summonerId, $region)
     {
-        $static_data_version = $this->container->getParameter('static_data_version');
-        if(!$request->isXmlHttpRequest())
-        {
+        if (!$request->isXmlHttpRequest()) {
             return new JsonResponse(array('httpCode' => 400, 'error' => 'Requête non AJAX'));
-        }
-        else
-        {
+        } else {
             $em = $this->get('doctrine')->getManager();
             $api = $this->container->get('app.lolapi');
             $sum = $this->container->get('app.lolsummoner');
@@ -115,20 +96,18 @@ class SummonerAjaxController extends Controller
             //$chests = $api->getChampionsMastery($summonerId);
             $language = $sum->getLanguageByRequestLocale($request);
             $champions = $sum->getChampionsSortedByIds($language);
-            for($i = 0; $i < count($championsMasteryData); $i++)
-            {
+            for ($i = 0; $i < count($championsMasteryData); $i++) {
                 $champions[$championsMasteryData[$i]['championId']] = array_merge($champions[$championsMasteryData[$i]['championId']], $championsMasteryData[$i]);
             }
             //var_dump($champions[103]);
             //exit();
 
-            $summoner =  $em->getRepository('AppBundle:Summoner\Summoner')->findOneByRegionAndSummonerId($region->getSlug(), $summonerId);
-            $template =  $this->render('AppBundle:Summoner:_remaining_champion_mastery.html.twig',
+            $summoner = $em->getRepository('AppBundle:Summoner\Summoner')->findOneByRegionAndSummonerId($region->getSlug(), $summonerId);
+            $template = $this->render('AppBundle:Summoner:_remaining_champion_mastery.html.twig',
                 array(
                     'championsMastery' => $championsMasteryData,
                     'champions' => $champions,
-                    'summoner' => $summoner,
-                    'static_data_version' => $static_data_version
+                    'summoner' => $summoner
                 ))
                 ->getContent();
             return new Response($template);
@@ -137,13 +116,9 @@ class SummonerAjaxController extends Controller
 
     public function runesAction(Request $request, $summonerId, $region)
     {
-        $static_data_version = $this->container->getParameter('static_data_version');
-        if(!$request->isXmlHttpRequest())
-        {
+        if (!$request->isXmlHttpRequest()) {
             return new JsonResponse(array('httpCode' => 400, 'error' => 'Requête non AJAX'));
-        }
-        else
-        {
+        } else {
             $sum = $this->container->get('app.lolsummoner');
             $em = $this->get('doctrine')->getManager();
 
@@ -164,18 +139,16 @@ class SummonerAjaxController extends Controller
                 'languageId' => $language->getId()
             ]);
             $translations = array();
-            foreach($runesTranslations as $translation)
-            {
+            foreach ($runesTranslations as $translation) {
                 $translations[$translation->getRuneId()] = $translation;
             }
 
-            $template =  $this->render('AppBundle:Summoner:_runes.html.twig',
+            $template = $this->render('AppBundle:Summoner:_runes.html.twig',
                 array(
                     'runePages' => $runesPages['data'],
                     'runes' => $runesPages['images'],
-                    'translations' => $translations,
                     //'runesData' => $runeData,
-                    'static_data_version' => $static_data_version
+                    'translations' => $translations
                 ))
                 ->getContent();
             return new Response($template);
@@ -184,13 +157,9 @@ class SummonerAjaxController extends Controller
 
     public function masteriesAction(Request $request, $summonerId, $region)
     {
-        $static_data_version = $this->container->getParameter('static_data_version');
-        if(!$request->isXmlHttpRequest())
-        {
+        if (!$request->isXmlHttpRequest()) {
             return new JsonResponse(array('httpCode' => 400, 'error' => 'Requête non AJAX'));
-        }
-        else
-        {
+        } else {
             $sum = $this->container->get('app.lolsummoner');
             $em = $this->get('doctrine')->getManager();
 
@@ -210,19 +179,17 @@ class SummonerAjaxController extends Controller
                 'languageId' => $language->getId()
             ]);
             $translations = array();
-            foreach($masteriesTranslations as $translation)
-            {
+            foreach ($masteriesTranslations as $translation) {
                 $translations[$translation->getMasteryId()] = $translation;
             }
 
-            $template =  $this->render('AppBundle:Summoner:_masteries.html.twig',
+            $template = $this->render('AppBundle:Summoner:_masteries.html.twig',
                 array(
                     'masteriesPages' => $masteriesPages,
                     'masteries' => $masteries,
-                    'translations' => $translations,
+                    'translations' => $translations
                     //'masteriesPages' => $masteriesPages['data'],
                     //'$masteries' => $masteriesPages['images'],
-                    'static_data_version' => $static_data_version
                 ))
                 ->getContent();
             return new Response($template);
@@ -231,13 +198,9 @@ class SummonerAjaxController extends Controller
 
     public function historyAction(Request $request, $summonerId, $region)
     {
-        $static_data_version = $this->container->getParameter('static_data_version');
-        if(!$request->isXmlHttpRequest())
-        {
+        if (!$request->isXmlHttpRequest()) {
             return new JsonResponse(array('httpCode' => 400, 'error' => 'Requête non AJAX'));
-        }
-        else
-        {
+        } else {
             $sum = $this->container->get('app.lolsummoner');
             $em = $this->get('doctrine')->getManager();
 
@@ -255,27 +218,20 @@ class SummonerAjaxController extends Controller
             $gamesItems = array();
             $gamesPlayers = array();
             $playersIds = array();
-            foreach($history['games'] as $game)
-            {
-                for($i = 0; $i <= 6; $i++)
-                {
-                    if(isset($game['stats']['item' . $i]))
-                    {
+            foreach ($history['games'] as $game) {
+                for ($i = 0; $i <= 6; $i++) {
+                    if (isset($game['stats']['item' . $i])) {
                         $gamesItems[$game['gameId']][$i] = $game['stats']['item' . $i];
-                    }
-                    else
-                    {
+                    } else {
                         $gamesItems[$game['gameId']][$i] = null;
                     }
                 }
                 $playersIds[] = $summonerId;
-                foreach($game['fellowPlayers'] as $player)
-                {
+                foreach ($game['fellowPlayers'] as $player) {
                     $playersIds[] = $player['summonerId'];
                 }
                 $summonerNames = $sum->getSummonerNamesByIds($summoner->getRegion(), $playersIds);
-                foreach($game['fellowPlayers'] as $player)
-                {
+                foreach ($game['fellowPlayers'] as $player) {
                     $gamesPlayers[$game['gameId']][$player['teamId']][] = $player;
                 }
                 $gamesPlayers[$game['gameId']][$game['teamId']][] = array(
@@ -284,7 +240,7 @@ class SummonerAjaxController extends Controller
                 );
             }
 
-            $template =  $this->render('AppBundle:Summoner:_history.html.twig',
+            $template = $this->render('AppBundle:Summoner:_history.html.twig',
                 array(
                     'history' => $history,
                     'champions' => $champions,
@@ -292,8 +248,7 @@ class SummonerAjaxController extends Controller
                     'summonerNames' => $summonerNames,
                     'gamesItems' => $gamesItems,
                     'gamesPlayers' => $gamesPlayers,
-                    'summoner' => $summoner,
-                    'static_data_version' => $static_data_version
+                    'summoner' => $summoner
                 ))
                 ->getContent();
             return new Response($template);
@@ -303,13 +258,9 @@ class SummonerAjaxController extends Controller
     public function liveGameAction(Request $request, $summonerId, $region)
     {
         //TODO: afficher les infos progressivement si un summoner n'est pas créé
-        $static_data_version = $this->container->getParameter('static_data_version');
-        if(!$request->isXmlHttpRequest())
-        {
+        if (!$request->isXmlHttpRequest()) {
             return new JsonResponse(array('httpCode' => 400, 'error' => 'Requête non AJAX'));
-        }
-        else
-        {
+        } else {
             $api = $this->container->get('app.lolapi');
             $sum = $this->container->get('app.lolsummoner');
             $em = $this->get('doctrine')->getManager();
@@ -323,11 +274,9 @@ class SummonerAjaxController extends Controller
 
             $liveGame = $sum->getLiveGame($mainSummoner);
 
-            if(isset($liveGame['currentGame']['status']['status_code']))
-            {
-                $template =  $this->render('AppBundle:Summoner:_live_game_not_found.html.twig',
-                    array(
-                ))
+            if (isset($liveGame['currentGame']['status']['status_code'])) {
+                $template = $this->render('AppBundle:Summoner:_live_game_not_found.html.twig',
+                    array())
                     ->getContent();
                 return new Response($template);
             }
@@ -336,11 +285,9 @@ class SummonerAjaxController extends Controller
             $champions = $sum->getChampionsSortedByIds($language);
             $runeData = null;
             $playerStats = array();
-            if(isset($liveGame['currentGame']['participants']))
-            {
+            if (isset($liveGame['currentGame']['participants'])) {
                 $runeData = $sum->getRunePageByData($region, $liveGame['currentGame']['participants']);
-                foreach($liveGame['currentGame']['participants'] as $player)
-                {
+                foreach ($liveGame['currentGame']['participants'] as $player) {
                     // On récupère le summoner en BDD
                     $summoner = $em->getRepository('AppBundle:Summoner\Summoner')->findOneBy([
                         'id' => $player['summonerId'],
@@ -348,11 +295,9 @@ class SummonerAjaxController extends Controller
                     ]);
 
                     // Si le summoner n'existe pas encore en BDD, on le crée
-                    if (empty($summoner))
-                    {
-                        $summonerData = $api->getSummonerByIds($region,array($player['summonerId']));
-                        if($api->getResponseCode() == 404)
-                        {
+                    if (empty($summoner)) {
+                        $summonerData = $api->getSummonerByIds($region, array($player['summonerId']));
+                        if ($api->getResponseCode() == 404) {
                             //TODO: exception summoner not found
                             throw new NotFoundHttpException('Summoner not existing');
                         }
@@ -362,7 +307,7 @@ class SummonerAjaxController extends Controller
                         $newSummoner->setLevel($summonerData[$player['summonerId']]['summonerLevel']);
                         $newSummoner->setProfileIconId($summonerData[$player['summonerId']]['profileIconId']);
                         $date = date_create();
-                        date_timestamp_set($date, ($summonerData[$player['summonerId']]['revisionDate']/1000));
+                        date_timestamp_set($date, ($summonerData[$player['summonerId']]['revisionDate'] / 1000));
                         $newSummoner->setRevisionDate($date);
                         $em->persist($newSummoner);
                         $em->flush();
@@ -392,41 +337,31 @@ class SummonerAjaxController extends Controller
                 'languageId' => $language->getId()
             ]);
             $translations = array();
-            foreach($masteriesTranslations as $translation)
-            {
+            foreach ($masteriesTranslations as $translation) {
                 $translations[$translation->getMasteryId()] = $translation;
             }
             $masteriesPages = array();
-            foreach($liveGame['currentGame']['participants'] as $player)
-            {
-                foreach($player['masteries'] as $mastery)
-                {
+            foreach ($liveGame['currentGame']['participants'] as $player) {
+                foreach ($player['masteries'] as $mastery) {
                     $masteriesPages[$player['summonerId']][$mastery['masteryId']] = $mastery['rank'];
                 }
-                if($player['teamId'] == 100)
-                {
+                if ($player['teamId'] == 100) {
                     $players['blue'][] = $player;
-                }
-                else
-                {
+                } else {
                     $players['purple'][] = $player;
                 }
             }
             $bannedChampions['blue'] = array();
             $bannedChampions['purple'] = array();
-            foreach($liveGame['currentGame']['bannedChampions'] as $champion)
-            {
-                if($champion['teamId'] == 100)
-                {
+            foreach ($liveGame['currentGame']['bannedChampions'] as $champion) {
+                if ($champion['teamId'] == 100) {
                     $bannedChampions['blue'][] = $champion;
-                }
-                else
-                {
+                } else {
                     $bannedChampions['purple'][] = $champion;
                 }
             }
 
-            $template =  $this->render('AppBundle:Summoner:_live_game.html.twig',
+            $template = $this->render('AppBundle:Summoner:_live_game.html.twig',
                 array(
                     'currentGame' => $liveGame['currentGame'],
                     'summonerSpells' => $liveGame['summonerSpells'],
@@ -440,8 +375,7 @@ class SummonerAjaxController extends Controller
                     'masteries' => $masteries,
                     'translations' => $translations,
                     'players' => $players,
-                    'bannedChampions' => $bannedChampions,
-                    'static_data_version' => $static_data_version
+                    'bannedChampions' => $bannedChampions
                 ))
                 ->getContent();
             return new Response($template);

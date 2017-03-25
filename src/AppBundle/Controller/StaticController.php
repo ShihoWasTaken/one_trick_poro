@@ -89,6 +89,12 @@ class StaticController extends Controller
                     'formattedName' => $summonerName
                 )
             );
+        } else if ($api->getResponseCode() == 500) {
+            return $this->render('AppBundle:Summoner:not_existing_error.html.twig',
+                array(
+                    'name' => $originalName
+                )
+            );
         }
         return $this->redirectToRoute('app_summoner',
             array(

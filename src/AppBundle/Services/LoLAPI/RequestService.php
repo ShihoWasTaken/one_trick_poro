@@ -14,8 +14,7 @@ class RequestService
 
     public function errorMessage($responseCode)
     {
-        switch($responseCode)
-        {
+        switch ($responseCode) {
             case '400':
                 $responseError = 'Bad request';
                 break;
@@ -75,8 +74,7 @@ class RequestService
         $header_size = curl_getinfo($ch, CURLINFO_HEADER_SIZE);
         $this->headers = substr($response, 0, $header_size);
 
-        while($this->responseCode == 429)
-        {
+        while ($this->responseCode == 429) {
             $rateLimitInfos = $this->getRateLimitInfos();
             usleep(1000000 * ($rateLimitInfos['retry'] + 0.1));
             //Execute the cURL request.
@@ -101,14 +99,12 @@ class RequestService
         $retryAfter = '';
         $limits = '';
 
-        $replaced = str_replace (array("\r\n", "\n", "\r"), '<br>', $this->headers);
+        $replaced = str_replace(array("\r\n", "\n", "\r"), '<br>', $this->headers);
 
         $lines = explode('<br>', $replaced);
-        foreach($lines as $line)
-        {
-            $parts = explode(': ',$line, 2);
-            switch($parts[0])
-            {
+        foreach ($lines as $line) {
+            $parts = explode(': ', $line, 2);
+            switch ($parts[0]) {
                 default:
                     break;
                 case 'X-Rate-Limit-Count':
@@ -133,22 +129,7 @@ class RequestService
         );
     }
 
-    /**
-     * @return Container
-     */
-    public function getContainer()
-    {
-        return $this->container;
-    }
 
-    /**
-     * @param Container $container
-     */
-    public function setContainer($container)
-    {
-        $this->container = $container;
-    }
-    
     /**
      * @return mixed
      */

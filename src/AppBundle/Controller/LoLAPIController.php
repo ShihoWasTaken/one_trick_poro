@@ -9,7 +9,6 @@ class LoLAPIController extends Controller
 {
     public function profileAction($userId)
     {
-        $static_data_version = $this->container->getParameter('static_data_version');
         $user = $this->get('security.token_storage')->getToken()->getUser();
         if ($user != 'anon.') {
             if ($user->getId() != $userId) {
@@ -22,15 +21,13 @@ class LoLAPIController extends Controller
         }
         return $this->render('AppBundle:Account:profile.html.twig',
             array(
-                'user' => $user,
-                'static_data_version' => $static_data_version
+                'user' => $user
             ));
     }
 
 
     public function editProfileAction($userId)
     {
-        $static_data_version = $this->container->getParameter('static_data_version');
         $api = $this->container->get('app.lolapi');
         $sum = $this->container->get('app.lolsummoner');
         $user = $this->get('security.token_storage')->getToken()->getUser();
@@ -40,8 +37,7 @@ class LoLAPIController extends Controller
         $sum = $this->container->get('app.lolsummoner');
         return $this->render('AppBundle:Account:profile_edit.html.twig',
             array(
-                'data' => $data,
-                'static_data_version' => $static_data_version,
+                'data' => $data
             ));
     }
 }

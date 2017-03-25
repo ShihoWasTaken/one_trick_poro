@@ -66,6 +66,7 @@ profile.of.user: "%name%'s profile"
 modal.language.title: "Choose a language"
 navbar.lookup: Lookup
 summoner.not.found.for.this.region: "The summoner %name% was not found for the region %region%."
+summoner.not.found.error: "The summoner %name% was not found because you entered bad characters"
 try.another.region: "Try another region below"
 back.to.home: "Back to home"
 contact: "Contact us"
