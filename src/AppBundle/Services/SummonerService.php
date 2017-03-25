@@ -9,13 +9,13 @@ use AppBundle\Entity\Summoner\ChampionMastery;
 use AppBundle\Entity\Summoner\Tier;
 use Symfony\Component\Config\Definition\Exception\Exception;
 use AppBundle\Services\LoLAPI\LoLAPIService;
-use Symfony\Component\DependencyInjection\ContainerInterface as Container;
+use Monolog\Logger;
+use Doctrine\ORM\EntityManager;
 
 define('OLDER_SEASON_AVAILABLE', 3);
 
 class SummonerService
 {
-    private $container;
     /**
      * @var \AppBundle\Services\LoLAPI\LoLAPIService
      */
@@ -23,12 +23,17 @@ class SummonerService
     private $em;
     private $current_season;
 
-    public function __construct(Container $container, LoLAPIService $api)
+    /**
+     * @var \Monolog\Logger
+     */
+    private $logger;
+
+    public function __construct(Logger $logger, EntityManager $entityManager, LoLAPIService $api, $current_season)
     {
-        $this->container = $container;
+        $this->logger = $logger;
         $this->api = $api;
-        $this->em = $this->container->get('doctrine')->getManager();
-        $this->current_season = $this->container->getParameter('current_season');
+        $this->em = $entityManager;
+        $this->current_season = $current_season;
     }
 
     public function getRegionBySlug($slug)

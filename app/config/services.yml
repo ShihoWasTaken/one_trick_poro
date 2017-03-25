@@ -12,7 +12,7 @@ services:
         arguments:    ['@service_container']
     app.lolsummoner:
         class:        AppBundle\Services\SummonerService
-        arguments:    ['@service_container','@app.lolapi']
+        arguments:    ['@logger', '@doctrine.orm.entity_manager', '@app.lolapi', '%current_season%']
     app.staticdataupdate:
         class:        AppBundle\Services\StaticDataUpdateService
         arguments:    ['@service_container','@app.lolapi']
