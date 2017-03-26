@@ -11,22 +11,30 @@ use AppBundle\Entity\StaticData\Translation\MasteryTranslation;
 use AppBundle\Entity\StaticData\Translation\RuneTranslation;
 use AppBundle\Entity\StaticData\Translation\ChampionTranslation;
 use AppBundle\Services\LoLAPI\LoLAPIService;
-use Symfony\Component\DependencyInjection\ContainerInterface as Container;
+use Doctrine\Bundle\DoctrineBundle\Registry;
 
 class StaticDataUpdateService
 {
-    private $container;
+    /**
+     * @var \Doctrine\Bundle\DoctrineBundle\Registry
+     */
+    private $doctrine;
+
     /**
      * @var \AppBundle\Services\LoLAPI\LoLAPIService
      */
     private $api;
+
+    /**
+     * @var \Doctrine\ORM\EntityManager
+     */
     private $em;
 
-    public function __construct(Container $container, LoLAPIService $api)
+    public function __construct(Registry $doctrine, LoLAPIService $api)
     {
-        $this->container = $container;
+        $this->doctrine = $doctrine;
         $this->api = $api;
-        $this->em = $this->container->get('doctrine')->getManager();
+        $this->em = $doctrine->getManager();
     }
 
     private function endline()
@@ -50,7 +58,7 @@ class StaticDataUpdateService
         $updated = false;
         $regions = $this->api->getShards();
         foreach ($regions as $region) {
-            $newRegion = $this->container->get('doctrine')->getRepository('AppBundle:StaticData\Region')->findOneBy([
+            $newRegion = $this->doctrine->getRepository('AppBundle:StaticData\Region')->findOneBy([
                 'tag' => $region['region_tag']
             ]);
             if (empty($newRegion)) {
@@ -63,19 +71,20 @@ class StaticDataUpdateService
         if ($updated)
             $this->em->flush();
         else
-            echo 'Aucune nouvelle région n\'a été trouvée';
+            echo 'Aucune nouvelle région n\'a été trouvée' . $this->endline();
     }
 
     public function updateChampions()
     {
-        $em = $this->container->get('doctrine')->getManager();
-        $region = $this->container->get('doctrine')->getRepository('AppBundle:StaticData\Region')->findOneBy([
+        $em = $this->doctrine->getManager();
+        $region = $this->doctrine->getRepository('AppBundle:StaticData\Region')->findOneBy([
             'slug' => 'euw'
         ]);
         $champions = $this->api->getStaticDataChampions($region);
-        $repository = $this->container->get('doctrine')->getRepository('AppBundle:StaticData\Champion');
+        $repository = $this->doctrine->getRepository('AppBundle:StaticData\Champion');
         $championsInDatabase = $repository->findAll();
         $updated = false;
+        $championsUpdated = array();
         foreach ($champions['data'] as $champion) {
             $update = true;
             for ($i = 0; $i < count($championsInDatabase); $i++) {
@@ -87,39 +96,44 @@ class StaticDataUpdateService
                 $newChampion = new Champion($champion['id']);
                 $newChampion->setKey($champion['key']);
                 $em->persist($newChampion);
+                $championsUpdated[] = $champion['id'];
                 echo('Champion ' . $champion['key'] . ' ajoute avec l\'id ' . $champion['id'] . $this->endline());
             }
         }
         if ($updated)
             $em->flush();
         else
-            echo 'Aucun nouveau champion n\'a été trouvé';
-        $languages = $this->container->get('doctrine')->getRepository('AppBundle:Language')->findAll();
+            echo 'Aucun nouveau champion n\'a été trouvé' . $this->endline();
+        $languages = $this->doctrine->getRepository('AppBundle:Language')->findAll();
         foreach ($languages as $language) {
             $championTranslationData = $this->api->getStaticDataChampions($region, $language->getLocaleCode(), null, null, null);
             foreach ($championTranslationData['data'] as $data) {
-                $championTranslation = new ChampionTranslation();
-                $championTranslation->setChampionId($data['id']);
-                $championTranslation->setLanguageId($language->getId());
-                $championTranslation->setName($data['name']);
-                $championTranslation->setTitle($data['title']);
-                $em->persist($championTranslation);
+                if (in_array($data['id'], $championsUpdated)) {
+                    $championTranslation = new ChampionTranslation();
+                    $championTranslation->setChampionId($data['id']);
+                    $championTranslation->setLanguageId($language->getId());
+                    $championTranslation->setName($data['name']);
+                    $championTranslation->setTitle($data['title']);
+                    $em->persist($championTranslation);
+                }
             }
-            echo('Traduction ' . $language->getSymfonyLocale() . ' des champions ajoutées ' . $this->endline());
+            if ($updated)
+                echo('Traduction ' . $language->getSymfonyLocale() . ' des champions ajoutées ' . $this->endline());
         }
         $em->flush();
     }
 
     public function updateRunes()
     {
-        $em = $this->container->get('doctrine')->getManager();
-        $region = $this->container->get('doctrine')->getRepository('AppBundle:StaticData\Region')->findOneBy([
+        $em = $this->doctrine->getManager();
+        $region = $this->doctrine->getRepository('AppBundle:StaticData\Region')->findOneBy([
             'slug' => 'euw'
         ]);
         $runes = $this->api->getStaticRunes($region, null, null, 'all');
-        $repository = $this->container->get('doctrine')->getRepository('AppBundle:StaticData\Rune');
+        $repository = $this->doctrine->getRepository('AppBundle:StaticData\Rune');
         $runesInDatabase = $repository->findAll();
         $updated = false;
+        $runesUpdated = array();
         foreach ($runes['data'] as $rune) {
             $update = true;
             for ($i = 0; $i < count($runesInDatabase); $i++) {
@@ -133,40 +147,45 @@ class StaticDataUpdateService
                 $newRune->setType($rune['rune']['type']);
                 $newRune->setTier($rune['rune']['tier']);
                 $em->persist($newRune);
+                $runesUpdated[] = $rune['id'];
                 echo('Rune ' . $this->img('http://ddragon.leagueoflegends.com/cdn/6.24.1/img/rune/' . $rune['image']['full']) . ' ajoutée avec l\'id ' . $rune['id'] . $this->endline());
             }
         }
         if ($updated)
             $em->flush();
         else
-            echo 'Aucune nouvelle rune n\'a été trouvée';
-        $languages = $this->container->get('doctrine')->getRepository('AppBundle:Language')->findAll();
+            echo 'Aucune nouvelle rune n\'a été trouvée' . $this->endline();
+        $languages = $this->doctrine->getRepository('AppBundle:Language')->findAll();
         foreach ($languages as $language) {
             $runesTranslationData = $this->api->getStaticRunes($region, $language->getLocaleCode(), null, null);
             foreach ($runesTranslationData['data'] as $data) {
-                $runeTranslation = new RuneTranslation();
-                $runeTranslation->setRuneId($data['id']);
-                $runeTranslation->setLanguageId($language->getId());
-                $runeTranslation->setName($data['name']);
-                $runeTranslation->setDescription($data['description']);
-                $em->persist($runeTranslation);
+                if (in_array($data['id'], $runesUpdated)) {
+                    $runeTranslation = new RuneTranslation();
+                    $runeTranslation->setRuneId($data['id']);
+                    $runeTranslation->setLanguageId($language->getId());
+                    $runeTranslation->setName($data['name']);
+                    $runeTranslation->setDescription($data['description']);
+                    $em->persist($runeTranslation);
+                }
             }
-            echo('Traduction ' . $language->getSymfonyLocale() . ' des runes ajoutées ' . $this->endline());
+            if ($updated)
+                echo('Traduction ' . $language->getSymfonyLocale() . ' des runes ajoutées ' . $this->endline());
         }
         $em->flush();
     }
 
     public function updateMasteries()
     {
-        $em = $this->container->get('doctrine')->getManager();
-        $languages = $this->container->get('doctrine')->getRepository('AppBundle:Language')->findAll();
-        $region = $this->container->get('doctrine')->getRepository('AppBundle:StaticData\Region')->findOneBy([
+        $em = $this->doctrine->getManager();
+        $languages = $this->doctrine->getRepository('AppBundle:Language')->findAll();
+        $region = $this->doctrine->getRepository('AppBundle:StaticData\Region')->findOneBy([
             'slug' => 'euw'
         ]);
         $masteries = $this->api->getStaticMasteries($region, null, null, 'all');
-        $repository = $this->container->get('doctrine')->getRepository('AppBundle:StaticData\Mastery');
+        $repository = $this->doctrine->getRepository('AppBundle:StaticData\Mastery');
         $masteriesInDatabase = $repository->findAll();
         $updated = false;
+        $masteriesUpdated = array();
         foreach ($masteries['data'] as $mastery) {
             $update = true;
             for ($i = 0; $i < count($masteriesInDatabase); $i++) {
@@ -180,37 +199,41 @@ class StaticDataUpdateService
                 $newMastery->setMasteryTree($mastery['masteryTree']);
                 $newMastery->setImage($mastery['image']['full']);
                 $em->persist($newMastery);
+                $masteriesUpdated[] = $mastery['id'];
                 echo('Mastery ' . $this->img('http://ddragon.leagueoflegends.com/cdn/6.24.1/img/mastery/' . $mastery['image']['full']) . ' ajoutée avec l\'id ' . $mastery['id'] . $this->endline());
             }
         }
         if ($updated)
             $em->flush();
         else
-            echo 'Aucune nouvelle maitrise n\'a été trouvée';
+            echo 'Aucune nouvelle maitrise n\'a été trouvée' . $this->endline();
         foreach ($languages as $language) {
             $masteryTranslationData = $this->api->getStaticMasteries($region, $language->getLocaleCode(), null, null);
             foreach ($masteryTranslationData['data'] as $data) {
-                $MasteryTranslation = new MasteryTranslation();
-                $MasteryTranslation->setMasteryId($data['id']);
-                $MasteryTranslation->setLanguageId($language->getId());
-                $MasteryTranslation->setName($data['name']);
-                $MasteryTranslation->setDescription(implode('|', $data['description']));
-                $em->persist($MasteryTranslation);
+                if (in_array($data['id'], $masteriesUpdated)) {
+                    $MasteryTranslation = new MasteryTranslation();
+                    $MasteryTranslation->setMasteryId($data['id']);
+                    $MasteryTranslation->setLanguageId($language->getId());
+                    $MasteryTranslation->setName($data['name']);
+                    $MasteryTranslation->setDescription(implode('|', $data['description']));
+                    $em->persist($MasteryTranslation);
+                }
             }
-            echo('Traduction ' . $language->getSymfonyLocale() . ' des masteries ajoutées ' . $this->endline());
+            if ($updated)
+                echo('Traduction ' . $language->getSymfonyLocale() . ' des masteries ajoutées ' . $this->endline());
         }
         $em->flush();
     }
 
     public function updateItems()
     {
-        $em = $this->container->get('doctrine')->getManager();
-        $languages = $this->container->get('doctrine')->getRepository('AppBundle:Language')->findAll();
-        $region = $this->container->get('doctrine')->getRepository('AppBundle:StaticData\Region')->findOneBy([
+        $em = $this->doctrine->getManager();
+        $languages = $this->doctrine->getRepository('AppBundle:Language')->findAll();
+        $region = $this->doctrine->getRepository('AppBundle:StaticData\Region')->findOneBy([
             'slug' => 'euw'
         ]);
         $items = $this->api->getStaticDataItems($region, null, null, 'all');
-        $repository = $this->container->get('doctrine')->getRepository('AppBundle:StaticData\Item');
+        $repository = $this->doctrine->getRepository('AppBundle:StaticData\Item');
         $itemsInDatabase = $repository->findAll();
         $updated = false;
         foreach ($items['data'] as $item) {
@@ -229,7 +252,8 @@ class StaticDataUpdateService
         if ($updated)
             $em->flush();
         else
-            echo 'Aucun nouvel item n\'a été trouvé';
+            echo 'Aucun nouvel item n\'a été trouvé' . $this->endline();
+        // TODO: faire la traductions des items
         /*
         foreach($languages as $language)
         {

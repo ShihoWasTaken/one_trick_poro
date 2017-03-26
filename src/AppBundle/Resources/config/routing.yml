@@ -85,6 +85,16 @@ app_summoner_history_ajax:
     methods:  [POST]
     requirements: { method: POST }
 
+app_admin_update_regions:
+    path:     /update/regions
+    defaults: { _controller: AppBundle:Admin:updateRegions }
+    methods:  [GET]
+
+app_admin_update_items:
+    path:     /update/items
+    defaults: { _controller: AppBundle:Admin:updateItems }
+    methods:  [GET]
+
 app_admin_update_champions:
     path:     /update/champions
     defaults: { _controller: AppBundle:Admin:updateChampions }
