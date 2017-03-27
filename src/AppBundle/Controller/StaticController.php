@@ -31,8 +31,7 @@ class StaticController extends Controller
 
     public function contactAction(Request $request)
     {
-        $defaultData = array('message' => 'Type your message here');
-        $form = $this->createFormBuilder($defaultData)
+        $form = $this->createFormBuilder()
             ->add('name', TextType::class, array(
                 'constraints' => array(
                     new NotBlank(),

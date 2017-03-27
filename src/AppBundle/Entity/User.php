@@ -209,4 +209,9 @@ class User extends BaseUser
         }
         return $url;
     }
+
+    public function getSummonerLinkCode()
+    {
+        return 'OneTrickPoro.com/' . substr($this->getId(), -8);
+    }
 }

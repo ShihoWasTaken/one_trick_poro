@@ -78,8 +78,7 @@ class SummonerService
     {
         $region = $this->getRegionBySlug($regionSlug);
         $summonerName = $this->api->toSafeLowerCase($summonerName);
-        //$code = 'LeagueOfTools-' . $user->getId();
-        $code = 'Sivir';
+        $code = $user->getSummonerLinkCode();
 
         $summoner = $this->api->getSummonerByNames($region, array($summonerName));
         if (!isset($summoner[$summonerName]['id']))
@@ -117,6 +116,8 @@ class SummonerService
                 $this->em->persist($newSummoner);
                 $this->em->flush();
                 $summonerDatabase = $newSummoner;
+            } else if (!empty($summonerDatabase->getUser())) {
+                return 'already_linked';
             }
             $summonerDatabase->setUser($user);
 
@@ -126,6 +127,25 @@ class SummonerService
             return 'success';
         } else
             return 'page_not_found';
+    }
+
+    public function unlinkSummonerToUser(User $user, $summonerName, $regionSlug)
+    {
+        $region = $this->getRegionBySlug($regionSlug);
+        $summonerName = $this->api->toSafeLowerCase($summonerName);
+        $summoner = $this->api->getSummonerByNames($region, array($summonerName));
+        if (!isset($summoner[$summonerName]['id']))
+            return 'summoner_not_found';
+        $summonerId = $summoner[$summonerName]['id'];
+        // On récupère le summoner en BDD
+        $summonerDatabase = $this->em->getRepository('AppBundle:Summoner\Summoner')->findOneBy([
+            'id' => $summonerId,
+            'region' => $region
+        ]);
+        $summonerDatabase->setUser(null);
+        $this->em->persist($summonerDatabase);
+        $this->em->flush();
+        return 'success';
     }
 
     public function updateSummonerRank(\AppBundle\Entity\Summoner\Summoner $summoner)

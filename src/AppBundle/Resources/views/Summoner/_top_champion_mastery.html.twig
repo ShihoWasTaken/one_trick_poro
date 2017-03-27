@@ -1,18 +1,12 @@
 <div class="col-md-12">
-    <h2>Maitrises de champions</h2>
+    <h2>{{ 'champion.masteries'|trans }}</h2>
     {% for mastery in topChampionsMastery %}
         <div class="col-md-4 text-center">
             <h4>{{ champions[mastery.championId].name }}</h4>
-            <img src="http://ddragon.leagueoflegends.com/cdn/{{ static_data_version }}/img/champion/{{ champions[mastery.championId].key  }}.png">
-            {% if mastery.highestGrade is defined %}
-                <div>Meilleure note {{ mastery.highestGrade }} </div>
-            {% endif %}
-            {% if mastery.lastPlayTime is defined %}
-                <br>Joué la dernière fois le {{ (mastery.lastPlayTime/1000)|date('d/m/Y à H:m') }}
-            {% endif %}
-            <img src="{{ asset('bundles/app/images/champion-masteries/' ~ mastery.championLevel ~ '.png') }}" />
-            <br>Niveau de maitrise : {{ mastery.championLevel }}
-            <br>Points : {{ mastery.championPoints }}
+            <img src="http://ddragon.leagueoflegends.com/cdn/{{ static_data_version }}/img/champion/{{ champions[mastery.championId].key }}.png"><br>
+            <img src="{{ asset('bundles/app/images/champion-masteries/' ~ mastery.championLevel ~ '.png') }}"/>
+            <br>{{ 'champion.masteries.level'|trans }} : {{ mastery.championLevel }}
+            <br>{{ 'champion.masteries.points'|trans }} : {{ mastery.championPoints }}
         </div>
     {% endfor %}
 

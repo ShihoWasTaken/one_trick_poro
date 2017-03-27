@@ -1,0 +1,4 @@
+security.login.submit: __security.login.submit
+security.login.remember_me: __security.login.remember_me
+custom.forgot_password: __custom.forgot_password
+layout.register: __layout.register

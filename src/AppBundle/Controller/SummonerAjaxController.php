@@ -40,6 +40,28 @@ class SummonerAjaxController extends Controller
         }
     }
 
+    public function unlinkSummonerToUserAction(Request $request)
+    {
+        $authenticatedUser = $this->get('security.token_storage')->getToken()->getUser();
+        if (!$request->isXmlHttpRequest()) {
+            return new JsonResponse(array('httpCode' => 400, 'error' => 'Requête non AJAX'));
+        } elseif (!$authenticatedUser) {
+            return new JsonResponse(array('httpCode' => 401, 'error' => 'Authentification nécessaire'));
+        } else {
+            $summonerName = $request->request->get('summonerName');
+            $region = $request->request->get('region');
+            $summonerService = $this->container->get('app.lolsummoner');
+
+            $linkMessage = $summonerService->unlinkSummonerToUser($authenticatedUser, $summonerName, $region);
+            $template = $this->render('AppBundle:Account:_link-account.html.twig',
+                array(
+                    'linkMessage' => $linkMessage,
+                ))
+                ->getContent();
+            return new Response($template);
+        }
+    }
+
     public function chestsAction(Request $request, $summonerId, $region)
     {
         if (!$request->isXmlHttpRequest()) {

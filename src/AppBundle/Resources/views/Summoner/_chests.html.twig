@@ -1,44 +1,39 @@
 <div class="col-xs-12 col-md-12 white-bg">
     <div class="col-md-12">
-        <h2>Coffres</h2>
+        <h2>{{ 'chests'|trans }}</h2>
         <div class="row">
             <div class="col-md-9">
                 <div id="chests-choice" class="btn-group">
-                    <button data-filter="all" type="button" class="btn btn-primary btn-lg">{{ 'chests.all.champions'|trans }}<span class="badge">{{ champions|length }}</span></button>
-                    <button data-filter="1" type="button" class="btn btn-primary btn-lg">{{ 'chests.owned'|trans }}<span class="badge">{{ owned }}</span></button>
-                    <button data-filter="2" type="button" class="btn btn-primary btn-lg">{{ 'chests.remaining'|trans }}<span class="badge">{{ remaining }}</button>
+                    <button data-filter="all" type="button"
+                            class="btn btn-primary btn-lg">{{ 'chests.all.champions'|trans }} <span
+                                class="badge">{{ champions|length }}</span></button>
+                    <button data-filter="1" type="button" class="btn btn-primary btn-lg">{{ 'chests.owned'|trans }}
+                        <span
+                                class="badge">{{ owned }}</span></button>
+                    <button data-filter="2" type="button" class="btn btn-primary btn-lg">{{ 'chests.remaining'|trans }}
+                        <span class="badge">{{ remaining }}</button>
                 </div>
             </div>
             <div class="col-md-3">
-                <input type="text" name="filtr-search" class="filtr-search form-control" value="" placeholder="{{ 'search'|trans }}" data-search="">
+                <input type="text" name="filtr-search" class="filtr-search form-control" value=""
+                       placeholder="{{ 'search'|trans }}" data-search="">
             </div>
         </div>
 
         <div id="filtr-container-chests" class="filtr-container">
             {% for key, champion in champions %}
-                <div class="col-md-3 text-center champion filtr-item" data-category="{{ dataCategory[champion.key] }}" data-sort="value">
+                <div class="col-md-3 text-center champion filtr-item" data-category="{{ dataCategory[champion.key] }}"
+                     data-sort="value">
                     <h4>{{ champion.name }}</h4>
                     <img src="http://ddragon.leagueoflegends.com/cdn/{{ static_data_version }}/img/champion/{{ champion.key }}.png">
                     {% if champion.chestGranted is defined and champion.chestGranted %}
                         <div>
-                            <img src="{{ asset('bundles/app/images/champion-masteries/chest_champion_mastery_over.png' ) }}" />
+                            <img src="{{ asset('bundles/app/images/champion-masteries/chest_champion_mastery_over.png' ) }}"/>
                         </div>
                     {% else %}
                         <div>
-                            <img src="{{ asset('bundles/app/images/champion-masteries/chest_champion_mastery_disabled.png' ) }}" />
+                            <img src="{{ asset('bundles/app/images/champion-masteries/chest_champion_mastery_disabled.png' ) }}"/>
                         </div>
-                    {% endif %}
-                    {% if champion.championLevel is defined %}
-                        <div>
-                            <img src="{{ asset('bundles/app/images/champion-masteries/' ~ champion.championLevel ~ '.png' ) }}" />
-                        </div>
-                    {% else %}
-                        <div>
-                            <img src="{{ asset('bundles/app/images/champion-masteries/chest_champion_mastery_disabled.png' ) }}" />
-                        </div>
-                    {% endif %}
-                    {% if champion.lastPlayTime is defined %}
-                        Joué la dernière fois le {{ (champion.lastPlayTime/1000)|date('d/m/Y à H:m') }}
                     {% endif %}
                 </div>
             {% endfor %}

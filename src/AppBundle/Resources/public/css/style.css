@@ -11,7 +11,7 @@ body {
     padding: 15px;
 }
 
-.modal-content {
+.modal-content, .panel-heading, .panel-body, .panel {
     border-radius: 0;
 }
 
@@ -116,12 +116,13 @@ body {
     min-height: 100%;
     height: auto;
     /* Negative indent footer by its height */
-    margin: 0 auto -411px;
+    margin: 0 auto -41px;
     /* Pad bottom by footer height */
-    padding: 0 0 411px;
+    padding: 0 0 41px;
 }
 
-/* 350 + 41 +20 */
+/* 40 */
+/* 350 + 41 +20 = 411 */
 
 /* Set the fixed height of the footer here */
 #footer {
@@ -147,11 +148,13 @@ figcaption {
     padding: 5px;
     width: 30px;
     height: 30px;
-    right: 37px;
+    right: 0px;
+    text-align: center;
 }
 
 figure {
     position: relative;
+    width: 128px;
 }
 
 textarea {

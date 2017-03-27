@@ -20,16 +20,10 @@ class SummonerController extends Controller
         $user = $user = $this->getUser();
         // Si l'utilisateur n'est pas connecté
         if (empty($user)) {
-            return $this->render('AppBundle:Lookup:search_error_not_logged_in.html.twig',
-                array(
-                    'static_data_version' => $static_data_version,
-                ));
+            return $this->render('AppBundle:Lookup:search_error_not_logged_in.html.twig');
         } // Si l'utilisateur n'a pas de summoner enregistré
         else if (count($user->getSummoners()) == 0) {
-            return $this->render('AppBundle:Lookup:search_error_no_summoner_registered.html.twig',
-                array(
-                    'static_data_version' => $static_data_version,
-                ));
+            return $this->render('AppBundle:Lookup:search_error_no_summoner_registered.html.twig');
         } // Cas normal
         else {
             $region = $sum->getRegionBySlug('euw');

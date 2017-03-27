@@ -121,7 +121,7 @@ services:
         alias: doctrine
 
 fos_js_routing:
-  routes_to_expose: [ app_link_summoner_to_user ]
+  routes_to_expose: [ app_link_summoner_to_user, app_unlink_summoner_to_user ]
 
 jms_i18n_routing:
     default_locale: "%locale%"

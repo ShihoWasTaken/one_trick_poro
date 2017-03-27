@@ -1,17 +1,21 @@
 {% if linkMessage == 'success' %}
     <div class="alert alert-success">
         <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-        Votre invocateur a été lié a votre compte
+        {{ 'summoner.link.success'|trans }}
     </div>
-
 {% elseif linkMessage == 'summoner_not_found' %}
     <div class="alert alert-danger">
         <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-        Cet invocateur est introuvable
+        {{ 'summoner.link.not_found'|trans }}
     </div>
 {% elseif linkMessage == 'page_not_found' %}
     <div class="alert alert-warning">
         <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-        Aucune page de runes n'a été trouvé avec votre code d'activation
+        {{ 'summoner.link.page_not_found'|trans }}
+    </div>
+{% elseif linkMessage == 'already_linked' %}
+    <div class="alert alert-danger">
+        <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+        {{ 'summoner.link.already_linked'|trans }}
     </div>
 {% endif %}

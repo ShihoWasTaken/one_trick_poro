@@ -1,11 +1,11 @@
-licensed.under: is licensed under a
-license.condition: Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License
-error403.title: Error 403 - Forbidden
-error403.content: "You are not authorized to access this page."
-error404.title: Error 404 - Page not found
-error404.content: "Sorry I can't found your page. Make sure you correctly typed the URL."
-error500.title: Error 500 - Internal Server Error
-error500.content: "We are sorry, the server encountered an internal error. You can send a message to the team to explain how you get this message."
+licensed.under: 'is licensed under a'
+license.condition: 'Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License'
+error403.title: 'Error 403 - Forbidden'
+error403.content: 'You are not authorized to access this page.'
+error404.title: 'Error 404 - Page not found'
+error404.content: 'Sorry I can''t found your page. Make sure you correctly typed the URL.'
+error500.title: 'Error 500 - Internal Server Error'
+error500.content: 'We are sorry, the server encountered an internal error. You can send a message to the team to explain how you get this message.'
 title.summoner.profile: '%summonerName%''s profile'
 hello.username: 'Hello %user%'
 summoner.update: Update
@@ -38,7 +38,8 @@ navbar.about: About
 sitename: 'One Trick Poro'
 navbar.register: Register
 navbar.login: 'Log in'
-navbar.account: 'My profile'
+navbar.account: 'My account'
+navbar.logout: Logout
 home_page.title: Home
 about_page.title: About
 about_page.content: about
@@ -46,27 +47,55 @@ match.history: 'Match history'
 masteries.page.choice: 'Choose a masteries page please'
 live.game.played: played
 navbar.contact: Contact
-search.page.title: __search.page.title
-edit.infos: __edit.infos
-link.summoner: __link.summoner
-unlink.summoner: __unlink.summoner
-link.summoner.title: __link.summoner.title
-ajax.processing: __ajax.processing
-link.summoner.help: __link.summoner.help
-button.copy: __button.copy
-summoner.to.link: __summoner.to.link
-link.summoner.button: __link.summoner.button
-button.close: __button.close
-unlink.summoner.title: __unlink.summoner.title
-summoner.to.unlink: __summoner.to.unlink
-unlink.summoner.button: __unlink.summoner.button
+search.page.title: Search
+edit.infos: 'Edit profile'
+link.summoner: 'Link a summoner'
+unlink.summoner: 'Unlink a summoner'
+link.summoner.title: 'Link a summoner to your account'
+ajax.processing: 'Processing please wait'
+link.summoner.help: 'Please name one of your runes pages like below'
+button.copy: Copy
+summoner.to.link: 'The summoner to link to your account'
+link.summoner.button: Link
+button.close: Close
+unlink.summoner.title: 'Unlink a summoner from your account'
+summoner.to.unlink: 'The summoner to unlink from your account'
+unlink.summoner.button: Unlink
 search.summoner.placeholder: 'Search summoner'
 summoners.found: '{0} No summoners found|{1} Only one summoner found|]1,Inf[ %count% summoners found'
-profile.of.user: "%name%'s profile"
-modal.language.title: "Choose a language"
+profile.of.user: '%name%''s profile'
+modal.language.title: 'Choose a language'
 navbar.lookup: Lookup
-summoner.not.found.for.this.region: "The summoner %name% was not found for the region %region%."
-summoner.not.found.error: "The summoner %name% was not found because you entered bad characters"
-try.another.region: "Try another region below"
-back.to.home: "Back to home"
-contact: "Contact us"
+summoner.not.found.for.this.region: 'The summoner %name% was not found for the region %region%.'
+summoner.not.found.error: 'The summoner %name% was not found because you entered bad characters'
+try.another.region: 'Try another region below'
+back.to.home: 'Back to home'
+contact: 'Contact us'
+form.name: Name
+form.email: Email
+form.message: Message
+form.send: Send
+account: 'My account'
+logout: Logout
+summoner.link.success: 'Your summoner have been linked to your account'
+summoner.link.not_found: 'This summoner can''t be found'
+summoner.link.page_not_found: 'No masteries pages found with your activation code'
+summoner.link.blank: 'You should enter a summoner name first'
+summoner.link.already_linked: 'This summoner is already linked to an account'
+gravatar.modify: 'Change your Gravatar'
+summoners.list: 'Summoners of %user%'
+this.user.has.no.summoners: 'This user has no summoners linked to his account'
+profile.overview: Overview
+profile.edit: 'Edit profile'
+profile.link: 'Link summoner'
+profile.unlink: 'Unlink summoner'
+summoner.unlink.success: 'Summoner successfully unlinked'
+summoner.unlink.error: 'An error occured while unlinking your summoner'
+lookup.error.summoner_not_registered: 'Error, you have to link at least one summoner to your account to use this feature'
+lookup.error.not_logged_in: 'Error, you have to log in to use this feature'
+title.summoner.not.existing: Summoner not existing
+champion.masteries: Champion masteries
+champion.masteries.level: Mastery level
+champion.masteries.points: Points
+change.region: "Change region"
+contact.support: Contact support

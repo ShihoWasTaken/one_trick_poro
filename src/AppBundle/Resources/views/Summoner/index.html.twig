@@ -95,14 +95,6 @@
                  */
             });
 
-            // Bootstrap Tab URL
-            $(document).ready(function () {
-                if (location.hash !== '') $('a[href="' + location.hash + '"]').tab('show');
-                $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
-                    if (history.pushState) history.pushState(null, null, '#' + $(e.target).attr('href').substr(1)); else location.hash = '#' + $(e.target).attr('href').substr(1);
-                });
-            });
-
         });
     </script>
 {% endblock %}
@@ -121,30 +113,19 @@
                         <img src="http://ddragon.leagueoflegends.com/cdn/img/champion/splash/{{ topChampionsMastery.0.championKey }}_0.jpg" />
                         #}
                     </div>
-                    <div class="col-md-5">
+                    <div class="col-md-7">
                         <h1>{{ summoner.name }}<span class="badge region-badge"> {{ summoner.region.slug }}</span></h1>
                         <button class="btn btn-default btn-lg"
                                 id="update-summoner-btn">{{ 'summoner.update'|trans }}</button>
                     </div>
-                    <div class="col-md-5">
+                    <div class="col-md-3 text-center">
                         <img src="{{ asset('bundles/app/images/leagues/' ~ soloqimg ~ '.png') }}"/>
                         {% if soloq is not null %}
                             <div class="row">
-                                <div class="col-md-12">
-                                    {{ soloq.tier }} {{ soloq.entries.0.division }}
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-12">
-                                    {{ soloq.entries.0.leaguePoints }} {{ 'league.points'|trans }}
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-6 positive-color">
-                                    {{ soloq.entries.0.wins }} W
-                                </div>
-                                <div class="col-md-6 negative-color">
-                                    {{ soloq.entries.0.losses }} L
+                                <div class="col-md-12 text-center">
+                                    {{ soloq.tier }} {{ soloq.entries.0.division }} <br>
+                                    {{ soloq.entries.0.leaguePoints }} {{ 'league.points'|trans }} <br>
+                                    <span class="positive-color">{{ soloq.entries.0.wins }} W</span> - <span class="negative-color">{{ soloq.entries.0.losses }} L</span>
                                 </div>
                             </div>
                         {% else %}

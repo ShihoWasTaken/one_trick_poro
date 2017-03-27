@@ -11,73 +11,76 @@
         <div class="navbar-collapse collapse">
 
             <ul class="nav navbar-nav navbar-left">
-                {% if not is_granted('IS_AUTHENTICATED_REMEMBERED') %}
-                    <li><a href="{{ path('fos_user_registration_register') }}">{{ 'navbar.register' | trans }}</a></li>
-                    <li><a href="#" data-toggle="modal"
-                           data-target="#loginModal">{{ 'navbar.login' | trans }}</a></li>
-                {% else %}
-                    <li class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                            <span class="fa fa-user"></span> 
-                            <strong>{{ 'account'|trans }}</strong>
-                            <span class="fa fa-chevron-down"></span>
-                        </a>
-                        <ul class="dropdown-menu">
-                            <li>
-                                <div class="navbar-login">
-                                    <div class="row">
-                                        <div class="col-lg-4">
-                                            <p class="text-center">
-                                                <img src="{{ app.user.gravatar }}"/>
-                                            </p>
-                                        </div>
-                                        <div class="col-lg-8">
-                                            <p class="text-left"><strong>{{ app.user.username }}</strong></p>
-                                            <p class="text-left small">{{ app.user.email }}</p>
-                                            <p class="text-left">
-                                                <a href="{{ path('app_profile',  {'userId':app.user.id}) }}"
-                                                   class="btn btn-primary btn-block btn-sm">{{ 'navbar.account' | trans }}</a>
-                                            </p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </li>
-                            <li class="divider"></li>
-                            <li>
-                                <div class="navbar-login navbar-login-session">
-                                    <div class="row">
-                                        <div class="col-lg-12">
-                                            <p>
-                                                <a href="{{ path('fos_user_security_logout') }}"
-                                                   class="btn btn-danger btn-block">{{ 'logout'|trans }}</a>
-                                            </p>
+                {% if app.environment == 'dev' %}
+                    {% if not is_granted('IS_AUTHENTICATED_REMEMBERED') %}
+                        <li><a href="{{ path('fos_user_registration_register') }}">{{ 'navbar.register' | trans }}</a></li>
+                        <li><a href="#" data-toggle="modal"
+                               data-target="#loginModal">{{ 'navbar.login' | trans }}</a></li>
+                    {% else %}
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                <span class="fa fa-user"></span> 
+                                <strong>{{ 'navbar.account'|trans }}</strong>
+                                <span class="fa fa-chevron-down"></span>
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li>
+                                    <div class="navbar-login">
+                                        <div class="row">
+                                            <div class="col-lg-4">
+                                                <p class="text-center">
+                                                    <img src="{{ app.user.gravatar }}"/>
+                                                </p>
+                                            </div>
+                                            <div class="col-lg-8">
+                                                <p class="text-left"><strong>{{ app.user.username }}</strong></p>
+                                                <p class="text-left small">{{ app.user.email }}</p>
+                                                <p class="text-left">
+                                                    <a href="{{ path('app_profile',  {'userId':app.user.id}) }}"
+                                                       class="btn btn-primary btn-block btn-sm">{{ 'navbar.account' | trans }}</a>
+                                                </p>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                            </li>
-                        </ul>
-                    </li>
-                    <style>
-                        .navbar-login {
-                            width: 305px;
-                            padding: 10px;
-                            padding-bottom: 0px;
-                        }
+                                </li>
+                                <li class="divider"></li>
+                                <li>
+                                    <div class="navbar-login navbar-login-session">
+                                        <div class="row">
+                                            <div class="col-lg-12">
+                                                <p>
+                                                    <a href="{{ path('fos_user_security_logout') }}"
+                                                       class="btn btn-danger btn-block">{{ 'navbar.logout'|trans }}</a>
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </li>
+                            </ul>
+                        </li>
+                        <style>
+                            .navbar-login {
+                                width: 305px;
+                                padding: 10px;
+                                padding-bottom: 0px;
+                            }
 
-                        .navbar-login-session {
-                            padding: 10px;
-                            padding-bottom: 0px;
-                            padding-top: 0px;
-                        }
+                            .navbar-login-session {
+                                padding: 10px;
+                                padding-bottom: 0px;
+                                padding-top: 0px;
+                            }
 
-                        .icon-size {
-                            font-size: 87px;
-                        }
-                    </style>
+                            .icon-size {
+                                font-size: 87px;
+                            }
+                        </style>
+                    {% endif %}
+                    <li><a href="{{ path('app_search_summoners') }}">{{ 'navbar.lookup'|trans }}</a></li>
                 {% endif %}
-                <li><a href="{{ path('app_search_summoners') }}">{{ 'navbar.lookup'|trans }}</a></li>
                 {% if app.environment == 'dev' %}
                     <li><a href="{{ path('app_dev_featured') }}">Featured</a></li>
+                    <li><a href="{{ path('app_badge_generator') }}">Badge</a></li>
                 {% endif %}
             </ul>
             <ul class="nav navbar-nav navbar-right">

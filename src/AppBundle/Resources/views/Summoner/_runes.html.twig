@@ -17,34 +17,35 @@
                 {% if page.slots is defined %}
                     {% for rune in page.slots %}
                         <div>
-                            <div  data-toggle="tooltip" data-html="true" title="<h4>{{ translations[rune.runeId].name }}</h4>{{ translations[rune.runeId].description }}" class="overlay runes rune-overlay-{{ rune.runeSlotId }} {% if rune.runeSlotId > 27 %}quint{% endif %}"  style="background-image: url('http://ddragon.leagueoflegends.com/cdn/{{ static_data_version }}/img/rune/{{ runes[rune.runeId] }}');"></div>
+                            <div data-toggle="tooltip" data-html="true" title="<h4>{{ translations[rune.runeId].name }}</h4>{{ translations[rune.runeId].description }}" class="overlay runes rune-overlay-{{ rune.runeSlotId }} {% if rune.runeSlotId > 27 %}quint{% endif %}"
+                                 style="background-image: url('http://ddragon.leagueoflegends.com/cdn/{{ static_data_version }}/img/rune/{{ runes[rune.runeId] }}');"></div>
                         </div>
                     {% endfor %}
                 {% endif %}
             </div>
         </div>
         <div class="col-md-3">
-            <h2>Total</h2>
+            {#<h2>Total</h2>#}
         </div>
     </div>
 {% endfor %}
 <script>
-    $( document ).ready(function() {
+    $(document).ready(function () {
 
         var lastPageDisplayed = 1;
 
-        $('#runesPageSelect').change(function(){
+        $('#runesPageSelect').change(function () {
             var data = $(this).val();
             $('#rune-page-' + lastPageDisplayed).addClass('hidden');
             $('#rune-page-' + data).removeClass('hidden');
             lastPageDisplayed = data;
         });
 
-        var index =         $('.rune-page-current-true:first').text();
+        var index = $('.rune-page-current-true:first').text();
 
         $('#runesPageSelect')
-                .val(index)
-                .trigger('change');
+            .val(index)
+            .trigger('change');
         $('[data-toggle="tooltip"]').tooltip();
     });
 </script>
@@ -52,19 +53,18 @@
     .relative-container {
         position: relative;
     }
+
     .overlay {
         position: absolute;
         z-index: 100;
     }
 
-    .runes-background
-    {
+    .runes-background {
         width: 656px;
         height: 436px;
     }
 
-    .runes
-    {
+    .runes {
         width: 50px;
         height: 50px;
         background-repeat: no-repeat;
@@ -72,188 +72,157 @@
 
     }
 
-    .runes.quint
-    {
+    .runes.quint {
         width: 80px;
         height: 80px;
     }
 
-    .rune-overlay-1
-    {
+    .rune-overlay-1 {
         left: 24px;
         top: 374px;
     }
 
-    .rune-overlay-2
-    {
+    .rune-overlay-2 {
         left: 86px;
         top: 375px;
     }
 
-    .rune-overlay-3
-    {
+    .rune-overlay-3 {
         left: 158px;
         top: 377px;
     }
 
-    .rune-overlay-4
-    {
+    .rune-overlay-4 {
         left: 10px;
         top: 318px;
     }
 
-    .rune-overlay-5
-    {
+    .rune-overlay-5 {
         left: 72px;
         top: 314px;
     }
 
-    .rune-overlay-6
-    {
+    .rune-overlay-6 {
         left: 127px;
         top: 329px;
     }
 
-    .rune-overlay-7
-    {
+    .rune-overlay-7 {
         left: 32px;
         top: 267px;
     }
 
-    .rune-overlay-8
-    {
+    .rune-overlay-8 {
         left: 113px;
         top: 271px;
     }
 
-    .rune-overlay-9
-    {
+    .rune-overlay-9 {
         left: 74px;
         top: 228px;
     }
 
-    .rune-overlay-10
-    {
+    .rune-overlay-10 {
         left: 38px;
         top: 185px;
     }
 
-    .rune-overlay-11
-    {
+    .rune-overlay-11 {
         left: 107px;
         top: 179px;
     }
 
-    .rune-overlay-12
-    {
+    .rune-overlay-12 {
         left: 67px;
         top: 135px;
     }
 
-    .rune-overlay-13
-    {
+    .rune-overlay-13 {
         left: 122px;
         top: 112px;
     }
 
-    .rune-overlay-14
-    {
+    .rune-overlay-14 {
         left: 154px;
         top: 67px;
     }
 
-    .rune-overlay-15
-    {
+    .rune-overlay-15 {
         left: 211px;
         top: 40px;
     }
 
-    .rune-overlay-16
-    {
+    .rune-overlay-16 {
         left: 268px;
         top: 22px;
     }
 
-    .rune-overlay-17
-    {
+    .rune-overlay-17 {
         left: 332px;
         top: 3px;
     }
 
-    .rune-overlay-18
-    {
+    .rune-overlay-18 {
         left: 360px;
         top: 53px;
     }
 
-    .rune-overlay-19
-    {
+    .rune-overlay-19 {
         left: 399px;
         top: 6px;
     }
 
-    .rune-overlay-20
-    {
+    .rune-overlay-20 {
         left: 433px;
         top: 54px;
     }
 
-    .rune-overlay-21
-    {
+    .rune-overlay-21 {
         left: 465px;
         top: 6px;
     }
 
-    .rune-overlay-22
-    {
+    .rune-overlay-22 {
         left: 480px;
         top: 92px;
     }
 
-    .rune-overlay-23
-    {
+    .rune-overlay-23 {
         left: 510px;
         top: 46px;
     }
 
-    .rune-overlay-24
-    {
+    .rune-overlay-24 {
         left: 550px;
         top: 6px;
     }
 
-    .rune-overlay-25
-    {
+    .rune-overlay-25 {
         left: 599px;
         top: 40px;
     }
 
-    .rune-overlay-26
-    {
+    .rune-overlay-26 {
         left: 556px;
         top: 80px;
     }
 
-    .rune-overlay-27
-    {
+    .rune-overlay-27 {
         left: 578px;
         top: 132px;
     }
 
-    .rune-overlay-28
-    {
+    .rune-overlay-28 {
         left: 199px;
         top: 219px;
     }
 
-    .rune-overlay-29
-    {
+    .rune-overlay-29 {
         left: 41px;
         top: 30px;
     }
 
-    .rune-overlay-30
-    {
+    .rune-overlay-30 {
         left: 428px;
         top: 167px;
     }

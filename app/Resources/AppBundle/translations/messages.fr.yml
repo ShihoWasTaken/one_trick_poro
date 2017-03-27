@@ -1,11 +1,11 @@
-licensed.under: est mis à disposition selon les termes de la
-license.condition: licence Creative Commons Attribution - Pas d’Utilisation Commerciale - Partage dans les Mêmes Conditions 4.0 International
-error403.title: Error 403 - Interdit
-error403.content: "Vous n'êtes pas autorisé à accéder à cette page."
-error404.title: Erreur 404 - Page non trouvée
-error404.content: "Désolé, je n'ai pas trouvé la page que tu demandes. Elle a peut être été supprimée ou alors tu as peut être mal tapé l'URL"
-error500.title: Erreur 500 - Erreur interne du serveur
-error500.content: "Nous sommes désolé mais le serveur a rencontré une erreur interne. Vous pouvez nous aider en envoyant un message à notre support en expliquant dans quelles circonstances vous avez obtenu ce message."
+licensed.under: 'est mis à disposition selon les termes de la'
+license.condition: 'licence Creative Commons Attribution - Pas d’Utilisation Commerciale - Partage dans les Mêmes Conditions 4.0 International'
+error403.title: 'Error 403 - Interdit'
+error403.content: 'Vous n''êtes pas autorisé à accéder à cette page.'
+error404.title: 'Erreur 404 - Page non trouvée'
+error404.content: 'Désolé, je n''ai pas trouvé la page que tu demandes. Elle a peut être été supprimée ou alors tu as peut être mal tapé l''URL'
+error500.title: 'Erreur 500 - Erreur interne du serveur'
+error500.content: 'Nous sommes désolé mais le serveur a rencontré une erreur interne. Vous pouvez nous aider en envoyant un message à notre support en expliquant dans quelles circonstances vous avez obtenu ce message.'
 title.summoner.profile: 'Profil de %summonerName%'
 hello.username: 'Bonjour %user%'
 summoner.update: 'Mettre à jour'
@@ -40,33 +40,60 @@ sitename: 'One Trick Poro'
 navbar.register: 'Créer un compte'
 navbar.login: Connexion
 navbar.account: 'Mon compte'
+navbar.logout: Déconnexion
 home_page.title: Accueil
 about_page.title: 'A propos'
 about_page.content: 'a Propos'
 match.history: 'Historique des parties'
 masteries.page.choice: 'Veuillez choisir une page de maîtrises'
 live.game.played: jouées
-search.page.title: __search.page.title
-edit.infos: __edit.infos
-link.summoner: __link.summoner
-unlink.summoner: __unlink.summoner
-link.summoner.title: __link.summoner.title
-ajax.processing: __ajax.processing
-link.summoner.help: __link.summoner.help
-button.copy: __button.copy
-summoner.to.link: __summoner.to.link
-link.summoner.button: __link.summoner.button
-button.close: __button.close
-unlink.summoner.title: __unlink.summoner.title
-summoner.to.unlink: __summoner.to.unlink
-unlink.summoner.button: __unlink.summoner.button
+search.page.title: Recherche
+edit.infos: 'Modifier mon profil'
+link.summoner: 'Lier invocateur'
+unlink.summoner: 'Délier invocateur'
+link.summoner.title: 'Lier un invocateur à votre compte'
+ajax.processing: 'En cours de traitement'
+link.summoner.help: 'Veuillez renommer une de vos pages de maitrises comme ceci'
+button.copy: Copier
+summoner.to.link: 'L''invocateur à lier à votre compte'
+link.summoner.button: Lier
+button.close: Fermer
+unlink.summoner.title: 'Délier un invocateur de votre compte'
+summoner.to.unlink: 'L''invocateur à délier de votre compte'
+unlink.summoner.button: Délier
 search.summoner.placeholder: 'Chercher invocateur'
 summoners.found: '{0} Aucun summoner remplissant les critères|{1} Un seul invocateur correspond à ces critères|]1,Inf[ %count% invocateurs trouvés'
 profile.of.user: 'Profil de %name%'
 modal.language.title: 'Choisissez une langue'
 navbar.lookup: Recherche
-summoner.not.found.for.this.region: "L'invocateur %name% n'a pas été trouvé pour la region %region%."
-summoner.not.found.error: "L'invocateur %name% n'a pas été trouvé car vous avez entré des caractères illégaux"
-try.another.region: "Essayez une autre région ci-dessous"
-back.to.home: "Retour à l'accueil"
-contact: "Nous contacter"
+summoner.not.found.for.this.region: 'L''invocateur %name% n''a pas été trouvé pour la region %region%.'
+summoner.not.found.error: 'L''invocateur %name% n''a pas été trouvé car vous avez entré des caractères illégaux'
+try.another.region: 'Essayez une autre région ci-dessous'
+back.to.home: 'Retour à l''accueil'
+contact: 'Nous contacter'
+form.name: Nom
+form.email: Email
+form.message: Message
+form.send: Envoyer
+summoner.link.success: 'Votre invocateur a été lié a votre compte'
+summoner.link.not_found: 'Cet invocateur est introuvable'
+summoner.link.page_not_found: 'Aucune page de maîtrises n''a été trouvée avec votre code d''activation'
+summoner.link.blank: 'Vous devez d''abord rentrer un nom d''invocateur'
+summoner.link.already_linked: 'Cet invocateur a déjà été lié à un compte'
+gravatar.modify: 'Changer votre Gravatar'
+summoners.list: 'Invocateurs de %user%'
+this.user.has.no.summoners: 'Cet utilisateur n''a pas d''invocateur lié à son compte'
+profile.overview: Aperçu
+profile.edit: 'Modifier profil'
+profile.link: 'Lier invocateur'
+profile.unlink: 'Délier invocateur'
+summoner.unlink.success: 'L''invocateur a été délié avec succès'
+summoner.unlink.error: 'Une erreur est survenue en essayant de délier votre invocateur'
+lookup.error.summoner_not_registered: 'Erreur, vous devez lier un invocateur à votre compte pour utiliser cette fonctionnalité'
+lookup.error.not_logged_in: 'Erreur, vous devez vous connecter pour utiliser cette fonctionnalité'
+title.summoner.not.existing: Invocateur inexistant
+champion.masteries: Maîtrises de champion
+champion.masteries.level: Niveau de maîtrise
+champion.masteries.points: Points
+change.region: Changer la région
+contact.support: Contacter le support

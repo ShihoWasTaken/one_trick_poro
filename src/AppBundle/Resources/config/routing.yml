@@ -44,6 +44,12 @@ app_link_summoner_to_user:
     methods:  [POST]
     requirements: { method: POST }
 
+app_unlink_summoner_to_user:
+    path:     /unlink-account
+    defaults: { _controller: AppBundle:SummonerAjax:unlinkSummonerToUser }
+    methods:  [POST]
+    requirements: { method: POST }
+
 app_summoner:
     path:     /summoner/{region}/{summonerId}
     defaults: { _controller: AppBundle:Summoner:index }
@@ -125,3 +131,8 @@ app_search_summoners:
 app_deny_login:
     path:     /login
     defaults: { _controller: AppBundle:Static:notFound }
+
+app_badge_generator:
+    path:     /summoner-badge-generator
+    defaults: { _controller: AppBundle:Summoner:badgeGenerator }
+

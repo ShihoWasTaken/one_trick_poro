@@ -16,35 +16,36 @@
                 <div class="masteries-background" style="background-image: url({{ asset('bundles/app/images/masteries/masteries-background.jpg') }});"></div>
                 {% for mastery in masteries %}
                     <div>
-                        <div data-toggle="tooltip" data-html="true" title="<h3>{{ translations[mastery.id].name }}</h3>{{ translations[mastery.id].formattedDescription }}" class="overlay masteries masteries-overlay-{{ mastery.id }} {% if page.masteries[mastery.id] is not defined %}masteries-off{%  endif %}"  style="background-image: url('http://ddragon.leagueoflegends.com/cdn/{{ static_data_version }}/img/mastery/{{ mastery.id }}.png');">
-                            <div class="overlay masteries-rank">{% if page.masteries[mastery.id] is defined %}{{ page.masteries[mastery.id] }}{% else %}0{%  endif %}/{{ mastery.maxRank }}</div>
+                        <div data-toggle="tooltip" data-html="true" title="<h3>{{ translations[mastery.id].name }}</h3>{{ translations[mastery.id].formattedDescription }}"
+                             class="overlay masteries masteries-overlay-{{ mastery.id }} {% if page.masteries[mastery.id] is not defined %}masteries-off{% endif %}" style="background-image: url('http://ddragon.leagueoflegends.com/cdn/{{ static_data_version }}/img/mastery/{{ mastery.id }}.png');">
+                            <div class="overlay masteries-rank">{% if page.masteries[mastery.id] is defined %}{{ page.masteries[mastery.id] }}{% else %}0{% endif %}/{{ mastery.maxRank }}</div>
                         </div>
                     </div>
                 {% endfor %}
             </div>
         </div>
         <div class="col-md-3">
-            <h2>Total</h2>
+            {#<h2>Total</h2>#}
         </div>
     </div>
 {% endfor %}
 <script>
-    $( document ).ready(function() {
+    $(document).ready(function () {
 
         var lastMasteriesPageDisplayed = 1;
 
-        $('#masteriesPageSelect').change(function(){
+        $('#masteriesPageSelect').change(function () {
             var data = $(this).val();
             $('#masteries-page-' + lastMasteriesPageDisplayed).addClass('hidden');
             $('#masteries-page-' + data).removeClass('hidden');
             lastMasteriesPageDisplayed = data;
         });
 
-        var index =         $('.masteries-page-current-true:first').text();
+        var index = $('.masteries-page-current-true:first').text();
 
         $('#masteriesPageSelect')
-                .val(index)
-                .trigger('change');
+            .val(index)
+            .trigger('change');
 
         $('[data-toggle="tooltip"]').tooltip();
     });
@@ -59,27 +60,23 @@
         z-index: 100;
     }
 
-    .masteries-background
-    {
+    .masteries-background {
         width: 828px;
         height: 479px;
     }
 
-    .masteries
-    {
+    .masteries {
         width: 50px;
         height: 50px;
         background-repeat: no-repeat;
         background-size: cover
     }
 
-    .masteries-off
-    {
+    .masteries-off {
         filter: grayscale(100%);
     }
 
-    .masteries-rank
-    {
+    .masteries-rank {
         bottom: -15px;
         left: 0;
         color: gold;
@@ -93,279 +90,234 @@
     }
 
     /* On ajoute 138px en largeur */
-    .masteries-overlay-6111
-    {
+    .masteries-overlay-6111 {
         top: 10px;
         left: 88px;
     }
 
-    .masteries-overlay-6114
-    {
+    .masteries-overlay-6114 {
         top: 10px;
         left: 148px;
     }
 
-    .masteries-overlay-6311
-    {
+    .masteries-overlay-6311 {
         top: 10px;
         left: 364px;
     }
 
-    .masteries-overlay-6312
-    {
+    .masteries-overlay-6312 {
         top: 10px;
         left: 424px;
     }
 
-    .masteries-overlay-6211
-    {
+    .masteries-overlay-6211 {
         top: 10px;
         left: 640px;
     }
 
-    .masteries-overlay-6212
-    {
+    .masteries-overlay-6212 {
         top: 10px;
         left: 700px;
     }
 
     /* On descends de 80px */
-    .masteries-overlay-6121
-    {
+    .masteries-overlay-6121 {
         top: 90px;
         left: 58px;
     }
 
-    .masteries-overlay-6122
-    {
+    .masteries-overlay-6122 {
         top: 90px;
         left: 118px;
     }
 
-    .masteries-overlay-6123
-    {
+    .masteries-overlay-6123 {
         top: 90px;
         left: 178px;
     }
 
-    .masteries-overlay-6321
-    {
+    .masteries-overlay-6321 {
         top: 90px;
         left: 334px;
     }
 
-    .masteries-overlay-6322
-    {
+    .masteries-overlay-6322 {
         top: 90px;
         left: 394px;
     }
 
-    .masteries-overlay-6323
-    {
+    .masteries-overlay-6323 {
         top: 90px;
         left: 454px;
     }
 
-    .masteries-overlay-6221
-    {
+    .masteries-overlay-6221 {
         top: 90px;
         left: 610px;
     }
 
-    .masteries-overlay-6222
-    {
+    .masteries-overlay-6222 {
         top: 90px;
         left: 670px;
     }
 
-    .masteries-overlay-6223
-    {
+    .masteries-overlay-6223 {
         top: 90px;
         left: 730px;
     }
 
     /* part 2 */
     /* On ajoute 138px en largeur */
-    .masteries-overlay-6131
-    {
+    .masteries-overlay-6131 {
         top: 170px;
         left: 88px;
     }
 
-    .masteries-overlay-6134
-    {
+    .masteries-overlay-6134 {
         top: 170px;
         left: 148px;
     }
 
-    .masteries-overlay-6331
-    {
+    .masteries-overlay-6331 {
         top: 170px;
         left: 364px;
     }
 
-    .masteries-overlay-6332
-    {
+    .masteries-overlay-6332 {
         top: 170px;
         left: 424px;
     }
 
-    .masteries-overlay-6231
-    {
+    .masteries-overlay-6231 {
         top: 170px;
         left: 640px;
     }
 
-    .masteries-overlay-6232
-    {
+    .masteries-overlay-6232 {
         top: 170px;
         left: 700px;
     }
 
     /* On descends de 80px */
-    .masteries-overlay-6141
-    {
+    .masteries-overlay-6141 {
         top: 250px;
         left: 58px;
     }
 
-    .masteries-overlay-6142
-    {
+    .masteries-overlay-6142 {
         top: 250px;
         left: 118px;
     }
 
-    .masteries-overlay-6143
-    {
+    .masteries-overlay-6143 {
         top: 250px;
         left: 178px;
     }
 
-    .masteries-overlay-6341
-    {
+    .masteries-overlay-6341 {
         top: 250px;
         left: 334px;
     }
 
-    .masteries-overlay-6342
-    {
+    .masteries-overlay-6342 {
         top: 250px;
         left: 394px;
     }
 
-    .masteries-overlay-6343
-    {
+    .masteries-overlay-6343 {
         top: 250px;
         left: 454px;
     }
 
-    .masteries-overlay-6241
-    {
+    .masteries-overlay-6241 {
         top: 250px;
         left: 610px;
     }
 
-    .masteries-overlay-6242
-    {
+    .masteries-overlay-6242 {
         top: 250px;
         left: 670px;
     }
 
-    .masteries-overlay-6243
-    {
+    .masteries-overlay-6243 {
         top: 250px;
         left: 730px;
     }
 
     /* part 3 */
     /* On ajoute 138px en largeur */
-    .masteries-overlay-6151
-    {
+    .masteries-overlay-6151 {
         top: 330px;
         left: 88px;
     }
 
-    .masteries-overlay-6154
-    {
+    .masteries-overlay-6154 {
         top: 330px;
         left: 148px;
     }
 
-    .masteries-overlay-6351
-    {
+    .masteries-overlay-6351 {
         top: 330px;
         left: 364px;
     }
 
-    .masteries-overlay-6352
-    {
+    .masteries-overlay-6352 {
         top: 330px;
         left: 424px;
     }
 
-    .masteries-overlay-6251
-    {
+    .masteries-overlay-6251 {
         top: 330px;
         left: 640px;
     }
 
-    .masteries-overlay-6252
-    {
+    .masteries-overlay-6252 {
         top: 330px;
         left: 700px;
     }
 
     /* On descends de 80px */
-    .masteries-overlay-6161
-    {
+    .masteries-overlay-6161 {
         top: 410px;
         left: 58px;
     }
 
-    .masteries-overlay-6162
-    {
+    .masteries-overlay-6162 {
         top: 410px;
         left: 118px;
     }
 
-    .masteries-overlay-6164
-    {
+    .masteries-overlay-6164 {
         top: 410px;
         left: 178px;
     }
 
-    .masteries-overlay-6361
-    {
+    .masteries-overlay-6361 {
         top: 410px;
         left: 334px;
     }
 
-    .masteries-overlay-6362
-    {
+    .masteries-overlay-6362 {
         top: 410px;
         left: 394px;
     }
 
-    .masteries-overlay-6363
-    {
+    .masteries-overlay-6363 {
         top: 410px;
         left: 454px;
     }
 
-    .masteries-overlay-6261
-    {
+    .masteries-overlay-6261 {
         top: 410px;
         left: 610px;
     }
 
-    .masteries-overlay-6262
-    {
+    .masteries-overlay-6262 {
         top: 410px;
         left: 670px;
     }
 
-    .masteries-overlay-6263
-    {
+    .masteries-overlay-6263 {
         top: 410px;
         left: 730px;
     }

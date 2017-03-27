@@ -10,113 +10,261 @@
 {% endblock %}
 
 {% block content %}
-    <div class="container">
-        <div class="col-xs-12 col-md-12 white-bg">
-            <h1>{{ 'profile.of.user'|trans({'%name%': user.username}) }}</h1>
-            <img src="{{ user.gravatar }}"/>
-            <div><a href="https://{{ app.request.locale }}.gravatar.com/emails/">{{ 'gravatar.modify'|trans }}</a></div>
-            {% if app.user and app.user == user %}
-                {# Utilisateur connecté et sur son profil #}
-                <div class="btn-group btn-group-justified" role="group" aria-label="...">
-                    <div class="btn-group" role="group">
-                        <a class="btn btn-primary" role="button"
-                           href="{{ path('app_profile_edit', {'userId': app.user.id}) }}">{{ 'edit.infos'|trans }}</a>
-                    </div>
-                    <div class="btn-group" role="group">
-                        {# Bouton link summoner #}
-                        <button class="btn btn-primary" id="btn-link-account" type="button" data-toggle="modal"
-                                data-target="#modalLinkSummoner"
-                                data-backdrop="static">{{ 'link.summoner'|trans }}</button>
-                    </div>
-                    <div class="btn-group" role="group">
-                        {# Bouton unlink summoner #}
-                        <button class="btn btn-primary" id="btn-unlink-account" type="button" data-toggle="modal"
-                                data-target="#modalUnlinkSummoner"
-                                data-backdrop="static">{{ 'unlink.summoner'|trans }}</button>
-                    </div>
-                </div>
-                {# Modal link summoner #}
-                <div id="modalLinkSummoner" class="modal fade" role="dialog">
-                    <div class="modal-dialog">
+    <style>
+        /***
+User Profile Sidebar by @keenthemes
+A component of Metronic Theme - #1 Selling Bootstrap 3 Admin Theme in Themeforest: http://j.mp/metronictheme
+Licensed under MIT
+***/
 
-                        <!-- Modal content-->
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <button type="button" class="close" data-dismiss="modal">&times;</button>
-                                <h4 class="modal-title">{{ 'link.summoner.title'|trans }}</h4>
+        body {
+            background: #F1F3FA;
+        }
+
+        /* Profile container */
+        .profile {
+            margin: 20px 0;
+        }
+
+        /* Profile sidebar */
+        .profile-sidebar {
+            padding: 20px 0 10px 0;
+            background: #fff;
+        }
+
+        .profile-userpic {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .profile-usertitle {
+            text-align: center;
+        }
+
+        .profile-usertitle-name {
+            color: #5a7391;
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 7px;
+        }
+
+        .profile-usertitle-job {
+            text-transform: uppercase;
+            color: #5b9bd1;
+            font-size: 12px;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+
+        .profile-userbuttons {
+            text-align: center;
+            margin-top: 10px;
+        }
+
+        .profile-userbuttons .btn {
+            text-transform: uppercase;
+            font-size: 11px;
+            font-weight: 600;
+            padding: 6px 15px;
+            margin-right: 5px;
+        }
+
+        .profile-userbuttons .btn:last-child {
+            margin-right: 0px;
+        }
+
+        .profile-usermenu {
+            margin-top: 30px;
+        }
+
+        .profile-usermenu ul li {
+            border-bottom: 1px solid #f0f4f7;
+        }
+
+        .profile-usermenu ul li:last-child {
+            border-bottom: none;
+        }
+
+        .profile-usermenu ul li a {
+            color: #93a3b5;
+            font-size: 14px;
+            font-weight: 400;
+        }
+
+        .profile-usermenu ul li a i {
+            margin-right: 8px;
+            font-size: 14px;
+        }
+
+        .profile-usermenu ul li a:hover {
+            background-color: #fafcfd;
+            color: #5b9bd1;
+        }
+
+        .profile-usermenu ul li.active {
+            border-bottom: none;
+        }
+
+        .profile-usermenu ul li.active a {
+            color: #5b9bd1;
+            background-color: #f6f9fb;
+            border-left: 2px solid #5b9bd1;
+            margin-left: -2px;
+        }
+
+        /* Profile Content */
+        .tab-pane {
+            padding: 20px;
+            background: #fff;
+            min-height: 460px;
+        }
+    </style>
+    <!--
+    User Profile Sidebar by @keenthemes
+    A component of Metronic Theme - #1 Selling Bootstrap 3 Admin Theme in Themeforest: http://j.mp/metronictheme
+    Licensed under MIT
+    -->
+
+    <div class="container">
+        <div class="row profile">
+            <div class="col-md-3">
+                <div class="profile-sidebar">
+                    <!-- SIDEBAR USER TITLE -->
+                    <div class="profile-usertitle">
+                        <div class="profile-usertitle-name">
+                            {{ user.username }}
+                        </div>
+                        <div class="profile-usertitle-job">
+                            User
+                        </div>
+                    </div>
+                    <!-- END SIDEBAR USER TITLE -->
+                    <!-- SIDEBAR USERPIC -->
+                    <div class="profile-userpic">
+                        <img src="{{ user.gravatar }}"/>
+                        {% if app.user and app.user == user %}
+                            <div><a target="_blank"
+                                    href="https://{{ app.request.locale }}.gravatar.com/emails/">{{ 'gravatar.modify'|trans }}</a>
                             </div>
-                            <div class="modal-body">
-                                <div id="responseDiv" class="col-md-12 text-center">
-                                </div>
-                                <div id="loadingDiv" class="col-md-12 text-center hidden">
-                                    <img src="{{ asset('bundles/app/images/loader.gif' ) }}"/>
-                                    <h1>{{ 'ajax.processing'|trans }}</h1>
-                                </div>
-                                <p>{{ 'link.summoner.help'|trans }}: </p>
-                                <div class="input-group">
-                                    {# TODO: tester que le code est le même que dans le service qui lie le compte #}
-                                    <span class="input-group-addon"
-                                          id="foo">OneTrickPoro.com/{{ app.user.id[-5:] }}</span>
-                                    <span class="input-group-btn">
+                        {% endif %}
+                    </div>
+                    <!-- END SIDEBAR USERPIC -->
+                    {#
+                    <!-- SIDEBAR BUTTONS -->
+                    {% if app.user and app.user != user %}
+                        <div class="profile-userbuttons">
+                            <button type="button" class="btn btn-success btn-sm">Follow</button>
+                            <button type="button" class="btn btn-danger btn-sm">Message</button>
+                        </div>
+                    {% endif %}
+                    <!-- END SIDEBAR BUTTONS -->
+                    #}
+                    <!-- SIDEBAR MENU -->
+                    <div class="profile-usermenu">
+                        <ul class="nav">
+                            <li class="active">
+                                <a data-toggle="tab" href="#overview" class="active dropdown-toggle">
+                                    <i class="fa fa-home"></i>
+                                    {{ 'profile.overview'|trans }}
+                                </a>
+                            </li>
+                            {% if app.user and app.user == user %}
+                                <li>
+                                    <a data-toggle="tab" href="#edit" class="dropdown-toggle">
+                                        <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+                                        {{ 'profile.edit'|trans }}
+                                    </a>
+                                </li>
+                                <li>
+                                    <a data-toggle="tab" href="#link" class="dropdown-toggle">
+                                        <i class="fa fa-link" aria-hidden="true"></i>
+                                        {{ 'profile.link'|trans }}
+                                    </a>
+                                </li>
+                                {% if user.summoners is not empty %}
+                                    <li>
+                                        <a data-toggle="tab" href="#unlink" class="dropdown-toggle">
+                                            <i class="fa fa-chain-broken" aria-hidden="true"></i>
+                                            {{ 'profile.unlink'|trans }}
+                                        </a>
+                                    </li>
+                                {% endif %}
+                            {% endif %}
+                        </ul>
+                    </div>
+                    <!-- END MENU -->
+                </div>
+            </div>
+            <div class="col-md-9">
+                <div class="tab-content">
+                    <div id="overview" class="tab-pane fade in active">
+                        <h3>{{ 'profile.overview'|trans }}</h3>
+                        {% include 'AppBundle:Account:profile_summoners.html.twig' %}
+                    </div>
+                    {% if app.user and app.user == user %}
+                        <div id="edit" class="tab-pane fade">
+                            <h3>{{ 'edit.infos'|trans }}</h3>
+                        </div>
+                        <div id="link" class="tab-pane fade">
+                            <h3>{{ 'link.summoner.title'|trans }}</h3>
+                            <div id="responseDivLink" class="col-md-12 text-center">
+                            </div>
+                            <div id="loadingDiv" class="col-md-12 text-center hidden">
+                                <img src="{{ asset('bundles/app/images/loader.gif' ) }}"/>
+                                <h1>{{ 'ajax.processing'|trans }}</h1>
+                            </div>
+                            <p>{{ 'link.summoner.help'|trans }}: </p>
+                            <div class="input-group">
+                                {# TODO: tester que le code est le même que dans le service qui lie le compte #}
+                                <span class="input-group-addon"
+                                      id="foo">{{ app.user.summonerLinkCode }}</span>
+                                <span class="input-group-btn">
 										<button class="btn btn-default" data-clipboard-target="#foo"><i
                                                     class="fa fa-clipboard"
                                                     aria-hidden="true"></i>{{ 'button.copy'|trans }}</button>
 									</span>
+                            </div>
+                            <form role="form" id="formLinkSummonerToUser">
+                                <div class="form-group">
+                                    <label for="summonerToLink">{{ 'summoner.to.link'|trans }}: </label>
+                                    <input type="text" id="summonerToLink" class="form-control" required>
                                 </div>
-                                <form role="form" id="formLinkSummonerToUser">
-                                    <div class="form-group">
-                                        <label for="summonerToLink">{{ 'summoner.to.link'|trans }}: </label>
-                                        <input type="text" id="summonerToLink" class="form-control" required>
-                                    </div>
-                                    <button class="btn btn-primary"
-                                            type="submit">{{ 'link.summoner.button'|trans }}</button>
-                                    <button type="button" class="btn btn-primary"
-                                            data-dismiss="modal">{{ 'button.close'|trans }}</button>
-                                </form>
-                            </div>
+                                <button class="btn btn-default btn-block"
+                                        type="submit">{{ 'link.summoner.button'|trans }}</button>
+                            </form>
                         </div>
-
-                    </div>
-                </div>
-                {# Modal unlink summoner #}
-                <div id="modalUnlinkSummoner" class="modal fade" role="dialog">
-                    <div class="modal-dialog">
-
-                        <!-- Modal content-->
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <button type="button" class="close" data-dismiss="modal">&times;</button>
-                                <h4 class="modal-title">{{ 'unlink.summoner.title'|trans }}</h4>
-                            </div>
-                            <div class="modal-body">
-                                <div id="responseDiv" class="col-md-12 text-center">
+                        {% if user.summoners is not empty %}
+                            <div id="unlink" class="tab-pane fade">
+                                <h3>{{ 'unlink.summoner.title'|trans }}</h3>
+                                <div class="col-md-12 text-center">
+                                    <div id="successUnlink" class="alert alert-success hidden">
+                                        <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                                        {{ 'summoner.unlink.success'|trans }}
+                                    </div>
+                                    <div id="errorUnlink" class="alert alert-danger hidden">
+                                        <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                                        {{ 'summoner.unlink.error'|trans }}
+                                    </div>
                                 </div>
                                 <form role="form" id="formUnlinkSummonerToUser">
                                     <div class="form-group">
                                         <label for="selectSummonersToUnlink">{{ 'summoner.to.unlink'|trans }}: </label>
                                         <select class="form-control" id="selectSummonersToUnlink">
                                             {% for summoner in user.summoners %}
-                                                <option value="{{ summoner.name }}">[{{ summoner.region.slug|upper }}]
+                                                <option value="{{ summoner.region.slug }}|{{ summoner.name }}">
+                                                    [{{ summoner.region.slug|upper }}]
                                                     | {{ summoner.name }}</option>
                                             {% endfor %}
                                         </select>
                                     </div>
-                                    <button class="btn btn-primary"
+                                    <button class="btn btn-default btn-block"
                                             type="submit">{{ 'unlink.summoner.button'|trans }}</button>
-                                    <button type="button" class="btn btn-primary"
-                                            data-dismiss="modal">{{ 'button.close'|trans }}</button>
                                 </form>
                             </div>
-                        </div>
-
-                    </div>
+                        {% endif %}
+                    {% endif %}
                 </div>
-            {% else %}
-
-            {% endif %}
-
-
-            {% include 'AppBundle:Account:profile_summoners.html.twig' %}
+            </div>
         </div>
     </div>
 {% endblock content %}

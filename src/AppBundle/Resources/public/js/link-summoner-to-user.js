@@ -1,75 +1,55 @@
-var manageSummoner = function(summonerName, route)
-{
-    var url = Routing.generate(route, { 'summonerName':summonerName });
-    return $.post(url);
-}
-
-/*
-$('#linkSummonerToUser').click(function()
-{
-    var summonerName = $('#summonerToLink').val();
-    $('#loader').removeClass('hidden');
-    //alert('Le nom de l\'invocateur est ' + summonerName);
-    $(this).addClass('disabled');
-
-    var json = manageSummoner(summonerName, 'app_link_summoner_to_user');
-    $('#loader').addClass('hidden');
-    alert(json);
-
-
-});
-*/
-/*
-$('#linkSummonerToUser').click(function()
-{
-    $('#linkSummonerToUser').addClass('disabled');
-    $('#loadingDiv').removeClass('hidden');
-    var summonerName = $('#summonerToLink').val();
-    var idProjet = $(this).attr('id').split('-')[1];
-    $.ajax({
-        url: Routing.generate('app_link_summoner_to_user', { 'summonerName':summonerName }),
-        type: 'POST',
-        data: {'summonerName': summonerName},
-        dataType: 'html',
-        success: function(data) {
-            $('#loadingDiv').addClass('hidden');
-            $('#linkSummonerToUser').removeClass('disabled');
-            $('#responseDiv').html(data);
-
-            //alert(data.summonerName.id);
-        }
-    });
-});
-*/
-
-
-$('#formLinkSummonerToUser').on('submit', function(e)
-{
+$('#formLinkSummonerToUser').on('submit', function (e) {
+    e.preventDefault();
     $('#formLinkSummonerToUser :submit').attr('disabled', 'disabled');
     $('#loadingDiv').removeClass('hidden');
     var summonerName = $('#summonerToLink').val();
-    e.preventDefault();
     $.ajax({
         url: Routing.generate('app_link_summoner_to_user'),
         type: 'POST',
         data: {'summonerName': summonerName, 'region': 'euw'},
         dataType: 'html',
-        success: function(data) {
+        success: function (data) {
             $('#loadingDiv').addClass('hidden');
-            $('#linkSummonerToUser').removeClass('disabled');
-            $('#responseDiv').html(data);
+            $('#formLinkSummonerToUser :submit').removeClass('disabled');
+            $('#responseDivLink').html(data);
             $('#formLinkSummonerToUser :submit').removeAttr('disabled');
         }
     });
 });
 
-$('#modalLinkSummoner').on('shown.bs.modal', function() {
+$('#formUnlinkSummonerToUser').on('submit', function (e) {
+    e.preventDefault();
+    $('#formUnlinkSummonerToUser :submit').attr('disabled', 'disabled');
+    var select = document.getElementById("selectSummonersToUnlink");
+    var value = select.options[select.selectedIndex].value;
+    var valueArray = value.split("|");
+    var summonerName = valueArray[1];
+    var regionSlug = valueArray[0];
+    $.ajax({
+        url: Routing.generate('app_unlink_summoner_to_user'),
+        type: 'POST',
+        data: {'summonerName': summonerName, 'region': regionSlug},
+        dataType: 'html',
+        success: function (data) {
+            $('#formUnlinkSummonerToUser :submit').removeClass('disabled');
+            $('#successUnlink').removeClass('hidden');
+            $('#formUnlinkSummonerToUser :submit').removeAttr('disabled');
+        },
+        error: function (data) {
+            $('#formUnlinkSummonerToUser :submit').removeClass('disabled');
+            $('#errorUnlink').removeClass('hidden');
+            $('#formUnlinkSummonerToUser :submit').removeAttr('disabled');
+        }
+    });
+});
+
+$('#modalLinkSummoner').on('shown.bs.modal', function () {
     $("#summonerToLink").focus();
 });
 
 var clipboard = new Clipboard('.btn');
 
-clipboard.on('success', function(e) {
+clipboard.on('success', function (e) {
     //alert("Le code " + e.text + " a bien été copié dans le presse-papiers");
     console.info('Action:', e.action);
     console.info('Text:', e.text);
@@ -78,17 +58,7 @@ clipboard.on('success', function(e) {
     e.clearSelection();
 });
 
-clipboard.on('error', function(e) {
+clipboard.on('error', function (e) {
     console.error('Action:', e.action);
     console.error('Trigger:', e.trigger);
 });
-
-/*
-$('.remove-friend').click(function()
-{
-    var friendId = $(this).data('user-id');
-    $(this).addClass('disabled');
-    manageSummoner(friendId, 'tech_corp_front_user_remove_friend');
-    $(this).text('Supprimé');
-});
-    */

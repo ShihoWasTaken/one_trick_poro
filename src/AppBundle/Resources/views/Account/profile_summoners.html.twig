@@ -1,15 +1,26 @@
 <ul>
-    {% if user.summoners is defined %}
+    {% if user.summoners is not empty %}
+        <h3>{{ 'summoners.list'|trans({'%user%': user.username}) }}</h3>
         {% for summoner in user.summoners %}
-            <a href="{{ path('app_summoner',{'region': summoner.region.slug, 'summonerId': summoner.id}) }}">
-                <div class="col-md-3 summoner">
-                    <h3>{{ summoner.name }}</h3>
-                    <div>niveau {{ summoner.level }}</div>
-                    <img src="{{ asset('bundles/app/images/leagues/' ~ summoner.tier.image ~ '.png') }}"/>
-                    <img src="{{ summoner.profileIconId|sumIcon }}"/>
+            <div class="col-lg-3 col-sm-4 col-xs-6">
+                <div class="panel panel-default summoner-not-found-pannel">
+                    <div class="panel-heading text-center">
+                        {{ summoner.name }}
+                    </div>
+                    <a href="{{ path('app_summoner',{'region': summoner.region.slug, 'summonerId': summoner.id}) }}">
+                        <div class="panel-body">
+                            <figure class="img-responsive center-block">
+                                <img class="img-responsive" src="{{ summoner.profileIconId|sumIcon }}"/>
+                                <figcaption>{{ summoner.level }}</figcaption>
+                            </figure>
+                            <img class="img-responsive center-block"
+                                 src="{{ asset('bundles/app/images/leagues/' ~ summoner.tier.image ~ '.png') }}"/>
+                        </div>
+                    </a>
                 </div>
-            </a>
+            </div>
         {% endfor %}
     {% else %}
+        {{ 'this.user.has.no.summoners'|trans }}
     {% endif %}
 </ul>
