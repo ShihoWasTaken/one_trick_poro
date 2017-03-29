@@ -135,4 +135,9 @@ app_deny_login:
 app_badge_generator:
     path:     /summoner-badge-generator
     defaults: { _controller: AppBundle:Summoner:badgeGenerator }
+    methods:  [GET]
 
+app_coming_soon:
+    path:     /coming-soon
+    defaults: { _controller: AppBundle:Static:comingSoon }
+    methods:  [GET]

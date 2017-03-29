@@ -1,21 +1,13 @@
-.defeat-bg {
-    background-color: PeachPuff;
-}
-
-.victory-bg {
-    background-color: LightGreen;
-}
-
 .history-team-champion-icon {
     width: 16px;
 }
 
 .history-item {
-    width: 32px;
+    width: 64px;
 }
 
 .history-summoner-champion-icon {
-    width: 48px;
+    width: 92px;
 }
 
 .history-team-player {
@@ -25,7 +17,7 @@
     white-space: nowrap;
 }
 
-.match-history-div {
-    margin-top: 15px;
-    padding: 15px;
+.history-score {
+    font-size: 28px;
+    line-height: 100px;
 }

@@ -29,6 +29,11 @@ class StaticController extends Controller
         return $this->render('AppBundle:Static:about.html.twig');
     }
 
+    public function comingSoonAction()
+    {
+        return $this->render('AppBundle:Static:coming_soon.html.twig');
+    }
+
     public function contactAction(Request $request)
     {
         $form = $this->createFormBuilder()

@@ -4,5 +4,17 @@
 
 {% block content %}
     <h1>{{ 'about_page.title'|trans }}</h1>
-    <p>{{ 'about_page.content'|trans }}</p>
+    {% if app.request.locale == 'en' %}
+        <p>One Trick Poro is a brand new service that allows players to see their statistics</p>
+        <p>Le site n'apporte pas grand chose de plus pour l'instant comparé à d'autres sites comme OP.GG ou Lolking, but many other features are coming soon.</p>
+        <p>Notre but est de permettre de créer des liens entre les joueurs et de les inciter à jouer ensemble</p>
+        <p>In the future, we will offer some services in order to help people to evaluate themselves and improve their skills.</p>
+        <p>Our team is quite small at the moment but if you want to joins us don't hesitate to contact us <i class="fa fa-smile-o" aria-hidden="true"></i></p>
+    {% elseif app.request.locale == 'fr' %}
+        <p>One Trick Poro est est un tout nouveau service qui permet aux joueurs de voir leurs statistiques et bien plus encore comme les coffres disponibles ou débloqués.</p>
+        <p>Le site n'apporte pas grand chose de plus pour l'instant comparé à d'autres sites comme OP.GG ou Lolking, mais d'autres fonctionnalités sont en cours de développement.</p>
+        <p>Notre but est de permettre de créer des liens entre les joueurs et de les inciter à jouer ensemble</p>
+        <p>Dans le futur, nous proposerons également des services pour aider les joueurs à évaluer leur niveau et à s'améliorer.</p>
+        <p>Notre équipe est assez réduite pour le moment alors si tu as envie de nous rejoindre n'hésite pas à nous contacter <i class="fa fa-smile-o" aria-hidden="true"></i></p>
+    {% endif %}
 {% endblock content %}
