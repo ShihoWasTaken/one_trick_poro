@@ -4,13 +4,18 @@
         <div class="row">
             <div class="col-md-12">
                 <div class="panel panel-{% if game.stats.win == 'true' %}success{% else %}danger{% endif %}">
-                    <div class="panel-heading">{% if game.stats.win == 'true' %}{{ 'victory'|trans }}{% else %}{{ 'defeat'|trans }}{% endif %}</div>
-                    <div class="panel-body">
+                    <div class="panel-heading">{% if game.stats.win == 'true' %}{{ 'victory'|trans }}{% else %}{{ 'defeat'|trans }}{% endif %} - {{ game.mapId|mapName }} ({{ game.subType|subType }}) - {{ game.stats.timePlayed|duration }}</div>
+                    <div class="panel-body h-v-centered">
                         <div class="col-md-2 history-score">
                             <span class="text-success">{{ game.stats.championsKilled }}</span> / <span class="text-danger">{{ game.stats.numDeaths }}</span> / <span class="text-warning">{{ game.stats.assists }}</span>
                         </div>
-                        <div class="col-md-7">
-                            <img class="history-summoner-champion-icon" src="http://ddragon.leagueoflegends.com/cdn/{{ static_data_version }}/img/champion/{{ champions[game.championId].key }}.png">
+                        <div class="col-md-7 h-v-centered">
+                            <div class="d-inline-block">
+                                <img class="history-summoner-champion-icon" src="http://ddragon.leagueoflegends.com/cdn/{{ static_data_version }}/img/champion/{{ champions[game.championId].key }}.png">
+                                <br>
+                                <img class="history-summoner-spell" src="http://ddragon.leagueoflegends.com/cdn/{{ static_data_version }}/img/spell/{{ summonerSpells[game.spell1] }}.png">
+                                <img class="history-summoner-spell" src="http://ddragon.leagueoflegends.com/cdn/{{ static_data_version }}/img/spell/{{ summonerSpells[game.spell2] }}.png">
+                            </div>
                             {% for index in 0..6 %}
                                 {% include 'AppBundle:Summoner:_history_item.html.twig' with {'item': gamesItems[game.gameId][index] } %}
                             {% endfor %}

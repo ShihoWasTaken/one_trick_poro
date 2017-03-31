@@ -52,7 +52,7 @@ edit.infos: 'Modifier mon profil'
 link.summoner: 'Lier invocateur'
 unlink.summoner: 'Délier invocateur'
 link.summoner.title: 'Lier un invocateur à votre compte'
-ajax.processing: 'En cours de traitement'
+ajax.processing: 'Chargement'
 link.summoner.help: 'Veuillez renommer une de vos pages de maitrises comme ceci'
 button.copy: Copier
 summoner.to.link: 'L''invocateur à lier à votre compte'

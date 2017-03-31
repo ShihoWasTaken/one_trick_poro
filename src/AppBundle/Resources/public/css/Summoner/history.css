@@ -21,3 +21,12 @@
     font-size: 28px;
     line-height: 100px;
 }
+
+img.history-summoner-spell {
+    width: 44px;
+}
+
+.history-item-placeholder {
+    width: 64px;
+    height: 64px;
+}

@@ -78,6 +78,15 @@ class StaticController extends Controller
 
         // On doit traiter le nom du summoner
         $originalName = $request->request->get('searchbar-summonerName', 'UTF-8');
+
+        // Si rien n'est rentré dans l'input
+        if (empty(trim($originalName))) {
+            return $this->render('AppBundle:Summoner:not_existing_error.html.twig',
+                array(
+                    'name' => $originalName
+                )
+            );
+        }
         $summonerName = $api->toSafeLowerCase($originalName);
 
         $region = $sum->getRegionBySlug($request->request->get('searchbar-region'));

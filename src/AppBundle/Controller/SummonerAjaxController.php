@@ -277,7 +277,8 @@ class SummonerAjaxController extends Controller
         }
     }
 
-    public function liveGameAction(Request $request, $summonerId, $region)
+    public
+    function liveGameAction(Request $request, $summonerId, $region)
     {
         //TODO: afficher les infos progressivement si un summoner n'est pas créé
         if (!$request->isXmlHttpRequest()) {

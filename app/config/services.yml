@@ -27,6 +27,6 @@ services:
     app.twig_extension:
         class: AppBundle\Twig\AppExtension
         public: false
-        arguments: ['%static_data_version%']
+        arguments: ['@logger', '%static_data_version%']
         tags:
             - { name: twig.extension }

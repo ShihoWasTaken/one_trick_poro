@@ -11,20 +11,12 @@ body {
     padding: 15px;
 }
 
-.modal-content, .panel-heading, .panel-body, .panel {
+.modal-content, .panel-heading, .panel-body, .panel, .navbar-form .form-control, .btn, .input-group-lg > .form-control, .input-group-lg > .input-group-addon, .input-group-lg > .input-group-btn > .btn, .nav-tabs > li > a {
     border-radius: 0;
-}
-
-.btn {
-    border-radius: 0
 }
 
 .btn-primary {
     background-color: red;
-}
-
-.navbar-form .form-control {
-    border-radius: 0;
 }
 
 .navbar-default {
@@ -159,4 +151,21 @@ figure {
 
 textarea {
     resize: none;
+}
+
+.centered-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+}
+
+.h-v-centered {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.d-inline-block {
+    display: inline-block;;
 }
