@@ -147,7 +147,7 @@ class SummonerAjaxController extends Controller
             $region = $sum->getRegionBySlug($region);
             // On récupère le summoner en BDD
             $summoner = $em->getRepository('AppBundle:Summoner\Summoner')->findOneBy([
-                'id' => $summonerId,
+                'summonerId' => $summonerId,
                 'region' => $region
             ]);
 
@@ -188,7 +188,7 @@ class SummonerAjaxController extends Controller
             $region = $sum->getRegionBySlug($region);
             // On récupère le summoner en BDD
             $summoner = $em->getRepository('AppBundle:Summoner\Summoner')->findOneBy([
-                'id' => $summonerId,
+                'summonerId' => $summonerId,
                 'region' => $region
             ]);
 
@@ -229,7 +229,7 @@ class SummonerAjaxController extends Controller
             $region = $sum->getRegionBySlug($region);
             // On récupère le summoner en BDD
             $summoner = $em->getRepository('AppBundle:Summoner\Summoner')->findOneBy([
-                'id' => $summonerId,
+                'summonerId' => $summonerId,
                 'region' => $region
             ]);
 
@@ -291,7 +291,7 @@ class SummonerAjaxController extends Controller
             $region = $sum->getRegionBySlug($region);
             // On récupère le summoner en BDD
             $mainSummoner = $em->getRepository('AppBundle:Summoner\Summoner')->findOneBy([
-                'id' => $summonerId,
+                'summonerId' => $summonerId,
                 'region' => $region
             ]);
 
@@ -313,7 +313,7 @@ class SummonerAjaxController extends Controller
                 foreach ($liveGame['currentGame']['participants'] as $player) {
                     // On récupère le summoner en BDD
                     $summoner = $em->getRepository('AppBundle:Summoner\Summoner')->findOneBy([
-                        'id' => $player['summonerId'],
+                        'summonerId' => $player['summonerId'],
                         'region' => $region
                     ]);
 

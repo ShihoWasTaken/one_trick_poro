@@ -4,37 +4,42 @@ namespace AppBundle\Entity\Summoner;
 
 use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\ORM\Mapping as ORM;
-use  AppBundle\Entity\User;
 use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * @ORM\Entity(repositoryClass="AppBundle\Repository\Summoner\SummonerRepository")
  * @ORM\HasLifecycleCallbacks
- * @ORM\Table(name="summoner")
+ * @ORM\Table(name="summoner",uniqueConstraints={@ORM\UniqueConstraint(name="UK_summonerId_per_region", columns={"summoner_id", "region_id"})})
  */
 class Summoner
 {
-    //TODO: Rajouter league points
     const UPDATE_INTERVAL = 60 * 30; // 30 min
 
     public function __construct($summonerId, \AppBundle\Entity\StaticData\Region $region)
     {
-        $this->id = $summonerId;
+        $this->summonerId = $summonerId;
         $this->region = $region;
+        $this->tiers = new ArrayCollection();
         $this->rankedStats = new ArrayCollection();
         $this->firstUpdated = false;
-
     }
 
     /**
      * @ORM\Id
      * @ORM\Column(type="integer")
+     * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $id;
 
+
     /**
-     * @ORM\Id
+     * @ORM\Column(name="summoner_id", type="integer")
+     */
+    private $summonerId;
+
+    /**
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\StaticData\Region")
+     * @ORM\JoinColumn(name="region_id", referencedColumnName="id")
      */
     private $region;
 
@@ -68,66 +73,15 @@ class Summoner
     private $level;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Tier", inversedBy="summoners")
-     * @ORM\JoinColumn(name="tier_id", referencedColumnName="id")
+     * @ORM\OneToMany(targetEntity="SummonerTiers", mappedBy="summoner", cascade={"all"})
      */
-    private $tier;
+    protected $tiers;
 
     /**
      * @ORM\Column(type="boolean")
      * */
     private $firstUpdated;
 
-    // TODO: les infos suivantes doivent être affichés seulement si Tier n'est pas null
-
-    /**
-     * @ORM\Column(type="smallint")
-     *
-     */
-    private $leaguePoints = 0;
-
-
-    /**
-     * @ORM\Column(type="integer")
-     *
-     */
-    private $wins = 0;
-
-    /**
-     * @ORM\Column(type="integer")
-     *
-     */
-    private $losses = 0;
-
-    /**
-     * @ORM\Column(type="boolean")
-     *
-     */
-    private $freshBlood = false;
-
-    /**
-     * @ORM\Column(type="boolean")
-     *
-     */
-    private $hotStreak = false;
-
-    /**
-     * @ORM\Column(type="boolean")
-     *
-     */
-    private $inactive = false;
-
-    /**
-     * @ORM\Column(type="boolean")
-     *
-     */
-    private $veteran = false;
-
-    /**
-     * @ORM\Column(type="string", length=5)
-     *
-     */
-    private $miniSeries = "";
 
     /**
      * @ORM\Column(name="LastUpdateDate", type="datetime")
@@ -153,7 +107,6 @@ class Summoner
         return ($last_update < $now);
     }
 
-
     /**
      * Set id
      *
@@ -176,6 +129,31 @@ class Summoner
     public function getId()
     {
         return $this->id;
+    }
+
+
+    /**
+     * Set summoner id
+     *
+     * @param integer $summonerId
+     *
+     * @return Summoner
+     */
+    public function setSummonerId($summonerId)
+    {
+        $this->summonerId = $summonerId;
+
+        return $this;
+    }
+
+    /**
+     * Get summoner id
+     *
+     * @return integer
+     */
+    public function getSummonerId()
+    {
+        return $this->summonerId;
     }
 
     /**
@@ -225,7 +203,7 @@ class Summoner
     {
         return $this->profileIconId;
     }
-    
+
     /**
      * Set revisionDate
      *
@@ -272,6 +250,40 @@ class Summoner
     public function getLevel()
     {
         return $this->level;
+    }
+
+    /**
+     * Set firstUpdated
+     *
+     * @param boolean $firstUpdated
+     *
+     * @return Summoner
+     */
+    public function setFirstUpdated($firstUpdated)
+    {
+        $this->firstUpdated = $firstUpdated;
+
+        return $this;
+    }
+
+    /**
+     * Get firstUpdated
+     *
+     * @return boolean
+     */
+    public function getFirstUpdated()
+    {
+        return $this->firstUpdated;
+    }
+
+    /**
+     * Get firstUpdated
+     *
+     * @return boolean
+     */
+    public function isFirstUpdated()
+    {
+        return $this->firstUpdated;
     }
 
     /**
@@ -347,292 +359,36 @@ class Summoner
     }
 
     /**
-     * Set tier
+     * Add tier
      *
-     * @param \AppBundle\Entity\Summoner\Tier $tier
+     * @param \AppBundle\Entity\Summoner\SummonerTiers $tier
      *
      * @return Summoner
      */
-    public function setTier(\AppBundle\Entity\Summoner\Tier $tier = null)
+    public function addTier(\AppBundle\Entity\Summoner\SummonerTiers $tier)
     {
-        $this->tier = $tier;
+        $this->tiers[] = $tier;
 
         return $this;
     }
 
     /**
-     * Get tier
+     * Remove tier
      *
-     * @return \AppBundle\Entity\Summoner\Tier
+     * @param \AppBundle\Entity\Summoner\SummonerTiers $tier
      */
-    public function getTier()
+    public function removeTier(\AppBundle\Entity\Summoner\SummonerTiers $tier)
     {
-        return $this->tier;
+        $this->tiers->removeElement($tier);
     }
 
     /**
-     * Set firstUpdated
+     * Get tiers
      *
-     * @param boolean $firstUpdated
-     *
-     * @return Summoner
+     * @return \Doctrine\Common\Collections\Collection
      */
-    public function setFirstUpdated($firstUpdated)
+    public function getTiers()
     {
-        $this->firstUpdated = $firstUpdated;
-
-        return $this;
-    }
-
-    /**
-     * Get firstUpdated
-     *
-     * @return boolean
-     */
-    public function isFirstUpdated()
-    {
-        return $this->firstUpdated;
-    }
-
-    /**
-     * Get firstUpdated
-     *
-     * @return boolean
-     */
-    public function getFirstUpdated()
-    {
-        return $this->firstUpdated;
-    }
-
-    /**
-     * Set leaguePoints
-     *
-     * @param integer $leaguePoints
-     *
-     * @return Summoner
-     */
-    public function setLeaguePoints($leaguePoints)
-    {
-        $this->leaguePoints = $leaguePoints;
-
-        return $this;
-    }
-
-    /**
-     * Get leaguePoints
-     *
-     * @return integer
-     */
-    public function getLeaguePoints()
-    {
-        return $this->leaguePoints;
-    }
-
-    /**
-     * Set wins
-     *
-     * @param integer $wins
-     *
-     * @return Summoner
-     */
-    public function setWins($wins)
-    {
-        $this->wins = $wins;
-
-        return $this;
-    }
-
-    /**
-     * Get wins
-     *
-     * @return integer
-     */
-    public function getWins()
-    {
-        return $this->wins;
-    }
-
-    /**
-     * Set losses
-     *
-     * @param integer $losses
-     *
-     * @return Summoner
-     */
-    public function setLosses($losses)
-    {
-        $this->losses = $losses;
-
-        return $this;
-    }
-
-    /**
-     * Get losses
-     *
-     * @return integer
-     */
-    public function getLosses()
-    {
-        return $this->losses;
-    }
-
-    /**
-     * Set freshBlood
-     *
-     * @param boolean $freshBlood
-     *
-     * @return Summoner
-     */
-    public function setFreshBlood($freshBlood)
-    {
-        $this->freshBlood = $freshBlood;
-
-        return $this;
-    }
-
-    /**
-     * Get freshBlood
-     *
-     * @return boolean
-     */
-    public function isFreshBlood()
-    {
-        return $this->freshBlood;
-    }
-
-    /**
-     * Set hotStreak
-     *
-     * @param boolean $hotStreak
-     *
-     * @return Summoner
-     */
-    public function setHotStreak($hotStreak)
-    {
-        $this->hotStreak = $hotStreak;
-
-        return $this;
-    }
-
-    /**
-     * Get hotStreak
-     *
-     * @return boolean
-     */
-    public function isHotStreak()
-    {
-        return $this->hotStreak;
-    }
-
-    /**
-     * Set inactive
-     *
-     * @param boolean $inactive
-     *
-     * @return Summoner
-     */
-    public function setInactive($inactive)
-    {
-        $this->inactive = $inactive;
-
-        return $this;
-    }
-
-    /**
-     * Get inactive
-     *
-     * @return boolean
-     */
-    public function isInactive()
-    {
-        return $this->inactive;
-    }
-
-    /**
-     * Set veteran
-     *
-     * @param boolean $veteran
-     *
-     * @return Summoner
-     */
-    public function setVeteran($veteran)
-    {
-        $this->veteran = $veteran;
-
-        return $this;
-    }
-
-    /**
-     * Get veteran
-     *
-     * @return boolean
-     */
-    public function isVeteran()
-    {
-        return $this->veteran;
-    }
-
-    /**
-     * Get freshBlood
-     *
-     * @return boolean
-     */
-    public function getFreshBlood()
-    {
-        return $this->freshBlood;
-    }
-
-    /**
-     * Get hotStreak
-     *
-     * @return boolean
-     */
-    public function getHotStreak()
-    {
-        return $this->hotStreak;
-    }
-
-    /**
-     * Get inactive
-     *
-     * @return boolean
-     */
-    public function getInactive()
-    {
-        return $this->inactive;
-    }
-
-    /**
-     * Get veteran
-     *
-     * @return boolean
-     */
-    public function getVeteran()
-    {
-        return $this->veteran;
-    }
-
-    /**
-     * Set miniSeries
-     *
-     * @param string $miniSeries
-     *
-     * @return Summoner
-     */
-    public function setMiniSeries($miniSeries)
-    {
-        $this->miniSeries = $miniSeries;
-
-        return $this;
-    }
-
-    /**
-     * Get miniSeries
-     *
-     * @return string
-     */
-    public function getMiniSeries()
-    {
-        return $this->miniSeries;
+        return $this->tiers;
     }
 }

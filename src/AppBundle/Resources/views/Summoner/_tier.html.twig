@@ -1,0 +1,17 @@
+{% if ranks[queue] is defined %}
+    <img src="{{ asset('bundles/app/images/leagues/' ~ ranks[queue].tier.image ~ '.png') }}"/>
+    <div class="row">
+        <div class="col-md-12 text-center">
+            {{ ranks[queue].tier.name }} <br>
+            {{ ranks[queue].leaguePoints }} {{ 'league.points'|trans }} <br>
+            <span class="positive-color">{{ ranks[queue].wins }} W</span> - <span class="negative-color">{{ ranks[queue].losses }} L</span>
+        </div>
+    </div>
+{% else %}
+    <img src="{{ asset('bundles/app/images/leagues/unranked_.png') }}"/>
+    <div class="row">
+        <div class="col-md-12">
+            {{ 'unranked'|trans }}
+        </div>
+    </div>
+{% endif %}

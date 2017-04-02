@@ -4,7 +4,6 @@ namespace AppBundle\Entity\Summoner;
 
 use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\ORM\Mapping as ORM;
-use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * @ORM\Entity
@@ -51,11 +50,6 @@ class Tier
     const ID_MASTER = 27;
     const ID_CHALLENGER = 28;
     
-    public function __construct() 
-    {
-        $this->sumonners = new ArrayCollection();
-    }
-
     /**
      * @ORM\Id
      * @ORM\Column(type="integer")
@@ -79,10 +73,6 @@ class Tier
      */
     private $division;
 
-    /**
-     * @ORM\OneToMany(targetEntity="Summoner", mappedBy="tier")
-     */
-    protected $summoners;
 
     /**
      * Get Image path without the ".png"
@@ -91,14 +81,12 @@ class Tier
      */
     public function getImage()
     {
-        if($this->id === self::ID_UNRANKED)
+        if ($this->id === self::ID_UNRANKED)
             return 'unranked_';
-        else
-        {
+        else {
             $pos = strpos($this->getName(), ' ');
             $rest = substr($this->getName(), 0, $pos);
-            switch($this->division)
-            {
+            switch ($this->division) {
                 default:
                 case 1:
                     $division = 'I';
@@ -118,6 +106,21 @@ class Tier
             }
             return strtolower($rest) . '_' . $division;
         }
+    }
+
+
+    /**
+     * Set id
+     *
+     * @param integer $id
+     *
+     * @return Tier
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
+
+        return $this;
     }
 
     /**
@@ -200,53 +203,5 @@ class Tier
     public function getDivision()
     {
         return $this->division;
-    }
-
-    /**
-     * Add summoner
-     *
-     * @param \AppBundle\Entity\Summoner\Summoner $summoner
-     *
-     * @return Tier
-     */
-    public function addSummoner(\AppBundle\Entity\Summoner\Summoner $summoner)
-    {
-        $this->summoners[] = $summoner;
-
-        return $this;
-    }
-
-    /**
-     * Remove summoner
-     *
-     * @param \AppBundle\Entity\Summoner\Summoner $summoner
-     */
-    public function removeSummoner(\AppBundle\Entity\Summoner\Summoner $summoner)
-    {
-        $this->summoners->removeElement($summoner);
-    }
-
-    /**
-     * Get summoners
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getSummoners()
-    {
-        return $this->summoners;
-    }
-
-    /**
-     * Set id
-     *
-     * @param integer $id
-     *
-     * @return Tier
-     */
-    public function setId($id)
-    {
-        $this->id = $id;
-
-        return $this;
     }
 }

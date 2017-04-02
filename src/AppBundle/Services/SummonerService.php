@@ -5,6 +5,7 @@ namespace AppBundle\Services;
 use AppBundle\Entity\User;
 use AppBundle\Entity\Summoner\Summoner;
 use AppBundle\Entity\Summoner\RankedStats;
+use AppBundle\Entity\Summoner\SummonerTiers;
 use AppBundle\Entity\Summoner\ChampionMastery;
 use AppBundle\Entity\Summoner\Tier;
 use Symfony\Component\Config\Definition\Exception\Exception;
@@ -50,15 +51,16 @@ class SummonerService
     public function firstUpdateSummoner(\AppBundle\Entity\StaticData\Region $region, $summonerId)
     {
         $databaseSummoner = $this->em->getRepository('AppBundle:Summoner\Summoner')->findOneBy([
-            'id' => $summonerId,
+            'summonerId' => $summonerId,
             'region' => $region
         ]);
         if (empty($databaseSummoner)) {
+            $this->logger->error("Echec à la firstUpdateSummoner() du Summoner " . $summonerId . " de la region " . $region->getSlug() . ", il n'existe pas dans la BDD");
             throw new Exception('Summoner not existing in database');
         }
         $summonerData = $this->api->getSummonerByIds($region, array($summonerId));
         if ($this->api->getResponseCode() == 404) {
-            throw new Exception('Summoner not existing in Riot Games Database');
+            $this->logger->error("Echec à la firstUpdateSummoner() du Summoner " . $summonerId . " de la region " . $region->getSlug() . ", il n'existe pas dans l'API de Riot");
         }
         $databaseSummoner->setName($summonerData[$summonerId]['name']);
         $databaseSummoner->setLevel($summonerData[$summonerId]['summonerLevel']);
@@ -152,97 +154,160 @@ class SummonerService
     {
 
         $soloq = null;
-        $summonerAPIData = $this->api->getLeaguesBySumonnerIdsEntry($summoner->getRegion(), array($summoner->getId()));
+        $summonerAPIData = $this->api->getLeaguesBySumonnerIdsEntry($summoner->getRegion(), array($summoner->getSummonerId()));
+        $tiers = array();
+
+
+        $leagueId = array();
+        $divisionId = array();
+        $databaseTiers = array();
+
         if ($this->api->getResponseCode() != 404) {
-            foreach ($summonerAPIData[$summoner->getId()] as $queue) {
+            foreach ($summonerAPIData[$summoner->getSummonerId()] as $queue) {
                 switch ($queue['queue']) {
                     case 'RANKED_SOLO_5x5':
-                        $soloq = $queue;
+                    case 'RANKED_FLEX_SR':
+                    case 'RANKED_FLEX_TT':
+                        $tiers[$queue['queue']] = $queue;
+                        switch ($tiers[$queue['queue']]['tier']) {
+                            default:
+                            case 'UNRANKED':
+                                $leagueId[$queue['queue']] = Tier::UNRANKED;
+                                break;
+                            case 'BRONZE':
+                                $leagueId[$queue['queue']] = Tier::BRONZE;
+                                break;
+                            case 'SILVER':
+                                $leagueId[$queue['queue']] = Tier::SILVER;
+                                break;
+                            case 'GOLD':
+                                $leagueId[$queue['queue']] = Tier::GOLD;
+                                break;
+                            case 'PLATINUM':
+                                $leagueId[$queue['queue']] = Tier::PLATINUM;
+                                break;
+                            case 'DIAMOND':
+                                $leagueId[$queue['queue']] = Tier::DIAMOND;
+                                break;
+                            case 'MASTER':
+                                $leagueId[$queue['queue']] = Tier::MASTER;
+                                break;
+                            case 'CHALLENGER':
+                                $leagueId[$queue['queue']] = Tier::CHALLENGER;
+                                break;
+                        }
+                        switch ($tiers[$queue['queue']]['entries'][0]['division']) {
+                            default:
+                            case 'I':
+                                $divisionId[$queue['queue']] = 1;
+                                break;
+                            case 'II':
+                                $divisionId[$queue['queue']] = 2;
+                                break;
+                            case 'III':
+                                $divisionId[$queue['queue']] = 3;
+                                break;
+                            case 'IV':
+                                $divisionId[$queue['queue']] = 4;
+                                break;
+                            case 'V':
+                                $divisionId[$queue['queue']] = 5;
+                                break;
+                        }
+
+                        $databaseTiers[$queue['queue']] = $this->em->getRepository('AppBundle:Summoner\Tier')->findOneBy([
+                            'league' => $leagueId[$queue['queue']],
+                            'division' => $divisionId[$queue['queue']]
+                        ]);
                         break;
-                    case 'RANKED_TEAM_3x3':
-                        break;
-                    case 'RANKED_TEAM_5x5':
-                        break;
+                    default:
+                        $this->logger->error("La queue " . $queue['queue'] . " a été trouvée lors de l'update du summoner " . $summoner->getName() . " avec l'id " . $summoner->getSummonerId() . " sur le serveur " . $summoner->getRegion()->getName());
+                        return;
                 }
             }
 
-            switch ($soloq['tier']) {
-                default:
-                case 'UNRANKED':
-                    $leagueId = Tier::UNRANKED;
-                    break;
-                case 'BRONZE':
-                    $leagueId = Tier::BRONZE;
-                    break;
-                case 'SILVER':
-                    $leagueId = Tier::SILVER;
-                    break;
-                case 'GOLD':
-                    $leagueId = Tier::GOLD;
-                    break;
-                case 'PLATINUM':
-                    $leagueId = Tier::PLATINUM;
-                    break;
-                case 'DIAMOND':
-                    $leagueId = Tier::DIAMOND;
-                    break;
-                case 'MASTER':
-                    $leagueId = Tier::MASTER;
-                    break;
-                case 'CHALLENGER':
-                    $leagueId = Tier::CHALLENGER;
-                    break;
-            }
-            switch ($soloq['entries'][0]['division']) {
-                default:
-                case 'I':
-                    $divisionId = 1;
-                    break;
-                case 'II':
-                    $divisionId = 2;
-                    break;
-                case 'III':
-                    $divisionId = 3;
-                    break;
-                case 'IV':
-                    $divisionId = 4;
-                    break;
-                case 'V':
-                    $divisionId = 5;
-                    break;
-            }
         } else {
-            $leagueId = Tier::UNRANKED;
-            $divisionId = 1;
-        }
+            foreach (array('RANKED_SOLO_5x5', 'RANKED_FLEX_SR', 'RANKED_FLEX_TT') as $queueName) {
 
-        $databaseTier = $this->em->getRepository('AppBundle:Summoner\Tier')->findOneBy([
-            'league' => $leagueId,
-            'division' => $divisionId
-        ]);
-        $summoner->setTier($databaseTier);
-
-        if ($leagueId != Tier::UNRANKED) {
-            // Autres infos
-            $summoner->setLeaguePoints($soloq['entries'][0]['leaguePoints']);
-            $summoner->setWins($soloq['entries'][0]['wins']);
-            $summoner->setLosses($soloq['entries'][0]['losses']);
-            $summoner->setFreshBlood($soloq['entries'][0]['isFreshBlood']);
-            $summoner->setHotStreak($soloq['entries'][0]['isHotStreak']);
-            $summoner->setInactive($soloq['entries'][0]['isInactive']);
-            $summoner->setVeteran($soloq['entries'][0]['isVeteran']);
-
-            // Mini series
-            if (isset($soloq['entries'][0]['miniSeries'])) {
-                $summoner->setMiniSeries($soloq['entries'][0]['miniSeries']['progress']);
+                $leagueId[$queueName] = Tier::UNRANKED;
+                $divisionId[$queueName] = 1;
+                $databaseTiers[$queueName] = $this->em->getRepository('AppBundle:Summoner\Tier')->findOneBy([
+                    'league' => $leagueId[$queueName],
+                    'division' => $divisionId[$queueName]
+                ]);
             }
         }
 
+
+        foreach ($tiers as $key => $tier) {
+            $summonerTier = new summonerTiers();
+
+            switch ($tier['queue']) {
+                case 'RANKED_SOLO_5x5':
+                    $summonerTier->setQueueId(summonerTiers::SOLO_DUO);
+                    break;
+                case 'RANKED_FLEX_SR':
+                    $summonerTier->setQueueId(summonerTiers::FLEX_5v5);
+                    break;
+                case 'RANKED_FLEX_TT':
+                    $summonerTier->setQueueId(summonerTiers::FLEX_3v3);
+                    break;
+            }
+
+            $summonerTier->setSummoner($summoner);
+            $summonerTier->setRegionId($summoner->getRegion()->getId());
+            $summonerTier->setTier($databaseTiers[$key]);
+
+            if ($databaseTiers[$key]->getLeague() != Tier::UNRANKED) {
+                $summonerTier->setLeaguePoints($tier['entries'][0]['leaguePoints']);
+                $summonerTier->setWins($tier['entries'][0]['wins']);
+                $summonerTier->setLosses($tier['entries'][0]['losses']);
+                $summonerTier->setFreshBlood($tier['entries'][0]['isFreshBlood']);
+                $summonerTier->setHotStreak($tier['entries'][0]['isHotStreak']);
+                $summonerTier->setInactive($tier['entries'][0]['isInactive']);
+                $summonerTier->setVeteran($tier['entries'][0]['isVeteran']);
+                // Mini series
+                if (isset($tier['entries'][0]['miniSeries'])) {
+                    $summonerTier->setMiniSeries($tier['entries'][0]['miniSeries']['progress']);
+                }
+            }
+            $summoner->addTier($summonerTier);
+        }
 
         $this->em->persist($summoner);
         $this->em->flush();
     }
 
+    // TODO: plus d'appel à l'api mais à la BDD
+    public function getSummonerRank(\AppBundle\Entity\StaticData\Region $region, $summonerId)
+    {
+        $databaseSummoner = $this->em->getRepository('AppBundle:Summoner\Summoner')->findOneBy([
+            'summonerId' => $summonerId,
+            'region' => $region->getId()
+        ]);
+        $summonerRanks = $this->em->getRepository('AppBundle:Summoner\SummonerTiers')->findBy([
+            'summoner' => $databaseSummoner,
+            'regionId' => $region->getId()
+        ]);
+        $ranks = array();
+        foreach ($summonerRanks as $rank) {
+            switch ($rank->getQueueId()) {
+                case 1:
+                    $ranks['solo'] = $rank;
+                    break;
+                case 2;
+                    $ranks['flex5'] = $rank;
+                    break;
+                case 3:
+                    $ranks['flex3'] = $rank;
+                    break;
+            }
+        }
+
+        return $ranks;
+    }
+
+    /*
     public function getSummonerRank(\AppBundle\Entity\StaticData\Region $region, $summonerId)
     {
         $soloq = null;
@@ -261,22 +326,22 @@ class SummonerService
             }
         }
         return $soloq;
-    }
+    }*/
 
     public function updateRankedStats(\AppBundle\Entity\Summoner\Summoner $summoner)
     {
         for ($season = OLDER_SEASON_AVAILABLE; $season <= $this->current_season; $season++) {
-            $rankedStatsData = $this->api->getRankedStatsBySummonerId($summoner->getRegion(), $summoner->getId(), $season);
+            $rankedStatsData = $this->api->getRankedStatsBySummonerId($summoner->getRegion(), $summoner->getSummonerId(), $season);
             if ($this->api->getResponseCode() !== 404) {
                 foreach ($rankedStatsData['champions'] as $championData) {
                     $championRankedStats = $this->em->getRepository('AppBundle:Summoner\RankedStats')->findOneBy([
-                        'summonerId' => $summoner->getId(),
+                        'summonerId' => $summoner->getSummonerId(),
                         'regionId' => $summoner->getRegion()->getId(),
                         'season' => $season,
                         'championId' => $championData['id']
                     ]);
                     if (empty($championRankedStats)) {
-                        $championRankedStats = new rankedStats($summoner->getId(), $summoner->getRegion()->getId(), $season, $championData['id']);
+                        $championRankedStats = new rankedStats($summoner->getSummonerId(), $summoner->getRegion()->getId(), $season, $championData['id']);
                     }
                     $playedGames = $championData['stats']['totalSessionsPlayed'];
                     $championRankedStats->setKills($championData['stats']['totalChampionKills']);
@@ -298,7 +363,7 @@ class SummonerService
         $merged = array();
         for ($season = OLDER_SEASON_AVAILABLE; $season <= $this->current_season; $season++) {
             $rankedStatsData = $this->em->getRepository('AppBundle:Summoner\RankedStats')->findBy([
-                'summonerId' => $summoner->getId(),
+                'summonerId' => $summoner->getSummonerId(),
                 'regionId' => $summoner->getRegion()->getId(),
                 'season' => $season
             ]);
@@ -414,10 +479,10 @@ class SummonerService
 
     public function getRunePages(\AppBundle\Entity\Summoner\Summoner $summoner)
     {
-        $runePagesData = $this->api->getRunesBySummonerIds($summoner->getRegion(), array($summoner->getId()));
+        $runePagesData = $this->api->getRunesBySummonerIds($summoner->getRegion(), array($summoner->getSummonerId()));
         $images = array();
         $runeData = array();
-        foreach ($runePagesData[$summoner->getId()]['pages'] as $page) {
+        foreach ($runePagesData[$summoner->getSummonerId()]['pages'] as $page) {
             if (isset($page['slots'])) {
                 foreach ($page['slots'] as $rune) {
                     $runeData['runeId'] = $this->em->getRepository('AppBundle:StaticData\Rune')->findOneBy([
@@ -429,15 +494,15 @@ class SummonerService
         }
         return array(
             'images' => $images,
-            'data' => $runePagesData[$summoner->getId()]
+            'data' => $runePagesData[$summoner->getSummonerId()]
         );
     }
 
     public function getMasteriesPages(\AppBundle\Entity\Summoner\Summoner $summoner)
     {
-        $masteriesPagesData = $this->api->getMasteriesBySummonerIds($summoner->getRegion(), array($summoner->getId()));
+        $masteriesPagesData = $this->api->getMasteriesBySummonerIds($summoner->getRegion(), array($summoner->getSummonerId()));
         $pages = array();
-        foreach ($masteriesPagesData[$summoner->getId()]['pages'] as $page) {
+        foreach ($masteriesPagesData[$summoner->getSummonerId()]['pages'] as $page) {
             $index = count($pages);
             if (isset($page['name'])) {
                 $pages[$index]['name'] = $page['name'];
@@ -458,7 +523,7 @@ class SummonerService
 
     public function getMatchHistory(\AppBundle\Entity\Summoner\Summoner $summoner)
     {
-        $recentGamesData = $this->api->getRecentGames($summoner->getRegion(), $summoner->getId());
+        $recentGamesData = $this->api->getRecentGames($summoner->getRegion(), $summoner->getSummonerId());
         return $recentGamesData;
     }
 
@@ -546,7 +611,7 @@ class SummonerService
 
     public function getLiveGame(\AppBundle\Entity\Summoner\Summoner $summoner)
     {
-        $currentGame = $this->api->getCurrentGame($summoner->getRegion(), $summoner->getId());
+        $currentGame = $this->api->getCurrentGame($summoner->getRegion(), $summoner->getSummonerId());
 
         $summonerSpells = $this->getSummonerSpellsSortedById($summoner->getRegion());
         $liveGame = array();
@@ -554,12 +619,14 @@ class SummonerService
             //var_dump($currentGame['participants'] );exit();
             foreach ($currentGame['participants'] as $participant) {
                 $lg_soloq = $this->getSummonerRank($summoner->getRegion(), $participant['summonerId']);
-                if (!isset($lg_soloq)) {
+
+                if (!isset($lg_soloq['solo'])) {
                     $lg_soloqimg = "unranked_";
                     $liveGame[$participant['summonerId']]['rank'] = 'Unranked';
                 } else {
-                    $lg_soloqimg = strtolower($lg_soloq['tier']) . '_' . $lg_soloq['entries'][0]['division'];
-                    $liveGame[$participant['summonerId']]['rank'] = $lg_soloq['tier'] . ' ' . $lg_soloq['entries'][0]['division'];
+                    $lg_soloq = $lg_soloq['solo'];
+                    $lg_soloqimg = $lg_soloq->getTier()->getImage();
+                    $liveGame[$participant['summonerId']]['rank'] = $lg_soloq->getTier()->getName();
                 }
                 $liveGame[$participant['summonerId']]['img'] = $lg_soloqimg;
             }

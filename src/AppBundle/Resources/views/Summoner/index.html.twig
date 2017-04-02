@@ -72,10 +72,10 @@
                 $(this).attr("disabled", "disabled");
                 $(this).text('updating');
                 /*
-                 var summonerId = {{ summoner.id }};
+                 var summonerId = {{ summoner.summonerId }};
                  var region = '{{ summoner.region.slug }}';
                  $.ajax({
-                 url: '{{ path('app_summoner_chests_ajax', {'region': summoner.region.slug, 'summonerId': summoner.id}) }}',
+                 url: '{{ path('app_summoner_chests_ajax', {'region': summoner.region.slug, 'summonerId': summoner.summonerId}) }}',
                  type: 'POST',
                  data: {'summonerId': summonerId, 'region': region},
                  dataType: 'html',
@@ -119,16 +119,17 @@
                                 id="update-summoner-btn">{{ 'summoner.update'|trans }}</button>
                     </div>
                     <div class="col-md-3 text-center">
-                        <img src="{{ asset('bundles/app/images/leagues/' ~ soloqimg ~ '.png') }}"/>
-                        {% if soloq is not null %}
+                        {% if ranks['solo'] is defined %}
+                            <img src="{{ asset('bundles/app/images/leagues/' ~ ranks['solo'].tier.image ~ '.png') }}"/>
                             <div class="row">
                                 <div class="col-md-12 text-center">
-                                    {{ soloq.tier }} {{ soloq.entries.0.division }} <br>
-                                    {{ soloq.entries.0.leaguePoints }} {{ 'league.points'|trans }} <br>
-                                    <span class="positive-color">{{ soloq.entries.0.wins }} W</span> - <span class="negative-color">{{ soloq.entries.0.losses }} L</span>
+                                    {{ ranks['solo'].tier.name }} <br>
+                                    {{ ranks['solo'].leaguePoints }} {{ 'league.points'|trans }} <br>
+                                    <span class="positive-color">{{ ranks['solo'].wins }} W</span> - <span class="negative-color">{{ ranks['solo'].losses }} L</span>
                                 </div>
                             </div>
                         {% else %}
+                            <img src="{{ asset('bundles/app/images/leagues/unranked_.png') }}"/>
                             <div class="row">
                                 <div class="col-md-12">
                                     {{ 'unranked'|trans }}
@@ -228,10 +229,10 @@
                 switch (target) {
                     case "#liveGame":
                         if (!isLiveGameLoaded) {
-                            var summonerId = {{ summoner.id }};
+                            var summonerId = {{ summoner.summonerId }};
                             var region = '{{ summoner.region.slug }}';
                             $.ajax({
-                                url: '{{ path('app_summoner_live_game_ajax', {'region': summoner.region.slug, 'summonerId': summoner.id}) }}',
+                                url: '{{ path('app_summoner_live_game_ajax', {'region': summoner.region.slug, 'summonerId': summoner.summonerId}) }}',
                                 type: 'POST',
                                 data: {'summonerId': summonerId, 'region': region},
                                 dataType: 'html',
@@ -244,10 +245,10 @@
                         break;
                     case "#history":
                         if (!isHistoryLoaded) {
-                            var summonerId = {{ summoner.id }};
+                            var summonerId = {{ summoner.summonerId }};
                             var region = '{{ summoner.region.slug }}';
                             $.ajax({
-                                url: '{{ path('app_summoner_history_ajax', {'region': summoner.region.slug, 'summonerId': summoner.id}) }}',
+                                url: '{{ path('app_summoner_history_ajax', {'region': summoner.region.slug, 'summonerId': summoner.summonerId}) }}',
                                 type: 'POST',
                                 data: {'summonerId': summonerId, 'region': region},
                                 dataType: 'html',
@@ -260,10 +261,10 @@
                         break;
                     case "#runes":
                         if (!isRuneLoaded) {
-                            var summonerId = {{ summoner.id }};
+                            var summonerId = {{ summoner.summonerId }};
                             var region = '{{ summoner.region.slug }}';
                             $.ajax({
-                                url: '{{ path('app_summoner_runes_ajax', {'region': summoner.region.slug, 'summonerId': summoner.id}) }}',
+                                url: '{{ path('app_summoner_runes_ajax', {'region': summoner.region.slug, 'summonerId': summoner.summonerId}) }}',
                                 type: 'POST',
                                 data: {'summonerId': summonerId, 'region': region},
                                 dataType: 'html',
@@ -276,10 +277,10 @@
                         break;
                     case "#masteries":
                         if (!isMasteriesPagesLoaded) {
-                            var summonerId = {{ summoner.id }};
+                            var summonerId = {{ summoner.summonerId }};
                             var region = '{{ summoner.region.slug }}';
                             $.ajax({
-                                url: '{{ path('app_summoner_masteries_ajax', {'region': summoner.region.slug, 'summonerId': summoner.id}) }}',
+                                url: '{{ path('app_summoner_masteries_ajax', {'region': summoner.region.slug, 'summonerId': summoner.summonerId}) }}',
                                 type: 'POST',
                                 data: {'summonerId': summonerId, 'region': region},
                                 dataType: 'html',
@@ -292,10 +293,10 @@
                         break;
                     case "#championMasteries":
                         if (!isChampionMasteriesLoaded) {
-                            var summonerId = {{ summoner.id }};
+                            var summonerId = {{ summoner.summonerId }};
                             var region = '{{ summoner.region.slug }}';
                             $.ajax({
-                                url: '{{ path('app_summoner_champion_masteries_ajax', {'region': summoner.region.slug, 'summonerId': summoner.id}) }}',
+                                url: '{{ path('app_summoner_champion_masteries_ajax', {'region': summoner.region.slug, 'summonerId': summoner.summonerId}) }}',
                                 type: 'POST',
                                 data: {'summonerId': summonerId, 'region': region},
                                 dataType: 'html',
@@ -318,10 +319,10 @@
                         break;
                     case "#chests":
                         if (!isChestsLoaded) {
-                            var summonerId = {{ summoner.id }};
+                            var summonerId = {{ summoner.summonerId }};
                             var region = '{{ summoner.region.slug }}';
                             $.ajax({
-                                url: '{{ path('app_summoner_chests_ajax', {'region': summoner.region.slug, 'summonerId': summoner.id}) }}',
+                                url: '{{ path('app_summoner_chests_ajax', {'region': summoner.region.slug, 'summonerId': summoner.summonerId}) }}',
                                 type: 'POST',
                                 data: {'summonerId': summonerId, 'region': region},
                                 dataType: 'html',

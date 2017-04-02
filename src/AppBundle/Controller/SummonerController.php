@@ -42,6 +42,7 @@ class SummonerController extends Controller
 
     public function ajaxCreateAction($region, $summonerId)
     {
+        $this->container->get('logger')->debug('SummonerId = ' . $summonerId);
         $sum = $this->container->get('app.lolsummoner');
 
         $response = new Response();
@@ -65,6 +66,7 @@ class SummonerController extends Controller
 
     public function indexAction(Request $request, $region, $summonerId)
     {
+        $this->container->get('logger')->debug('SummonerId = ' . $summonerId);
         $em = $this->get('doctrine')->getManager();
         $api = $this->container->get('app.lolapi');
         $sum = $this->container->get('app.lolsummoner');
@@ -73,7 +75,7 @@ class SummonerController extends Controller
 
         // On récupère le summoner en BDD
         $summoner = $em->getRepository('AppBundle:Summoner\Summoner')->findOneBy([
-            'id' => $summonerId,
+            'summonerId' => $summonerId,
             'region' => $region
         ]);
 
@@ -123,7 +125,7 @@ class SummonerController extends Controller
 
         // On récupère le summoner en BDD
         $summoner = $em->getRepository('AppBundle:Summoner\Summoner')->findOneBy([
-            'id' => $summonerId,
+            'summonerId' => $summonerId,
             'region' => $safeRegion
         ]);
 
@@ -151,7 +153,7 @@ class SummonerController extends Controller
         }
         $rankedStats = $sum->getRankedStats($summoner);
 
-        $soloq = $sum->getSummonerRank($safeRegion, $summonerId);
+        $ranks = $sum->getSummonerRank($safeRegion, $summonerId);
         if (!isset($soloq)) {
             $soloqimg = "unranked_";
         } else {
@@ -212,7 +214,7 @@ class SummonerController extends Controller
                 //'championsMastery' => $championsMastery,
                 'topChampionsMastery' => $topChampionsMastery,
                 'summoner' => $summoner,
-                'soloq' => $soloq,
+                'ranks' => $ranks,
                 'soloqimg' => $soloqimg,
                 //'currentGame' => $currentGame,
                 //'summonerSpells' => $summonerSpells,

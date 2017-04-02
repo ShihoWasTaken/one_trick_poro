@@ -20,14 +20,14 @@
             <div class="col-xs-12 col-md-12 white-bg">
                 <div class="row">
                     <div class="col-md-2">
-                        <img src="http://ddragon.leagueoflegends.com/cdn/{{ static_data_version }}/img/profileicon/{{ summoner.profileIconId }}.png" />
+                        <img src="http://ddragon.leagueoflegends.com/cdn/{{ static_data_version }}/img/profileicon/{{ summoner.profileIconId }}.png"/>
                         {#
                         <img src="http://ddragon.leagueoflegends.com/cdn/img/champion/splash/{{ topChampionsMastery.0.championKey }}_0.jpg" />
                         #}
                     </div>
                     <div class="col-md-5">
                         <h1>{{ summoner.name }}<span class="badge region-badge"> {{ summoner.region.slug }}</span></h1>
-                        <button class="btn btn-default btn-lg" id="update-summoner-btn" disabled="disabled"><img class="loader" src="{{ asset('bundles/app/images/spin.gif' ) }}" />{{ 'summoner.updating'|trans }}</button>
+                        <button class="btn btn-default btn-lg" id="update-summoner-btn" disabled="disabled"><img class="loader" src="{{ asset('bundles/app/images/spin.gif' ) }}"/>{{ 'summoner.updating'|trans }}</button>
                     </div>
                 </div>
                 <div>{{ 'summoner.index.creating.message'|trans }}</div>
@@ -35,22 +35,22 @@
         </div>
     </div>
     <script>
-         $( document ).ready(function() {
-             var summonerId = {{ summoner.id }};
-             var region = '{{ summoner.region.slug }}';
-             $.ajax({
-                 url: '{{	path('app_summoner_create_ajax', {'region': summoner.region.slug, 'summonerId': summoner.id}) }}',
-                 type: 'POST',
-                 data: {'summonerId': summonerId, 'region': region},
-                 dataType: 'json'
-             }).done(function(){
+        $(document).ready(function () {
+            var summonerId = {{ summoner.summonerId }};
+            var region = '{{ summoner.region.slug }}';
+            $.ajax({
+                url: '{{ path('app_summoner_create_ajax', {'region': summoner.region.slug, 'summonerId': summoner.summonerId}) }}',
+                type: 'POST',
+                data: {'summonerId': summonerId, 'region': region},
+                dataType: 'json'
+            }).done(function () {
                 location.reload();
-             })
-             .fail(function(data) {
-                 alert(data.responseJSON['error']);
-             })
-             .always(function() {
-             });
-         });
+            })
+                .fail(function (data) {
+                    alert(data.responseJSON['error']);
+                })
+                .always(function () {
+                });
+        });
     </script>
 {% endblock content %}
