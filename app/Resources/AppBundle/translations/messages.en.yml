@@ -9,6 +9,7 @@ error500.content: 'We are sorry, the server encountered an internal error. You c
 title.summoner.profile: '%summonerName%''s profile'
 hello.username: 'Hello %user%'
 summoner.update: Update
+summoner.updated: Updated
 league.points: LP
 unranked: Unranked
 summary: Summary
@@ -102,3 +103,4 @@ contact.support: Contact support
 victory: Victory
 defeat: Defeat
 summoner.tiers: Ranking
+summoner.update.waiting.message: "You have to wait %time% seconds before updating again this summoner"

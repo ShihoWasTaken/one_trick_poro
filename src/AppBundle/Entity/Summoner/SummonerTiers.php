@@ -30,11 +30,13 @@ class SummonerTiers
      */
     protected $summoner;
 
+    // TODO: rajouter many to one pour cohérence BDD
     /**
      * @ORM\Column(type="smallint")
      */
     protected $regionId;
 
+    // TODO: rajouter many to one pour cohérence BDD
     /**
      * @ORM\Column(type="smallint")
      */
@@ -358,7 +360,7 @@ class SummonerTiers
     {
         return $this->summoner;
     }
-    
+
     /**
      * Set regionId
      *

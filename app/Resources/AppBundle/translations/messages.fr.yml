@@ -9,6 +9,7 @@ error500.content: 'Nous sommes désolé mais le serveur a rencontré une erreur 
 title.summoner.profile: 'Profil de %summonerName%'
 hello.username: 'Bonjour %user%'
 summoner.update: 'Mettre à jour'
+summoner.updated: Mis à jour
 league.points: PL
 unranked: 'Non classé'
 summary: Résumé
@@ -100,3 +101,4 @@ contact.support: Contacter le support
 victory: Victoire
 defeat: Défaite
 summoner.tiers: Rangs
+summoner.update.waiting.message: "Vous devez attendre encore %time% secondes avant de mettre à jour cet invocateur"

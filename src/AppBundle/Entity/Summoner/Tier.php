@@ -49,7 +49,7 @@ class Tier
     const ID_DIAMOND_1 = 26;
     const ID_MASTER = 27;
     const ID_CHALLENGER = 28;
-    
+
     /**
      * @ORM\Id
      * @ORM\Column(type="integer")
@@ -81,9 +81,13 @@ class Tier
      */
     public function getImage()
     {
-        if ($this->id === self::ID_UNRANKED)
+        if ($this->id === self::ID_UNRANKED) {
             return 'unranked_';
-        else {
+        } else if ($this->id === self::ID_MASTER) {
+            return 'master_I';
+        } else if ($this->id === self::ID_CHALLENGER) {
+            return 'challenger_I';
+        } else {
             $pos = strpos($this->getName(), ' ');
             $rest = substr($this->getName(), 0, $pos);
             switch ($this->division) {

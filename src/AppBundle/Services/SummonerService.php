@@ -37,6 +37,29 @@ class SummonerService
         $this->current_season = $current_season;
     }
 
+    public function updateSummonerInfos(\AppBundle\Entity\Summoner\Summoner $summoner)
+    {
+        $summonerData = $this->api->getSummonerByIds($summoner->getRegion(), array($summoner->getSummonerId()));
+        if ($this->api->getResponseCode() == 404) {
+            $this->logger->error("Echec à la firstUpdateSummoner() du Summoner " . $summoner->getSummonerId() . " de la region " . $summoner->getRegion()->getSlug() . ", il n'existe pas dans l'API de Riot");
+        }
+        $summoner->setName($summonerData[$summoner->getSummonerId()]['name']);
+        $summoner->setLevel($summonerData[$summoner->getSummonerId()]['summonerLevel']);
+        $summoner->setProfileIconId($summonerData[$summoner->getSummonerId()]['profileIconId']);
+        $date = date_create();
+        date_timestamp_set($date, ($summonerData[$summoner->getSummonerId()]['revisionDate'] / 1000));
+        $summoner->setRevisionDate($date);
+
+        $this->updateRankedStats($summoner);
+        $this->updateSummonerRank($summoner);
+    }
+
+    public function extraSummonerUpdate(\AppBundle\Entity\Summoner\Summoner $summoner)
+    {
+        $this->updateSummonerInfos($summoner);
+        $this->em->flush();
+    }
+
     public function getRegionBySlug($slug)
     {
         $region = $this->em->getRepository('AppBundle:StaticData\Region')->findOneBy([
@@ -58,21 +81,8 @@ class SummonerService
             $this->logger->error("Echec à la firstUpdateSummoner() du Summoner " . $summonerId . " de la region " . $region->getSlug() . ", il n'existe pas dans la BDD");
             throw new Exception('Summoner not existing in database');
         }
-        $summonerData = $this->api->getSummonerByIds($region, array($summonerId));
-        if ($this->api->getResponseCode() == 404) {
-            $this->logger->error("Echec à la firstUpdateSummoner() du Summoner " . $summonerId . " de la region " . $region->getSlug() . ", il n'existe pas dans l'API de Riot");
-        }
-        $databaseSummoner->setName($summonerData[$summonerId]['name']);
-        $databaseSummoner->setLevel($summonerData[$summonerId]['summonerLevel']);
-        $databaseSummoner->setProfileIconId($summonerData[$summonerId]['profileIconId']);
-        $date = date_create();
-        date_timestamp_set($date, ($summonerData[$summonerId]['revisionDate'] / 1000));
-        $databaseSummoner->setRevisionDate($date);
-
-        $this->updateRankedStats($databaseSummoner);
-        $this->updateSummonerRank($databaseSummoner);
+        $this->updateSummonerInfos($databaseSummoner);
         $databaseSummoner->setFirstUpdated(true);
-        $this->em->persist($databaseSummoner);
         $this->em->flush();
     }
 
@@ -238,23 +248,49 @@ class SummonerService
             }
         }
 
-
+        $databaseRanks = $this->getSummonerRank($summoner->getRegion(), $summoner->getSummonerId());
         foreach ($tiers as $key => $tier) {
-            $summonerTier = new summonerTiers();
 
+            $isSet = false;
             switch ($tier['queue']) {
                 case 'RANKED_SOLO_5x5':
-                    $summonerTier->setQueueId(summonerTiers::SOLO_DUO);
+                    if (isset($databaseRanks['solo'])) {
+                        $isSet = true;
+                        $summonerTier = $databaseRanks['solo'];
+                    }
                     break;
                 case 'RANKED_FLEX_SR':
-                    $summonerTier->setQueueId(summonerTiers::FLEX_5v5);
+                    if (isset($databaseRanks['flex5'])) {
+                        $isSet = true;
+                        $summonerTier = $databaseRanks['flex5'];
+                    }
                     break;
                 case 'RANKED_FLEX_TT':
-                    $summonerTier->setQueueId(summonerTiers::FLEX_3v3);
+                    if (isset($databaseRanks['flex3'])) {
+                        $isSet = true;
+                        $summonerTier = $databaseRanks['flex3'];
+                    }
                     break;
             }
 
-            $summonerTier->setSummoner($summoner);
+            if (!$isSet) {
+                $summonerTier = new summonerTiers();
+
+                switch ($tier['queue']) {
+                    case 'RANKED_SOLO_5x5':
+                        $summonerTier->setQueueId(summonerTiers::SOLO_DUO);
+                        break;
+                    case 'RANKED_FLEX_SR':
+                        $summonerTier->setQueueId(summonerTiers::FLEX_5v5);
+                        break;
+                    case 'RANKED_FLEX_TT':
+                        $summonerTier->setQueueId(summonerTiers::FLEX_3v3);
+                        break;
+                }
+
+                $summonerTier->setSummoner($summoner);
+            }
+
             $summonerTier->setRegionId($summoner->getRegion()->getId());
             $summonerTier->setTier($databaseTiers[$key]);
 
@@ -271,11 +307,10 @@ class SummonerService
                     $summonerTier->setMiniSeries($tier['entries'][0]['miniSeries']['progress']);
                 }
             }
-            $summoner->addTier($summonerTier);
+            if (!$isSet) {
+                $summoner->addTier($summonerTier);
+            }
         }
-
-        $this->em->persist($summoner);
-        $this->em->flush();
     }
 
     // TODO: plus d'appel à l'api mais à la BDD
@@ -340,22 +375,25 @@ class SummonerService
                         'season' => $season,
                         'championId' => $championData['id']
                     ]);
+                    $firstUpdate = false;
                     if (empty($championRankedStats)) {
+                        $firstUpdate = true;
+                    }
+                    if ($firstUpdate) {
                         $championRankedStats = new rankedStats($summoner->getSummonerId(), $summoner->getRegion()->getId(), $season, $championData['id']);
                     }
-                    $playedGames = $championData['stats']['totalSessionsPlayed'];
                     $championRankedStats->setKills($championData['stats']['totalChampionKills']);
                     $championRankedStats->setDeaths($championData['stats']['totalDeathsPerSession']);
                     $championRankedStats->setAssists($championData['stats']['totalAssists']);
                     $championRankedStats->setWins($championData['stats']['totalSessionsWon']);
                     $championRankedStats->setLoses($championData['stats']['totalSessionsLost']);
                     $championRankedStats->setCreeps($championData['stats']['totalMinionKills']);
-                    $this->em->persist($championRankedStats);
+                    if ($firstUpdate) {
+                        $this->em->persist($championRankedStats);
+                    }
                 }
             }
         }
-        $this->em->flush();
-        return $this->getRankedStats($summoner);
     }
 
     public function getRankedStats(\AppBundle\Entity\Summoner\Summoner $summoner)

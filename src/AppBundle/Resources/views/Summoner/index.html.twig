@@ -37,62 +37,34 @@
                 "order": [[0, 'asc']]
             });
 
-            var isChestsAndMasteriesLoaded = false;
             $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
                 var target = $(e.target).attr("href") // activated tab
-                //alert(target);
-                /*
-                 switch(target)
-                 {
-                 //case "#championMasteries":
-                 case "#chests":
-                 if(!isChestsAndMasteriesLoaded)
-                 {
-                 // Chests
-                 $( "#nav-filter li a" ).click(function() {
-                 $('#nav-filter > li').each(function () {
-                 $(this).removeClass("active")
-                 });
-                 $(this).parent().addClass("active");
-                 });
-                 var filterizd = $('.filtr-container').filterizr({
-                 //options object
-                 });
-                 // On met les champions avec les coffres en valeur
-                 //$( "li[data-filter='1']" ).click();
-                 isChestsAndMasteriesLoaded = true;
-                 }
-                 break;
-                 default:
-                 break;
-                 }*/
             });
 
             $('#update-summoner-btn').click(function () {
                 $(this).attr("disabled", "disabled");
-                $(this).text('updating');
-                /*
-                 var summonerId = {{ summoner.summonerId }};
-                 var region = '{{ summoner.region.slug }}';
-                 $.ajax({
-                 url: '{{ path('app_summoner_chests_ajax', {'region': summoner.region.slug, 'summonerId': summoner.summonerId}) }}',
-                 type: 'POST',
-                 data: {'summonerId': summonerId, 'region': region},
-                 dataType: 'html',
-                 success: function(data) {
-                 $('#chests').html(data);
-                 $( "#nav-filter li a" ).click(function() {
-                 $('#nav-filter > li').each(function () {
-                 $(this).removeClass("active")
-                 });
-                 $(this).parent().addClass("active");
-                 });
-                 var filterizd_chests = $('#filtr-container-chests').filterizr({
-                 //options object
-                 });
-                 }
-                 });
-                 */
+                $('#summoner.updated').addClass('hidden');
+                $('#summoner.updating').removeClass('hidden');
+                $('#summoner.updating').show();
+
+                var summonerId = {{ summoner.summonerId }};
+                var region = '{{ summoner.region.slug }}';
+                $.ajax({
+                    url: '{{ path('app_summoner_update', {'region': summoner.region.slug, 'summonerId': summoner.summonerId}) }}',
+                    type: 'POST',
+                    data: {'summonerId': summonerId, 'region': region},
+                    dataType: 'json',
+                    success: function (data) {
+                        location.reload();
+                    },
+                    error: function (data) {
+                        var json = $.parseJSON(data.responseText);
+                        alert(json.message);
+                    }
+                });
+                $(this).removeAttr("disabled");
+                $('#summoner.updating').addClass('hidden');
+                $('#summoner.updated').removeClass('hidden');
             });
 
         });
@@ -115,8 +87,11 @@
                     </div>
                     <div class="col-md-7">
                         <h1>{{ summoner.name }}<span class="badge region-badge"> {{ summoner.region.slug }}</span></h1>
-                        <button class="btn btn-default btn-lg"
-                                id="update-summoner-btn">{{ 'summoner.update'|trans }}</button>
+                        <button class="btn btn-{% if summoner.isUpdatable %}default{% else %}success{% endif %} btn-lg"
+                                id="update-summoner-btn">
+                            <span id="summoner.updated">{% if summoner.isUpdatable %}{{ 'summoner.update'|trans }}{% else %}{{ 'summoner.updated'|trans }}{% endif %}</span>
+                            <span class="hidden" id="summoner.updating"><i class="fa fa-refresh fa-spin"></i> {{ 'summoner.updating'|trans }}</span>
+                        </button>
                     </div>
                     <div class="col-md-3 text-center">
                         {% if ranks['solo'] is defined %}

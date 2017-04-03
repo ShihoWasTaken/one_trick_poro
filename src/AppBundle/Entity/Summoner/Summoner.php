@@ -13,7 +13,7 @@ use Doctrine\Common\Collections\ArrayCollection;
  */
 class Summoner
 {
-    const UPDATE_INTERVAL = 60 * 30; // 30 min
+    const UPDATE_INTERVAL = 10; // 30 min
 
     public function __construct($summonerId, \AppBundle\Entity\StaticData\Region $region)
     {
@@ -99,12 +99,30 @@ class Summoner
         $this->lastUpdateDate = $date;
     }
 
-    public function isUpdatable()
+    public function secondsBeforeNextUpdate()
     {
-        $last_update = $this->lastUpdateDate + self::UPDATE_INTERVAL;
+        $date = $this->lastUpdateDate->getTimestamp() + self::UPDATE_INTERVAL;
         $now = date_create();
         date_timestamp_set($now, time());
-        return ($last_update < $now);
+        return ($date - $now->getTimestamp());
+    }
+
+    public function isUpdatable()
+    {
+        $date = $this->lastUpdateDate->getTimestamp() + self::UPDATE_INTERVAL;
+        $now = date_create();
+        date_timestamp_set($now, time());
+        return ($date < $now->getTimestamp());
+    }
+
+    public function isRefreshed()
+    {
+        $elapsed = time() - strtotime($this->lastUpdateDate);
+        if ($elapsed > self::UPDATE_INTERVAL) {
+            return false;
+        } else {
+            return true;
+        }
     }
 
     /**

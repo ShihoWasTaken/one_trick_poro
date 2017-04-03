@@ -12,6 +12,41 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class SummonerAjaxController extends Controller
 {
+    public function updateSummonerAction(Request $request, $summonerId, $region)
+    {
+        sleep(5);
+        if (!$request->isXmlHttpRequest()) {
+            return new JsonResponse(array('httpCode' => 400, 'error' => 'Requête non AJAX'));
+        } else {
+            $translator = $this->get('translator');
+            $response = new JsonResponse();
+
+            $region = $this->get('app.lolsummoner')->getRegionBySlug($region);
+            $em = $this->get('doctrine')->getManager();
+            $databaseSummoner = $em->getRepository('AppBundle:Summoner\Summoner')->findOneBy([
+                'summonerId' => $summonerId,
+                'region' => $region
+            ]);
+
+            if ($databaseSummoner->isUpdatable()) {
+                $this->get('app.lolsummoner')->extraSummonerUpdate($databaseSummoner);
+                $response->setData(array(
+                    'message' => $translator->trans('summoner.update.waiting.message', array('%time%' => 0)),
+                    'buttonText' => ''
+                ));
+                $response->setStatusCode(200);
+            } else {
+                $response->setData(array(
+                    'message' => $translator->trans('summoner.update.waiting.message', array('%time%' => $databaseSummoner->secondsBeforeNextUpdate())),
+                    'buttonText' => ''
+                ));
+                $response->setStatusCode(500);
+            }
+
+            return $response;
+        }
+    }
+
     public function linkSummonerToUserBlankAction(Request $request)
     {
         $template = $this->render('AppBundle:Account:_link-account-blank.html.twig')->getContent();

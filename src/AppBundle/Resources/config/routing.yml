@@ -141,3 +141,9 @@ app_coming_soon:
     path:     /coming-soon
     defaults: { _controller: AppBundle:Static:comingSoon }
     methods:  [GET]
+
+app_summoner_update:
+    path:     /summoner/{region}/{summonerId}/update
+    defaults: { _controller: AppBundle:SummonerAjax:updateSummoner }
+    methods:  [POST]
+    requirements: { method: POST }
