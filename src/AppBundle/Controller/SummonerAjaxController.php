@@ -14,7 +14,6 @@ class SummonerAjaxController extends Controller
 {
     public function updateSummonerAction(Request $request, $summonerId, $region)
     {
-        sleep(5);
         if (!$request->isXmlHttpRequest()) {
             return new JsonResponse(array('httpCode' => 400, 'error' => 'Requête non AJAX'));
         } else {
@@ -31,16 +30,12 @@ class SummonerAjaxController extends Controller
             if ($databaseSummoner->isUpdatable()) {
                 $this->get('app.lolsummoner')->extraSummonerUpdate($databaseSummoner);
                 $response->setData(array(
-                    'message' => $translator->trans('summoner.update.waiting.message', array('%time%' => 0)),
-                    'buttonText' => ''
+                    'message' => 'success'
                 ));
-                $response->setStatusCode(200);
             } else {
                 $response->setData(array(
-                    'message' => $translator->trans('summoner.update.waiting.message', array('%time%' => $databaseSummoner->secondsBeforeNextUpdate())),
-                    'buttonText' => ''
+                    'errorMessage' => $translator->trans('summoner.update.waiting.message', array('%time%' => $databaseSummoner->secondsBeforeNextUpdate()))
                 ));
-                $response->setStatusCode(500);
             }
 
             return $response;

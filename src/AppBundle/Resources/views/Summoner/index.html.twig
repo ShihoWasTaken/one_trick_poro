@@ -42,10 +42,8 @@
             });
 
             $('#update-summoner-btn').click(function () {
-                $(this).attr("disabled", "disabled");
-                $('#summoner.updated').addClass('hidden');
-                $('#summoner.updating').removeClass('hidden');
-                $('#summoner.updating').show();
+                $(this).html('<i class="fa fa-refresh fa-spin"></i> {{ 'summoner.updating'|trans }}');
+                $(this).prop('disabled', true);
 
                 var summonerId = {{ summoner.summonerId }};
                 var region = '{{ summoner.region.slug }}';
@@ -55,16 +53,17 @@
                     data: {'summonerId': summonerId, 'region': region},
                     dataType: 'json',
                     success: function (data) {
-                        location.reload();
-                    },
-                    error: function (data) {
-                        var json = $.parseJSON(data.responseText);
-                        alert(json.message);
+                        if (typeof data.errorMessage !== 'undefined') {
+                            $('#update-summoner-btn').prop('disabled', false);
+                            $('#update-summoner-btn').html('<i class="fa fa-check"></i> {{ 'summoner.updated'|trans }}');
+                            alert(data.errorMessage);
+                        }
+                        else {
+                            location.reload();
+                        }
                     }
                 });
-                $(this).removeAttr("disabled");
-                $('#summoner.updating').addClass('hidden');
-                $('#summoner.updated').removeClass('hidden');
+
             });
 
         });
@@ -88,9 +87,8 @@
                     <div class="col-md-7">
                         <h1>{{ summoner.name }}<span class="badge region-badge"> {{ summoner.region.slug }}</span></h1>
                         <button class="btn btn-{% if summoner.isUpdatable %}default{% else %}success{% endif %} btn-lg"
-                                id="update-summoner-btn">
-                            <span id="summoner.updated">{% if summoner.isUpdatable %}{{ 'summoner.update'|trans }}{% else %}{{ 'summoner.updated'|trans }}{% endif %}</span>
-                            <span class="hidden" id="summoner.updating"><i class="fa fa-refresh fa-spin"></i> {{ 'summoner.updating'|trans }}</span>
+                                id="update-summoner-btn">{% if summoner.isUpdatable %}<i class="fa fa-refresh"></i> {{ 'summoner.update'|trans }}{% else %}<i class="fa fa-check"></i>  {{ 'summoner.updated'|trans }}{% endif %}
+                            <div class="hidden" id="summoner-updating"><i class="fa fa-refresh fa-spin"></i> {{ 'summoner.updating'|trans }}</div>
                         </button>
                     </div>
                     <div class="col-md-3 text-center">
