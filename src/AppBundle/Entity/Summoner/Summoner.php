@@ -13,7 +13,7 @@ use Doctrine\Common\Collections\ArrayCollection;
  */
 class Summoner
 {
-    const UPDATE_INTERVAL = 10; // 30 min
+    const UPDATE_INTERVAL = 60 * 30; // 30 min
 
     public function __construct($summonerId, \AppBundle\Entity\StaticData\Region $region)
     {
