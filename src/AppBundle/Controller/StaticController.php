@@ -11,6 +11,10 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
+use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 
 class StaticController extends Controller
 {
@@ -32,6 +36,20 @@ class StaticController extends Controller
     public function comingSoonAction()
     {
         return $this->render('AppBundle:Static:coming_soon.html.twig');
+    }
+
+    public function riotVerifyAction()
+    {
+        $fileContent = 'f66712b8-a1ed-4f17-8d97-58f951164184'; // the generated file content
+        $response = new Response($fileContent);
+
+        $disposition = $response->headers->makeDisposition(
+            ResponseHeaderBag::DISPOSITION_ATTACHMENT,
+            'riot.txt'
+        );
+
+        $response->headers->set('Content-Disposition', $disposition);
+        return $response;
     }
 
     public function contactAction(Request $request)

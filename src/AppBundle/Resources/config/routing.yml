@@ -147,3 +147,8 @@ app_summoner_update:
     defaults: { _controller: AppBundle:SummonerAjax:updateSummoner }
     methods:  [POST]
     requirements: { method: POST }
+
+app_riot_verify:
+    path:     /riot.txt
+    defaults: { _controller: AppBundle:Static:riotVerify }
+    methods:  [GET]
