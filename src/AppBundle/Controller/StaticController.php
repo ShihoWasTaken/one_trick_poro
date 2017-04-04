@@ -38,10 +38,10 @@ class StaticController extends Controller
         return $this->render('AppBundle:Static:coming_soon.html.twig');
     }
 
-    public function riotVerifyAction()
+    public function riotVerifyAction($filename)
     {
         $fileContent = 'f66712b8-a1ed-4f17-8d97-58f951164184'; // the generated file content
-        return new Response($fileContent);
+        //return new Response($fileContent);
         $response = new Response($fileContent);
 
         $disposition = $response->headers->makeDisposition(
