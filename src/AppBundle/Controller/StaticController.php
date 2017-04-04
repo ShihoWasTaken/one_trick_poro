@@ -41,6 +41,7 @@ class StaticController extends Controller
     public function riotVerifyAction()
     {
         $fileContent = 'f66712b8-a1ed-4f17-8d97-58f951164184'; // the generated file content
+        return new Response($fileContent);
         $response = new Response($fileContent);
 
         $disposition = $response->headers->makeDisposition(
