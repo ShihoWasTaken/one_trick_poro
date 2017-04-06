@@ -1,17 +1,40 @@
 <!DOCTYPE html>
 <html lang="fr">
-    <head>
-        <meta charset="utf-8">
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>{% block title %}{{ 'sitename' | trans }}{% endblock %}</title>
-        {% block stylesheets %}{% endblock %}
-        <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />
-        {% block javascripts_head %}{% endblock %}
-    </head>
-    <body>
-        {% block body %}{% endblock %}
-        {% block javascripts_body %}{% endblock %}
-    </body>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    {% block og_title %}
+        <meta property="og:title" content="{{ 'sitename' | trans }}"/>
+    {% endblock %}
+    {% block og_type %}
+        <meta property="og:type" content="website"/>
+    {% endblock %}
+    {% block og_url %}
+        <meta property="og:url" content="{{ path(app.request.attributes.get('_route'),  app.request.attributes.get('_route_params')) }}"/>
+    {% endblock %}
+    {% block og_image %}
+        <meta property="og:image" content="http://ddragon.leagueoflegends.com/cdn/{{ static_data_version }}/img/sticker/poro-smile.png"/>
+    {% endblock %}
+
+    {% block og_description %}
+        <meta property="og:description" content="{{ 'og.description'|trans }}"/>
+    {% endblock %}
+    {% if app.request.locale == 'fr' %}
+        <meta property="og:locale" content="fr_FR"/>
+        <meta property="og:locale:alternate" content="en_US"/>
+    {% else %}
+        <meta property="og:locale" content="en_US"/>
+        <meta property="og:locale:alternate" content="fr_FR"/>
+    {% endif %}
+    <title>{% block title %}{{ 'sitename' | trans }}{% endblock %}</title>
+    {% block stylesheets %}{% endblock %}
+    <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}"/>
+    {% block javascripts_head %}{% endblock %}
+</head>
+<body>
+{% block body %}{% endblock %}
+{% block javascripts_body %}{% endblock %}
+</body>
 </html>

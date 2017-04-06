@@ -40,17 +40,20 @@ class StaticController extends Controller
 
     public function riotVerifyAction($filename)
     {
-        $fileContent = 'f66712b8-a1ed-4f17-8d97-58f951164184'; // the generated file content
-        //return new Response($fileContent);
-        $response = new Response($fileContent);
+        if ($filename == '/riot.txt') {
+            $fileContent = 'f66712b8-a1ed-4f17-8d97-58f951164184'; // the generated file content
+            //return new Response($fileContent);
+            $response = new Response($fileContent);
 
-        $disposition = $response->headers->makeDisposition(
-            ResponseHeaderBag::DISPOSITION_ATTACHMENT,
-            'riot.txt'
-        );
+            $disposition = $response->headers->makeDisposition(
+                ResponseHeaderBag::DISPOSITION_ATTACHMENT,
+                'riot.txt'
+            );
 
-        $response->headers->set('Content-Disposition', $disposition);
-        return $response;
+            $response->headers->set('Content-Disposition', $disposition);
+            return $response;
+        }
+        return $this->notFoundAction();
     }
 
     public function contactAction(Request $request)
