@@ -366,6 +366,19 @@ class SummonerAjaxController extends Controller
                         $em->persist($newSummoner);
                         $em->flush();
                         $sum->firstUpdateSummoner($region, $player['summonerId']);
+
+                        // Mis à jour des rank dans les variables
+                        $lg_soloq = $sum->getSummonerRank($region, $player['summonerId']);
+
+                        if (!isset($lg_soloq['solo'])) {
+                            $lg_soloqimg = "unranked_";
+                            $liveGame['live_game'][$player['summonerId']]['rank'] = 'Unranked';
+                        } else {
+                            $lg_soloq = $lg_soloq['solo'];
+                            $lg_soloqimg = $lg_soloq->getTier()->getImage();
+                            $liveGame['live_game'][$player['summonerId']]['rank'] = $lg_soloq->getTier()->getName();
+                        }
+                        $liveGame['live_game'][$player['summonerId']]['img'] = $lg_soloqimg;
                     }
 
                     $rankedStats = $em->getRepository('AppBundle:Summoner\RankedStats')->findOneBy([
