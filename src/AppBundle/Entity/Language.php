@@ -11,6 +11,7 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Language
 {
+
     /**
      * @ORM\Id
      * @ORM\Column(type="smallint")

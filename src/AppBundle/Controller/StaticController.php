@@ -38,24 +38,6 @@ class StaticController extends Controller
         return $this->render('AppBundle:Static:coming_soon.html.twig');
     }
 
-    public function riotVerifyAction($filename)
-    {
-        if ($filename == '/riot.txt') {
-            $fileContent = 'f66712b8-a1ed-4f17-8d97-58f951164184'; // the generated file content
-            //return new Response($fileContent);
-            $response = new Response($fileContent);
-
-            $disposition = $response->headers->makeDisposition(
-                ResponseHeaderBag::DISPOSITION_ATTACHMENT,
-                'riot.txt'
-            );
-
-            $response->headers->set('Content-Disposition', $disposition);
-            return $response;
-        }
-        return $this->notFoundAction();
-    }
-
     public function contactAction(Request $request)
     {
         $form = $this->createFormBuilder()

@@ -565,7 +565,7 @@ class SummonerService
         return $recentGamesData;
     }
 
-    public function getRunePageByData(\AppBundle\Entity\StaticData\Region $region, array $runePagesData)
+    public function getRunePageByData(\AppBundle\Entity\StaticData\Region $region, array $runePagesData, \AppBundle\Entity\Language $language)
     {
         $images = array();
         $ids = array();
@@ -581,8 +581,12 @@ class SummonerService
                 'id' => $id
             ]);
             $images[$id] = $runeData['runeId']->getImage();
-            $stats[$id] = $this->api->getStaticRuneById($region, $id, 'fr_FR');
+            $stats[$id] = $this->em->getRepository('AppBundle:StaticData\Translation\RuneTranslation')->findOneBy([
+                'runeId' => $id,
+                'languageId' => $language->getId()
+            ]);
         }
+        //$toto = $this->em->getRepository('AppBundle:StaticData\Rune')->findAllIn($ids);
         return array(
             'images' => $images,
             'stats' => $stats

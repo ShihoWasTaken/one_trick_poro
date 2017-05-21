@@ -282,7 +282,6 @@ class SummonerAjaxController extends Controller
                 foreach ($game['fellowPlayers'] as $player) {
                     $playersIds[] = $player['summonerId'];
                 }
-                $summonerNames = $sum->getSummonerNamesByIds($summoner->getRegion(), $playersIds);
                 foreach ($game['fellowPlayers'] as $player) {
                     $gamesPlayers[$game['gameId']][$player['teamId']][] = $player;
                 }
@@ -291,6 +290,8 @@ class SummonerAjaxController extends Controller
                     'championId' => $game['championId']
                 );
             }
+
+            $summonerNames = $sum->getSummonerNamesByIds($summoner->getRegion(), $playersIds);
 
             $template = $this->render('AppBundle:Summoner:_history.html.twig',
                 array(
@@ -339,7 +340,7 @@ class SummonerAjaxController extends Controller
             $runeData = null;
             $playerStats = array();
             if (isset($liveGame['currentGame']['participants'])) {
-                $runeData = $sum->getRunePageByData($region, $liveGame['currentGame']['participants']);
+                $runeData = $sum->getRunePageByData($region, $liveGame['currentGame']['participants'], $language);
                 foreach ($liveGame['currentGame']['participants'] as $player) {
                     // On récupère le summoner en BDD
                     $summoner = $em->getRepository('AppBundle:Summoner\Summoner')->findOneBy([

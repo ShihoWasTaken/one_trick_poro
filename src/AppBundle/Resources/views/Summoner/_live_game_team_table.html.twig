@@ -62,7 +62,7 @@
                             <div class="modal-body">
                                 {% for rune in player.runes %}
                                     <div class="col-md-6">
-                                        <img src="http://ddragon.leagueoflegends.com/cdn/{{ static_data_version }}/img/rune/{{ runesImg[rune.runeId] }}" /> X {{  rune.count }}<br>
+                                        <img src="http://ddragon.leagueoflegends.com/cdn/{{ static_data_version }}/img/rune/{{ runesImg[rune.runeId] }}"/> X {{ rune.count }}<br>
                                         {{ runesStats[rune.runeId].description }}<br>
                                         {{ runesStats[rune.runeId].name }}<br>
                                     </div>

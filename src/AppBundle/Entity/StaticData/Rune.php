@@ -5,7 +5,7 @@ namespace AppBundle\Entity\StaticData;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="AppBundle\Repository\StaticData\RuneRepository")
  * @ORM\Table(name="rune")
  */
 class Rune
@@ -42,7 +42,7 @@ class Rune
      * @ORM\Column(type="string", length=32)
      */
     private $image;
-    
+
 
     /**
      * Set id
@@ -101,13 +101,12 @@ class Rune
      */
     public function setType($type)
     {
-        switch($type)
-        {
+        switch ($type) {
             // En cas d'erreur
             default:
                 $this->masteryTree = self::ERROR;
                 break;
-                // Rouge - Marque
+            // Rouge - Marque
             case 'red':
                 $this->type = self::RED;
                 break;
