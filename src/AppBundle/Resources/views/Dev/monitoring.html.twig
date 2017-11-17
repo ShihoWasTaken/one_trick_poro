@@ -24,8 +24,16 @@
             <div class="col-xs-12 col-md-12 white-bg">
                 <div class="row">
                     <h1>Invocateurs en game actuellement</h1>
-                    <div id="ram_info">
-                        {{ data }}
+
+                    <h1>{{ country }}</h1>
+                    <h1>{{ ip }}</h1>
+                    <div class="row">
+                        <div class="col-md-3">
+                            <h1 class="text-danger"><span id="ram_info_total"></span> Go</h1>
+                        </div>
+                        <div class="col-md-3">
+                            <h1 class="text-info"><span id="ram_info_percent"></span> %</h1>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -38,7 +46,9 @@
                     url: '{{ path('app_dev_monitoring_ajax') }}',
                     dataType: 'html',
                     success: function(data) {
-                        $('#ram_info').html(JSON.parse(data)['data']);
+                        var ramInfos = JSON.parse(data)['data'];
+                        $('#ram_info_total').html(Math.round(ramInfos['total'] / 1000000, 0));
+                        $('#ram_info_percent').html(ramInfos['percent']);
                     },
                     complete: function() {
                         // Schedule the next request when the current one's complete

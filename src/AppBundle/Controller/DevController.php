@@ -2,6 +2,7 @@
 
 namespace AppBundle\Controller;
 
+use AppBundle\Services\MonitoringService;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -21,10 +22,16 @@ class DevController extends Controller
 
     public function monitoringAction()
     {
+        /**
+         * @var \AppBundle\Services\MonitoringService $monitoringService
+         */
+        $monitoringService = $this->container->get('app.monitoring');
         $data = shell_exec('cat /proc/meminfo');
         return $this->render('AppBundle:Dev:monitoring.html.twig',
             array(
-                'data' => $data
+                'data' => $data,
+                'ip' => $monitoringService->getIpAdress(),
+                'country' => $monitoringService->ip_info("46.182.41.35",'country')
             ));
     }
 
@@ -33,12 +40,14 @@ class DevController extends Controller
 
         $response = new Response();
         $response->headers->set('Content-Type', 'application/json');
+        /**
+         * @var \AppBundle\Services\MonitoringService $monitoringService
+         */
+        $monitoringService = $this->container->get('app.monitoring');
+        $ramInfos = $monitoringService->getRamInfos();
 
-        $data = shell_exec('cat /proc/meminfo');
-        $lines = explode(PHP_EOL, $data);
-        $return = $lines[0] . '<br>' . $lines[1] . '<br>' . $lines[2];
         $response->setContent(json_encode(array(
-            'data' => $return,
+            'data' => $ramInfos,
         )));
 
         return $response;
