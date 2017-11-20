@@ -46,8 +46,14 @@ class DevController extends Controller
         $monitoringService = $this->container->get('app.monitoring');
         $ramInfos = $monitoringService->getRamInfos();
 
+        $cpuInfos = $monitoringService->getCPULoad();
+
+        $diskSpace = $monitoringService->getTotalUsedDiskSpace();
+
         $response->setContent(json_encode(array(
-            'data' => $ramInfos,
+            'ram' => $ramInfos,
+            'cpu' => $cpuInfos,
+            'disk' => $diskSpace
         )));
 
         return $response;

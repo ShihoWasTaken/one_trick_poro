@@ -117,7 +117,7 @@ return $output;
 }
 
 
-public function getRamInfos()
+    public function getRamInfos()
     {
         $data = shell_exec('cat /proc/meminfo');
         $lines = explode(PHP_EOL, $data);
@@ -134,6 +134,22 @@ public function getRamInfos()
             'used' => $usedInKB,
             'percent' => $percent
         );
+    }
+
+    public function getCPULoad()
+    {
+        $data = shell_exec("mpstat | grep all | awk '{print 100 - $12}'");
+        $cpuLoad = trim($data);
+
+        return $cpuLoad;
+    }
+
+    public function getTotalUsedDiskSpace()
+    {
+        $data = shell_exec("df / | grep \"/\" | awk '{print $5}'");
+        $usedSpace = substr(trim($data), 0, -1);
+
+        return $usedSpace;
     }
 
 }

@@ -29,10 +29,16 @@
                     <h1>{{ ip }}</h1>
                     <div class="row">
                         <div class="col-md-3">
-                            <h1 class="text-danger"><span id="ram_info_total"></span> Go</h1>
+                            <h1 class="text-success"><i class="fa fa-microchip" aria-hidden="true"></i> <span id="cpu_load_percent"></span> %</h1>
                         </div>
                         <div class="col-md-3">
-                            <h1 class="text-info"><span id="ram_info_percent"></span> %</h1>
+                            <h1 class="text-info"><i class="fa fa-building-o" aria-hidden="true"></i> <span id="ram_info_percent"></span> %</h1>
+                        </div>
+                        <div class="col-md-3">
+                            <h1 class="text-warning"><i class="fa fa-floppy-o" aria-hidden="true"></i> <span id="used_space_disk_percent"></span> %</h1>
+                        </div>
+                        <div class="col-md-3">
+                            <h1 class="text-danger"><i class="fa fa-wifi" aria-hidden="true"></i> <span id="ram_info_total"></span></h1>
                         </div>
                     </div>
                 </div>
@@ -46,9 +52,14 @@
                     url: '{{ path('app_dev_monitoring_ajax') }}',
                     dataType: 'html',
                     success: function(data) {
-                        var ramInfos = JSON.parse(data)['data'];
+                        var ramInfos = JSON.parse(data)['ram'];
+                        var cpuInfos = JSON.parse(data)['cpu'];
+                        var diskSpace = JSON.parse(data)['disk'];
+
                         $('#ram_info_total').html(Math.round(ramInfos['total'] / 1000000, 0));
                         $('#ram_info_percent').html(ramInfos['percent']);
+                        $('#cpu_load_percent').html(cpuInfos);
+                        $('#used_space_disk_percent').html(diskSpace);
                     },
                     complete: function() {
                         // Schedule the next request when the current one's complete
