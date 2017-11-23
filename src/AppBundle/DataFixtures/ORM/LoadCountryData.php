@@ -37,7 +37,7 @@ class LoadCountryData extends AbstractFixture implements OrderedFixtureInterface
             // Stocker sur 48 octets
             foreach($decoded as $code => $name)
             {
-                $country = new Country($name, $code);
+                $country = new \AppBundle\Entity\UserStatistic\Country($name, $code);
                 $em->persist($country);
             }
             $em->flush();

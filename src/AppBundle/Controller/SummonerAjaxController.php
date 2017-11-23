@@ -166,88 +166,6 @@ class SummonerAjaxController extends Controller
         }
     }
 
-    public function runesAction(Request $request, $summonerId, $region)
-    {
-        if (!$request->isXmlHttpRequest()) {
-            return new JsonResponse(array('httpCode' => 400, 'error' => 'Requête non AJAX'));
-        } else {
-            $sum = $this->container->get('app.lolsummoner');
-            $em = $this->get('doctrine')->getManager();
-
-            $region = $sum->getRegionBySlug($region);
-            // On récupère le summoner en BDD
-            $summoner = $em->getRepository('AppBundle:Summoner\Summoner')->findOneBy([
-                'summonerId' => $summonerId,
-                'region' => $region
-            ]);
-
-            $runesPages = $sum->getRunePages($summoner);
-            //$runeData = $sum->getRunePagesInfo($region, $runesPages['data']);
-
-            $language = $sum->getLanguageByRequestLocale($request);
-
-            // TODO: rechercher seulement les runes concernées
-            $runesTranslations = $em->getRepository('AppBundle:StaticData\Translation\RuneTranslation')->findBy([
-                'languageId' => $language->getId()
-            ]);
-            $translations = array();
-            foreach ($runesTranslations as $translation) {
-                $translations[$translation->getRuneId()] = $translation;
-            }
-
-            $template = $this->render('AppBundle:Summoner:_runes.html.twig',
-                array(
-                    'runePages' => $runesPages['data'],
-                    'runes' => $runesPages['images'],
-                    //'runesData' => $runeData,
-                    'translations' => $translations
-                ))
-                ->getContent();
-            return new Response($template);
-        }
-    }
-
-    public function masteriesAction(Request $request, $summonerId, $region)
-    {
-        if (!$request->isXmlHttpRequest()) {
-            return new JsonResponse(array('httpCode' => 400, 'error' => 'Requête non AJAX'));
-        } else {
-            $sum = $this->container->get('app.lolsummoner');
-            $em = $this->get('doctrine')->getManager();
-
-            $region = $sum->getRegionBySlug($region);
-            // On récupère le summoner en BDD
-            $summoner = $em->getRepository('AppBundle:Summoner\Summoner')->findOneBy([
-                'summonerId' => $summonerId,
-                'region' => $region
-            ]);
-
-            $masteriesPages = $sum->getMasteriesPages($summoner);
-
-            $masteries = $em->getRepository('AppBundle:StaticData\Mastery')->findAll();
-            $language = $sum->getLanguageByRequestLocale($request);
-
-            $masteriesTranslations = $em->getRepository('AppBundle:StaticData\Translation\MasteryTranslation')->findBy([
-                'languageId' => $language->getId()
-            ]);
-            $translations = array();
-            foreach ($masteriesTranslations as $translation) {
-                $translations[$translation->getMasteryId()] = $translation;
-            }
-
-            $template = $this->render('AppBundle:Summoner:_masteries.html.twig',
-                array(
-                    'masteriesPages' => $masteriesPages,
-                    'masteries' => $masteries,
-                    'translations' => $translations
-                    //'masteriesPages' => $masteriesPages['data'],
-                    //'$masteries' => $masteriesPages['images'],
-                ))
-                ->getContent();
-            return new Response($template);
-        }
-    }
-
     public function historyAction(Request $request, $summonerId, $region)
     {
         if (!$request->isXmlHttpRequest()) {
@@ -342,10 +260,8 @@ class SummonerAjaxController extends Controller
 
             $language = $sum->getLanguageByRequestLocale($request);
             $champions = $sum->getChampionsSortedByIds($language);
-            $runeData = null;
             $playerStats = array();
             if (isset($liveGame['currentGame']['participants'])) {
-                $runeData = $sum->getRunePageByData($region, $liveGame['currentGame']['participants'], $language);
                 foreach ($liveGame['currentGame']['participants'] as $player) {
                     // On récupère le summoner en BDD
                     $summoner = $em->getRepository('AppBundle:Summoner\Summoner')->findOneBy([
@@ -355,18 +271,18 @@ class SummonerAjaxController extends Controller
 
                     // Si le summoner n'existe pas encore en BDD, on le crée
                     if (empty($summoner)) {
-                        $summonerData = $api->getSummonerByIds($region, array($player['summonerId']));
+                        $summonerData = $api->getSummonerBySummonerId($region, $player['summonerId']);
                         if ($api->getResponseCode() == 404) {
                             //TODO: exception summoner not found
                             throw new NotFoundHttpException('Summoner not existing');
                         }
                         $newSummoner = new Summoner($player['summonerId'], $region);
                         $newSummoner->setUser(null);
-                        $newSummoner->setName($summonerData[$player['summonerId']]['name']);
-                        $newSummoner->setLevel($summonerData[$player['summonerId']]['summonerLevel']);
-                        $newSummoner->setProfileIconId($summonerData[$player['summonerId']]['profileIconId']);
+                        $newSummoner->setName($summonerData['name']);
+                        $newSummoner->setLevel($summonerData['summonerLevel']);
+                        $newSummoner->setProfileIconId($summonerData['profileIconId']);
                         $date = date_create();
-                        date_timestamp_set($date, ($summonerData[$player['summonerId']]['revisionDate'] / 1000));
+                        date_timestamp_set($date, ($summonerData['revisionDate'] / 1000));
                         $newSummoner->setRevisionDate($date);
                         $em->persist($newSummoner);
                         $em->flush();
@@ -377,13 +293,13 @@ class SummonerAjaxController extends Controller
 
                         if (!isset($lg_soloq['solo'])) {
                             $lg_soloqimg = "unranked_";
-                            $liveGame['live_game'][$player['summonerId']]['rank'] = 'Unranked';
+                            $liveGame['live_game']['rank'] = 'Unranked';
                         } else {
                             $lg_soloq = $lg_soloq['solo'];
                             $lg_soloqimg = $lg_soloq->getTier()->getImage();
-                            $liveGame['live_game'][$player['summonerId']]['rank'] = $lg_soloq->getTier()->getName();
+                            $liveGame['live_game']['rank'] = $lg_soloq->getTier()->getName();
                         }
-                        $liveGame['live_game'][$player['summonerId']]['img'] = $lg_soloqimg;
+                        $liveGame['live_game']['img'] = $lg_soloqimg;
                     }
 
                     $rankedStats = $em->getRepository('AppBundle:Summoner\RankedStats')->findOneBy([
@@ -402,21 +318,8 @@ class SummonerAjaxController extends Controller
                     $playerStats[$player['summonerId']]['champion'] = $rankedStats2;
                 }
             }
-            $masteries = $em->getRepository('AppBundle:StaticData\Mastery')->findAll();
-            $language = $sum->getLanguageByRequestLocale($request);
 
-            $masteriesTranslations = $em->getRepository('AppBundle:StaticData\Translation\MasteryTranslation')->findBy([
-                'languageId' => $language->getId()
-            ]);
-            $translations = array();
-            foreach ($masteriesTranslations as $translation) {
-                $translations[$translation->getMasteryId()] = $translation;
-            }
-            $masteriesPages = array();
             foreach ($liveGame['currentGame']['participants'] as $player) {
-                foreach ($player['masteries'] as $mastery) {
-                    $masteriesPages[$player['summonerId']][$mastery['masteryId']] = $mastery['rank'];
-                }
                 if ($player['teamId'] == 100) {
                     $players['blue'][] = $player;
                 } else {
@@ -440,12 +343,7 @@ class SummonerAjaxController extends Controller
                     'live_game_data' => $liveGame['live_game'],
                     'summoner' => $mainSummoner,
                     'champions' => $champions,
-                    'runesImg' => $runeData['images'],
-                    'runesStats' => $runeData['stats'],
                     'playerStats' => $playerStats,
-                    'masteriesPages' => $masteriesPages,
-                    'masteries' => $masteries,
-                    'translations' => $translations,
                     'players' => $players,
                     'bannedChampions' => $bannedChampions
                 ))
