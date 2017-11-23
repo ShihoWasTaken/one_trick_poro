@@ -53,27 +53,6 @@ class StaticDataUpdateService
         }
     }
 
-    public function updateRegions()
-    {
-        $updated = false;
-        $regions = $this->api->getShards();
-        foreach ($regions as $region) {
-            $newRegion = $this->doctrine->getRepository('AppBundle:StaticData\Region')->findOneBy([
-                'tag' => $region['region_tag']
-            ]);
-            if (empty($newRegion)) {
-                $newRegion = new Region($region['region_tag'], $region['name'], $region['slug']);
-                $this->em->persist($newRegion);
-                $updated = true;
-                echo 'Région ' . $region['name'] . ' ajoutée' . $this->endline();
-            }
-        }
-        if ($updated)
-            $this->em->flush();
-        else
-            echo 'Aucune nouvelle région n\'a été trouvée' . $this->endline();
-    }
-
     public function updateChampions()
     {
         $em = $this->doctrine->getManager();

@@ -39,15 +39,15 @@ class SummonerService
 
     public function updateSummonerInfos(\AppBundle\Entity\Summoner\Summoner $summoner)
     {
-        $summonerData = $this->api->getSummonerByIds($summoner->getRegion(), array($summoner->getSummonerId()));
+        $summonerData = $this->api->getSummonerBySummonerId($summoner->getRegion(), $summoner->getSummonerId());
         if ($this->api->getResponseCode() == 404) {
             $this->logger->error("Echec à la firstUpdateSummoner() du Summoner " . $summoner->getSummonerId() . " de la region " . $summoner->getRegion()->getSlug() . ", il n'existe pas dans l'API de Riot");
         }
-        $summoner->setName($summonerData[$summoner->getSummonerId()]['name']);
-        $summoner->setLevel($summonerData[$summoner->getSummonerId()]['summonerLevel']);
-        $summoner->setProfileIconId($summonerData[$summoner->getSummonerId()]['profileIconId']);
+        $summoner->setName($summonerData['name']);
+        $summoner->setLevel($summonerData['summonerLevel']);
+        $summoner->setProfileIconId($summonerData['profileIconId']);
         $date = date_create();
-        date_timestamp_set($date, ($summonerData[$summoner->getSummonerId()]['revisionDate'] / 1000));
+        date_timestamp_set($date, ($summonerData['revisionDate'] / 1000));
         $summoner->setRevisionDate($date);
 
         $this->updateRankedStats($summoner);
@@ -651,6 +651,26 @@ class SummonerService
         return $sorted;
     }
 
+    /**
+     * <table><tr><td>1</td><td>2</td></tr><table>
+     * This is the summary for a DocBlock.
+     *
+     * This is the description for a DocBlock. This text may contain
+     * multiple lines and even some _markdown_.
+     *
+     * * Markdown style lists function too
+     * * Just try this out once
+     *
+     * The section after the description contains the tags; which provide
+     * structured meta-data concerning the given element.
+     *
+     * @author  Mike van Riel <me@mikevanriel.com>
+     *
+     * @since 1.0
+     *
+     * @param int $example This is an example function/method parameter description.
+     * @param string $example2 This is a second example.
+     */
     public function getLiveGame(\AppBundle\Entity\Summoner\Summoner $summoner)
     {
         $currentGame = $this->api->getCurrentGame($summoner->getRegion(), $summoner->getSummonerId());

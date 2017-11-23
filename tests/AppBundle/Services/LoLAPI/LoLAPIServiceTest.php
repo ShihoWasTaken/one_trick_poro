@@ -56,8 +56,7 @@ class LoLAPIServiceTest extends KernelTestCase
         $region = $em->getRepository('AppBundle:StaticData\Region')->findOneBy([
             'slug' => REGION_SLUG
         ]);
-        if($region == null)
-        {
+        if ($region == null) {
             throw new Exception('Region not existing');
         }
         $this->region = $region;
@@ -67,16 +66,16 @@ class LoLAPIServiceTest extends KernelTestCase
     public function testToSafeLowerCase()
     {
         $lower = $this->LoLAPIService->toSafeLowerCase(SHIHO_CAPS_LOCK);
-        $this->assertEquals(SHIHO_LOWERCASE , $lower, 'La fonction toSafeLowerCase(' . SHIHO_CAPS_LOCK . ') devrait retourner ' . SHIHO_LOWERCASE);
+        $this->assertEquals(SHIHO_LOWERCASE, $lower, 'La fonction toSafeLowerCase(' . SHIHO_CAPS_LOCK . ') devrait retourner ' . SHIHO_LOWERCASE);
 
         $lower = $this->LoLAPIService->toSafeLowerCase(SPECIAL_CHAR_CAPS_LOCK_1);
-        $this->assertEquals(SPECIAL_CHAR_LOWERCASE_1 , $lower, 'La fonction toSafeLowerCase(' . SPECIAL_CHAR_CAPS_LOCK_1 . ') devrait retourner ' . SPECIAL_CHAR_LOWERCASE_1);
+        $this->assertEquals(SPECIAL_CHAR_LOWERCASE_1, $lower, 'La fonction toSafeLowerCase(' . SPECIAL_CHAR_CAPS_LOCK_1 . ') devrait retourner ' . SPECIAL_CHAR_LOWERCASE_1);
 
         $lower = $this->LoLAPIService->toSafeLowerCase(SPECIAL_CHAR_CAPS_LOCK_2);
-        $this->assertEquals(SPECIAL_CHAR_LOWERCASE_2 , $lower, 'La fonction toSafeLowerCase(' . SPECIAL_CHAR_CAPS_LOCK_2 . ') devrait retourner ' . SPECIAL_CHAR_LOWERCASE_2);
+        $this->assertEquals(SPECIAL_CHAR_LOWERCASE_2, $lower, 'La fonction toSafeLowerCase(' . SPECIAL_CHAR_CAPS_LOCK_2 . ') devrait retourner ' . SPECIAL_CHAR_LOWERCASE_2);
 
         $lower = $this->LoLAPIService->toSafeLowerCase(SPECIAL_CHAR_CAPS_LOCK_3);
-        $this->assertEquals(SPECIAL_CHAR_LOWERCASE_3 , $lower, 'La fonction toSafeLowerCase(' . SPECIAL_CHAR_CAPS_LOCK_3 . ') devrait retourner ' . SPECIAL_CHAR_LOWERCASE_3);
+        $this->assertEquals(SPECIAL_CHAR_LOWERCASE_3, $lower, 'La fonction toSafeLowerCase(' . SPECIAL_CHAR_CAPS_LOCK_3 . ') devrait retourner ' . SPECIAL_CHAR_LOWERCASE_3);
     }
 
     /* Champion v1.2
@@ -86,16 +85,16 @@ class LoLAPIServiceTest extends KernelTestCase
     public function testGetChampions()
     {
         $champions = $this->LoLAPIService->getChampions($this->region);
-        $this->assertArrayHasKey('champions' , $champions, 'Le tableau retourné doit avoir une clé champions');
+        $this->assertArrayHasKey('champions', $champions, 'Le tableau retourné doit avoir une clé champions');
     }
 
     public function testGetChampionById()
     {
         $champion = $this->LoLAPIService->getChampionById($this->region, AHRI_ID);
-        $this->assertArrayHasKey('id' , $champion, 'Un ID de champion valide devrait retourner des données');
+        $this->assertArrayHasKey('id', $champion, 'Un ID de champion valide devrait retourner des données');
 
         $champion = $this->LoLAPIService->getChampionById($this->region, INVALID_CHAMPION_ID);
-        $this->assertArrayNotHasKey('id' , $champion, 'Un ID de champion invalide ne devrait pas retourner de données');
+        $this->assertArrayNotHasKey('id', $champion, 'Un ID de champion invalide ne devrait pas retourner de données');
     }
 
     /* Champion Mastery
@@ -105,7 +104,7 @@ class LoLAPIServiceTest extends KernelTestCase
     public function testGetChampionMasteryByChampionId()
     {
         $champion = $this->LoLAPIService->getChampionMasteryByChampionId($this->region, SUMMONER_ID, AHRI_ID);
-        $this->assertArrayHasKey('championPoints' , $champion, 'Le tableau retourné doit avoir une clé ' . 'championPoints');
+        $this->assertArrayHasKey('championPoints', $champion, 'Le tableau retourné doit avoir une clé ' . 'championPoints');
 
         $this->LoLAPIService->getChampionMasteryByChampionId($this->region, SUMMONER_ID, INVALID_CHAMPION_ID);
         $responseCode = $this->LoLAPIService->getResponseCode();
@@ -119,7 +118,7 @@ class LoLAPIServiceTest extends KernelTestCase
     public function testGetChampionsMastery()
     {
         $champions = $this->LoLAPIService->getChampionsMastery($this->region, SUMMONER_ID);
-        $this->assertTrue(array_key_exists('championPoints' ,$champions[0]), 'La liste retournée doit avoir une entrée ' . 'championPoints');
+        $this->assertTrue(array_key_exists('championPoints', $champions[0]), 'La liste retournée doit avoir une entrée ' . 'championPoints');
 
         $champions = $this->LoLAPIService->getChampionsMastery($this->region, INVALID_SUMMONER_ID);
         $this->assertEmpty($champions, 'Doit retourner un tableau vide pour un summoner inexistant');
@@ -165,7 +164,7 @@ class LoLAPIServiceTest extends KernelTestCase
         $InGamesummonerID = $summoner[$this->LoLAPIService->toSafeLowerCase($summonerName)]['id'];
         $data = $this->LoLAPIService->getCurrentGame($this->region, $InGamesummonerID);
         $this->assertArrayHasKey('gameId', $data, 'Les données retournées doivent comporter l\'information gameId');
-        
+
     }
 
     /* Featured Games v1.0
@@ -177,7 +176,7 @@ class LoLAPIServiceTest extends KernelTestCase
         $responseCode = $this->LoLAPIService->getResponseCode();
         $this->assertEquals(200, $responseCode, 'Le code de retour de la requête doit être 200');
     }
-    
+
     /* Game v1.3
      * Only 1 entry
      */
@@ -213,7 +212,7 @@ class LoLAPIServiceTest extends KernelTestCase
         $leagues = $this->LoLAPIService->getLeaguesBySumonnerIdsEntry($this->region, array(SUMMONER_ID_RANKED));
         $this->assertArrayHasKey(strval(SUMMONER_ID_RANKED), $leagues, 'Les données retournées doivent comporter une clé avec le summoner ID passé en paramètre');
     }
-    
+
     /* Lol Static Data v1.2
      * No rate limit
      */
@@ -227,7 +226,7 @@ class LoLAPIServiceTest extends KernelTestCase
 
     public function testGetStaticDataChampionById()
     {
-        $this->LoLAPIService->getStaticDataChampionById($this->region, AHRI_ID,LOCALE_FR);
+        $this->LoLAPIService->getStaticDataChampionById($this->region, AHRI_ID, LOCALE_FR);
         $responseCode = $this->LoLAPIService->getResponseCode();
         $this->assertEquals(200, $responseCode, 'Le code de retour de la requête doit être 200 pour ces métadonnées');
     }
@@ -401,7 +400,7 @@ class LoLAPIServiceTest extends KernelTestCase
         $this->assertEquals(200, $responseCode, 'Le code de retour de la requête doit être 200 pour ces métadonnées');
         $this->assertArrayNotHasKey('timeline', $data, 'Les données retournées ne doivent pas comporter une clé timeline');
     }
-    
+
     /* Matchlist v2.2
      * Only 1 entry
      */

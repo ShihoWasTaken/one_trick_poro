@@ -315,8 +315,13 @@ class SummonerAjaxController extends Controller
         if (!$request->isXmlHttpRequest()) {
             return new JsonResponse(array('httpCode' => 400, 'error' => 'Requête non AJAX'));
         } else {
+            /** @var \AppBundle\Services\LoLAPI\LoLAPIService $api */
             $api = $this->container->get('app.lolapi');
+
+            /** @var \AppBundle\Services\SummonerService $sum */
             $sum = $this->container->get('app.lolsummoner');
+
+            /** @var \Doctrine\ORM\EntityManager $em */
             $em = $this->get('doctrine')->getManager();
 
             $region = $sum->getRegionBySlug($region);

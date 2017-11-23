@@ -5,7 +5,7 @@ namespace Tests\AppBundle\Services\LoLAPI;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use AppBundle\Services\LoLAPI\RequestService;
 
-define('URL', 'https://euw.api.pvp.net/api/lol/euw/v1.2/champion/1?api_key=33ba84f4-70f1-4676-b1a6-d98a4e68609c');
+define('URL', 'https://euw.api.pvp.net/api/lol/euw/v1.2/champion/1?api_key=');
 
 class RequestServiceTest extends KernelTestCase
 {
@@ -16,13 +16,12 @@ class RequestServiceTest extends KernelTestCase
     public function setUp()
     {
         // On utilise les attributs static pour ne set qu'une seule fois et éviter trop de requête à l'API
-        if(static::$requestService == null)
-        {
+        if (static::$requestService == null) {
             static::bootKernel();
             static::$container = static::$kernel->getContainer();
             static::$api_key = static::$container->getParameter('riot_api_key');
             static::$requestService = new RequestService(static::$container);
-            static::$requestService->request(URL);
+            static::$requestService->request(URL . static::$api_key);
         }
     }
 

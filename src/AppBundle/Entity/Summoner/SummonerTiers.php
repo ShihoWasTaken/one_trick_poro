@@ -212,7 +212,7 @@ class SummonerTiers
      *
      * @return boolean
      */
-    public function getFreshBlood()
+    public function isFreshBlood()
     {
         return $this->freshBlood;
     }
@@ -236,7 +236,7 @@ class SummonerTiers
      *
      * @return boolean
      */
-    public function getHotStreak()
+    public function isHotStreak()
     {
         return $this->hotStreak;
     }
@@ -260,7 +260,7 @@ class SummonerTiers
      *
      * @return boolean
      */
-    public function getInactive()
+    public function isInactive()
     {
         return $this->inactive;
     }
@@ -284,7 +284,7 @@ class SummonerTiers
      *
      * @return boolean
      */
-    public function getVeteran()
+    public function isVeteran()
     {
         return $this->veteran;
     }
@@ -383,5 +383,55 @@ class SummonerTiers
     public function getRegionId()
     {
         return $this->regionId;
+    }
+
+    /**
+     * Get id
+     *
+     * @return integer
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * Get freshBlood
+     *
+     * @return boolean
+     */
+    public function getFreshBlood()
+    {
+        return $this->freshBlood;
+    }
+
+    /**
+     * Get hotStreak
+     *
+     * @return boolean
+     */
+    public function getHotStreak()
+    {
+        return $this->hotStreak;
+    }
+
+    /**
+     * Get inactive
+     *
+     * @return boolean
+     */
+    public function getInactive()
+    {
+        return $this->inactive;
+    }
+
+    /**
+     * Get veteran
+     *
+     * @return boolean
+     */
+    public function getVeteran()
+    {
+        return $this->veteran;
     }
 }

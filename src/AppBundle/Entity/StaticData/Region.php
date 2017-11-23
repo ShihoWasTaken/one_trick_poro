@@ -7,16 +7,16 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * @ORM\Entity
  * @ORM\Table(name="region",uniqueConstraints={
- * @ORM\UniqueConstraint(name="uniqueRegionTag", columns={"tag"}),
+ * @ORM\UniqueConstraint(name="uniqueRegionTag", columns={"host"}),
  * @ORM\UniqueConstraint(name="uniqueRegionName", columns={"name"}),
  * @ORM\UniqueConstraint(name="uniqueRegionSlug", columns={"slug"})
  * })
  */
 class Region
 {
-    public function __construct($tag, $name, $slug)
+    public function __construct($name, $slug, $host)
     {
-        $this->tag = $tag;
+        $this->host = $host;
         $this->name = $name;
         $this->slug = $slug;
     }
@@ -29,9 +29,9 @@ class Region
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=4)
+     * @ORM\Column(type="string", length=24)
      */
-    private $tag;
+    private $host;
 
     /**
      * @ORM\Column(type="string", length=24)
@@ -42,7 +42,6 @@ class Region
      * @ORM\Column(type="string", length=4)
      */
     private $slug;
-
 
     /**
      * Get id
@@ -55,27 +54,27 @@ class Region
     }
 
     /**
-     * Set tag
+     * Set host
      *
-     * @param string $tag
+     * @param string $host
      *
      * @return Region
      */
-    public function setTag($tag)
+    public function setHost($host)
     {
-        $this->tag = $tag;
+        $this->host = $host;
 
         return $this;
     }
 
     /**
-     * Get tag
+     * Get host
      *
      * @return string
      */
-    public function getTag()
+    public function getHost()
     {
-        return $this->tag;
+        return $this->host;
     }
 
     /**

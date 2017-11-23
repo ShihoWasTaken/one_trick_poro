@@ -68,7 +68,10 @@ class SummonerController extends Controller
     {
         $this->container->get('logger')->debug('SummonerId = ' . $summonerId);
         $em = $this->get('doctrine')->getManager();
+        /**  @var \AppBundle\Services\LoLAPI\LoLAPIService $api */
         $api = $this->container->get('app.lolapi');
+
+        /**  @var \AppBundle\Services\SummonerService $sum */
         $sum = $this->container->get('app.lolsummoner');
 
         $region = $sum->getRegionBySlug($region);
@@ -82,18 +85,18 @@ class SummonerController extends Controller
         // Si le summoner n'existe pas encore en BDD, on le crée
         //TODO: Faire ça dans une méthode POST
         if (empty($summoner)) {
-            $summonerData = $api->getSummonerByIds($region, array($summonerId));
+            $summonerData = $api->getSummonerBySummonerId($region, $summonerId);
             if ($api->getResponseCode() == 404) {
                 //TODO: exception summoner not found
                 throw new NotFoundHttpException('Summoner not existing');
             }
             $newSummoner = new Summoner($summonerId, $region);
             $newSummoner->setUser(null);
-            $newSummoner->setName($summonerData[$summonerId]['name']);
-            $newSummoner->setLevel($summonerData[$summonerId]['summonerLevel']);
-            $newSummoner->setProfileIconId($summonerData[$summonerId]['profileIconId']);
+            $newSummoner->setName($summonerData['name']);
+            $newSummoner->setLevel($summonerData['summonerLevel']);
+            $newSummoner->setProfileIconId($summonerData['profileIconId']);
             $date = date_create();
-            date_timestamp_set($date, ($summonerData[$summonerId]['revisionDate'] / 1000));
+            date_timestamp_set($date, ($summonerData['revisionDate'] / 1000));
             $newSummoner->setRevisionDate($date);
             $em->persist($newSummoner);
             $em->flush();
@@ -112,7 +115,10 @@ class SummonerController extends Controller
     public function indexAction3(Request $request, $region, $summonerId)
     {
         $em = $this->get('doctrine')->getManager();
+        /**  @var \AppBundle\Services\LoLAPI\LoLAPIService $api */
         $api = $this->container->get('app.lolapi');
+
+        /**  @var \AppBundle\Services\SummonerService $sum */
         $sum = $this->container->get('app.lolsummoner');
 
         $safeRegion = $em->getRepository('AppBundle:StaticData\Region')->findOneBy([
@@ -196,7 +202,8 @@ class SummonerController extends Controller
                 $lg_data[$participant['summonerId']]['img'] = $lg_soloqimg;
             }
         }*/
-        $topChampionsMastery = $api->getMasteryTopChampions($safeRegion, $summonerId);
+        $topChampionsMastery = $api->getChampionsMastery($safeRegion, $summonerId);
+        echo $api->getURL();
         if (!empty($topChampionsMastery) && (count($topChampionsMastery) > 2)) {
             for ($i = 0; $i < count($topChampionsMastery); $i++) {
                 $arr = array('championKey' => $champions[$topChampionsMastery[$i]['championId']]['key']);
