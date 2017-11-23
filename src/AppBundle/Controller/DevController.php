@@ -31,7 +31,7 @@ class DevController extends Controller
             array(
                 'data' => $data,
                 'ip' => $monitoringService->getIpAdress(),
-                'country' => $monitoringService->ip_info("46.182.41.35",'country')
+                'country' => $monitoringService->ip_info("197.0.0.1",'country')
             ));
     }
 
@@ -49,11 +49,13 @@ class DevController extends Controller
         $cpuInfos = $monitoringService->getCPULoad();
 
         $diskSpace = $monitoringService->getTotalUsedDiskSpace();
+        $network = $monitoringService->getNetworkPercentage();
 
         $response->setContent(json_encode(array(
             'ram' => $ramInfos,
             'cpu' => $cpuInfos,
-            'disk' => $diskSpace
+            'disk' => $diskSpace,
+            'network' => $network
         )));
 
         return $response;
