@@ -50,7 +50,7 @@ class SummonerService
         date_timestamp_set($date, ($summonerData['revisionDate'] / 1000));
         $summoner->setRevisionDate($date);
 
-        $this->updateRankedStats($summoner);
+        //$this->updateRankedStats($summoner);
         $this->updateSummonerRank($summoner);
     }
 
@@ -164,7 +164,7 @@ class SummonerService
     {
 
         $soloq = null;
-        $summonerAPIData = $this->api->getLeaguesBySumonnerIdsEntry($summoner->getRegion(), array($summoner->getSummonerId()));
+        $ranks = $this->api->getSummonerRanksById($summoner->getRegion(), $summoner->getSummonerId());
         $tiers = array();
 
 
@@ -173,65 +173,65 @@ class SummonerService
         $databaseTiers = array();
 
         if ($this->api->getResponseCode() != 404) {
-            foreach ($summonerAPIData[$summoner->getSummonerId()] as $queue) {
-                switch ($queue['queue']) {
+            foreach ($ranks as $queue) {
+                switch ($queue['queueType']) {
                     case 'RANKED_SOLO_5x5':
                     case 'RANKED_FLEX_SR':
                     case 'RANKED_FLEX_TT':
-                        $tiers[$queue['queue']] = $queue;
-                        switch ($tiers[$queue['queue']]['tier']) {
+                        $tiers[$queue['queueType']] = $queue;
+                        switch ($tiers[$queue['queueType']]['tier']) {
                             default:
                             case 'UNRANKED':
-                                $leagueId[$queue['queue']] = Tier::UNRANKED;
+                                $leagueId[$queue['queueType']] = Tier::UNRANKED;
                                 break;
                             case 'BRONZE':
-                                $leagueId[$queue['queue']] = Tier::BRONZE;
+                                $leagueId[$queue['queueType']] = Tier::BRONZE;
                                 break;
                             case 'SILVER':
-                                $leagueId[$queue['queue']] = Tier::SILVER;
+                                $leagueId[$queue['queueType']] = Tier::SILVER;
                                 break;
                             case 'GOLD':
-                                $leagueId[$queue['queue']] = Tier::GOLD;
+                                $leagueId[$queue['queueType']] = Tier::GOLD;
                                 break;
                             case 'PLATINUM':
-                                $leagueId[$queue['queue']] = Tier::PLATINUM;
+                                $leagueId[$queue['queueType']] = Tier::PLATINUM;
                                 break;
                             case 'DIAMOND':
-                                $leagueId[$queue['queue']] = Tier::DIAMOND;
+                                $leagueId[$queue['queueType']] = Tier::DIAMOND;
                                 break;
                             case 'MASTER':
-                                $leagueId[$queue['queue']] = Tier::MASTER;
+                                $leagueId[$queue['queueType']] = Tier::MASTER;
                                 break;
                             case 'CHALLENGER':
-                                $leagueId[$queue['queue']] = Tier::CHALLENGER;
+                                $leagueId[$queue['queueType']] = Tier::CHALLENGER;
                                 break;
                         }
-                        switch ($tiers[$queue['queue']]['entries'][0]['division']) {
+                        switch ($tiers[$queue['queueType']]['rank']) {
                             default:
                             case 'I':
-                                $divisionId[$queue['queue']] = 1;
+                                $divisionId[$queue['queueType']] = 1;
                                 break;
                             case 'II':
-                                $divisionId[$queue['queue']] = 2;
+                                $divisionId[$queue['queueType']] = 2;
                                 break;
                             case 'III':
-                                $divisionId[$queue['queue']] = 3;
+                                $divisionId[$queue['queueType']] = 3;
                                 break;
                             case 'IV':
-                                $divisionId[$queue['queue']] = 4;
+                                $divisionId[$queue['queueType']] = 4;
                                 break;
                             case 'V':
-                                $divisionId[$queue['queue']] = 5;
+                                $divisionId[$queue['queueType']] = 5;
                                 break;
                         }
 
-                        $databaseTiers[$queue['queue']] = $this->em->getRepository('AppBundle:Summoner\Tier')->findOneBy([
-                            'league' => $leagueId[$queue['queue']],
-                            'division' => $divisionId[$queue['queue']]
+                        $databaseTiers[$queue['queueType']] = $this->em->getRepository('AppBundle:Summoner\Tier')->findOneBy([
+                            'league' => $leagueId[$queue['queueType']],
+                            'division' => $divisionId[$queue['queueType']]
                         ]);
                         break;
                     default:
-                        $this->logger->error("La queue " . $queue['queue'] . " a été trouvée lors de l'update du summoner " . $summoner->getName() . " avec l'id " . $summoner->getSummonerId() . " sur le serveur " . $summoner->getRegion()->getName());
+                        $this->logger->error("La queue " . $queue['queueType'] . " a été trouvée lors de l'update du summoner " . $summoner->getName() . " avec l'id " . $summoner->getSummonerId() . " sur le serveur " . $summoner->getRegion()->getName());
                         return;
                 }
             }
@@ -252,7 +252,7 @@ class SummonerService
         foreach ($tiers as $key => $tier) {
 
             $isSet = false;
-            switch ($tier['queue']) {
+            switch ($tier['queueType']) {
                 case 'RANKED_SOLO_5x5':
                     if (isset($databaseRanks['solo'])) {
                         $isSet = true;
@@ -276,7 +276,7 @@ class SummonerService
             if (!$isSet) {
                 $summonerTier = new summonerTiers();
 
-                switch ($tier['queue']) {
+                switch ($tier['queueType']) {
                     case 'RANKED_SOLO_5x5':
                         $summonerTier->setQueueId(summonerTiers::SOLO_DUO);
                         break;
@@ -295,16 +295,16 @@ class SummonerService
             $summonerTier->setTier($databaseTiers[$key]);
 
             if ($databaseTiers[$key]->getLeague() != Tier::UNRANKED) {
-                $summonerTier->setLeaguePoints($tier['entries'][0]['leaguePoints']);
-                $summonerTier->setWins($tier['entries'][0]['wins']);
-                $summonerTier->setLosses($tier['entries'][0]['losses']);
-                $summonerTier->setFreshBlood($tier['entries'][0]['isFreshBlood']);
-                $summonerTier->setHotStreak($tier['entries'][0]['isHotStreak']);
-                $summonerTier->setInactive($tier['entries'][0]['isInactive']);
-                $summonerTier->setVeteran($tier['entries'][0]['isVeteran']);
+                $summonerTier->setLeaguePoints($tier['leaguePoints']);
+                $summonerTier->setWins($tier['wins']);
+                $summonerTier->setLosses($tier['losses']);
+                $summonerTier->setFreshBlood($tier['freshBlood']);
+                $summonerTier->setHotStreak($tier['hotStreak']);
+                $summonerTier->setInactive($tier['inactive']);
+                $summonerTier->setVeteran($tier['veteran']);
                 // Mini series
-                if (isset($tier['entries'][0]['miniSeries'])) {
-                    $summonerTier->setMiniSeries($tier['entries'][0]['miniSeries']['progress']);
+                if (isset($tier['miniSeries'])) {
+                    $summonerTier->setMiniSeries($tier['miniSeries']['progress']);
                 }
             }
             if (!$isSet) {
@@ -563,52 +563,6 @@ class SummonerService
     {
         $recentGamesData = $this->api->getRecentGames($summoner->getRegion(), $summoner->getSummonerId());
         return $recentGamesData;
-    }
-
-    public function getRunePageByData(\AppBundle\Entity\StaticData\Region $region, array $runePagesData, \AppBundle\Entity\Language $language)
-    {
-        $images = array();
-        $ids = array();
-        $runeData = array();
-        $stats = array();
-        foreach ($runePagesData as $participant) {
-            foreach ($participant['runes'] as $rune) {
-                $ids[$rune['runeId']] = $rune['runeId'];
-            }
-        }
-        foreach ($ids as $id) {
-            $runeData['runeId'] = $this->em->getRepository('AppBundle:StaticData\Rune')->findOneBy([
-                'id' => $id
-            ]);
-            $images[$id] = $runeData['runeId']->getImage();
-            $stats[$id] = $this->em->getRepository('AppBundle:StaticData\Translation\RuneTranslation')->findOneBy([
-                'runeId' => $id,
-                'languageId' => $language->getId()
-            ]);
-        }
-        //$toto = $this->em->getRepository('AppBundle:StaticData\Rune')->findAllIn($ids);
-        return array(
-            'images' => $images,
-            'stats' => $stats
-        );
-    }
-
-    public function getRunePagesInfo(\AppBundle\Entity\StaticData\Region $region, array $data)
-    {
-        $ids = array();
-        $stats = array();
-        foreach ($data['pages'] as $page) {
-            if (isset($page['slots'])) {
-                foreach ($page['slots'] as $rune) {
-                    $ids[$rune['runeId']] = $rune['runeId'];
-                }
-            }
-        }
-        foreach ($ids as $id) {
-            //TODO: chercher les infos des runes directement depuis la BDD
-            $stats[$id] = $this->api->getStaticRuneById($region, $id, 'fr_FR');
-        }
-        return $stats;
     }
 
     public function getSummonerSpellsSortedById(\AppBundle\Entity\StaticData\Region $region)

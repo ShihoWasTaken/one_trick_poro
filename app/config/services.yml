@@ -16,6 +16,9 @@ services:
     app.staticdataupdate:
         class:        AppBundle\Services\StaticDataUpdateService
         arguments:    ['@doctrine','@app.lolapi']
+    app.monitoring:
+        class:        AppBundle\Services\MonitoringService
+        arguments:    ['@logger', '@doctrine.orm.entity_manager', '@app.lolapi']
     app.interceptor.action_listener:
         class: AppBundle\EventListener\InterceptorListener
         arguments: ['@twig', '%static_data_version%']
