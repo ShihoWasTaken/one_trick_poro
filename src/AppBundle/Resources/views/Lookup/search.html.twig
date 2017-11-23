@@ -68,6 +68,7 @@
         <div class="row white-bg">
             <!-- BEGIN SEARCH RESULT -->
             <div class="col-md-12">
+                {{ dump(search) }}
                 <div class="grid search">
                     <div class="grid-body">
                         <div class="row">
@@ -196,24 +197,25 @@
                                             <td class="number text-center">{{ summoner.name }}</td>
                                             <td class="image"><img src="{{ summoner.profileIconId|sumIcon }}"/>
                                             </td>
-                                            <td class="product">                                            {% if summoner.miniSeries is not empty %}
-                                                    "mini Series": {{ summoner.miniSeries }}<br>
+                                            <td class="product">
+                                                {% if summoner.tiers[0].miniSeries is not empty %}
+                                                    "mini Series": {{ summoner.tiers[0].miniSeries }}<br>
                                                 {% else %}
-                                                    "leaguePoints": {{ summoner.leaguePoints }}<br>
+                                                    "leaguePoints": {{ summoner.tiers[0].leaguePoints }}<br>
                                                 {% endif %}
-                                                "isFreshBlood": {{ summoner.isFreshBlood }},<br>
-                                                "isHotStreak": {{ summoner.isHotStreak }},<br>
-                                                "isInactive": {{ summoner.isInactive }},<br>
-                                                "isVeteran": {{ summoner.isVeteran }},<br>
-                                                "losses": {{ summoner.losses }},<br>
-                                                "wins": {{ summoner.wins }}</div>
+                                                "isFreshBlood": {{ summoner.tiers[0].isFreshBlood }},<br>
+                                                "isHotStreak": {{ summoner.tiers[0].isHotStreak }},<br>
+                                                "isInactive": {{ summoner.tiers[0].isInactive }},<br>
+                                                "isVeteran": {{ summoner.tiers[0].isVeteran }},<br>
+                                                "losses": {{ summoner.tiers[0].losses }},<br>
+                                                "wins": {{ summoner.tiers[0].wins }}</div>
                                 </td>
                                 <td class="rate text-right"><span><i class="fa fa-star"></i><i
                                                 class="fa fa-star"></i><i class="fa fa-star"></i><i
                                                 class="fa fa-star"></i><i
                                                 class="fa fa-star-half-o"></i></span></td>
-                                <td class="price text-right">{{ summoner.tier.name }}<img
-                                            src="{{ asset('bundles/app/images/leagues/' ~ summoner.tier.image ~ '.png') }}"/>
+                                <td class="price text-right">{{ summoner.tiers[0].tier.name }}<img
+                                            src="{{ asset('bundles/app/images/leagues/' ~ summoner.tiers[0].tier.image ~ '.png') }}"/>
                                 </td>
 
 

@@ -4,6 +4,14 @@
     {{ parent() }}
 {% endblock title %}
 
+{% block meta_description %}
+    {% if app.request.locale == 'fr' %}
+        <meta name="description" content="One Trick Poro est un site communautaire pour aider les joueurs de League of Legends."/>
+    {% else %}
+        <meta name="description" content="One Trick Poro is a community site to help League of Legends players."/>
+    {% endif %}
+{% endblock %}
+
 {% block stylesheets %}
     {{ parent() }}
     {% stylesheets '@bootstrap_css' output='css/bootstrap.css' %}
