@@ -125,14 +125,15 @@ class MonitoringService
         $lines = explode(PHP_EOL, $data);
         $totalInKB = explode(':', trim($lines[0]));
         $totalInKB = substr($totalInKB[1], 0, -3);
-        $freeInKB = explode(':', trim($lines[1]));
-        $freeInKB = substr($freeInKB[1], 0, -3);
-        $usedInKB = $totalInKB - $freeInKB;
+        // MemAvailable
+        $availableInKB = explode(':', trim($lines[2]));
+        $availableInKB = substr($availableInKB[1], 0, -3);
+        $usedInKB = $totalInKB - $availableInKB;
         $percent = round(($usedInKB / $totalInKB) * 100, 0);
 
         return array(
             'total' => $totalInKB,
-            'free' => $freeInKB,
+            'available' => $availableInKB,
             'used' => $usedInKB,
             'percent' => $percent
         );
