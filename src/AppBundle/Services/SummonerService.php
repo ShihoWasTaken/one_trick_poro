@@ -337,6 +337,11 @@ class SummonerService
                     $ranks['flex3'] = $rank;
                     break;
             }
+            if (!isset($ranks['best'])) {
+                $ranks['best'] = $rank;
+            } else {
+                $ranks['best'] = SummonerTiers::getHigherRank($ranks['best'], $rank);
+            }
         }
 
         return $ranks;

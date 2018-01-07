@@ -6,6 +6,12 @@
 
 {% block stylesheets %}
     {{ parent() }}
+    {% stylesheets 'bundles/app/css/Summoner/index.css' %}
+    <link rel="stylesheet" href="{{ asset_url }}"/>
+    {% endstylesheets %}
+    {% stylesheets 'bundles/app/css/Summoner/summary.css' %}
+    <link rel="stylesheet" href="{{ asset_url }}"/>
+    {% endstylesheets %}
     {% stylesheets 'bundles/app/css/Summoner/chests.css' %}
     <link rel="stylesheet" href="{{ asset_url }}"/>
     {% endstylesheets %}
@@ -77,7 +83,7 @@
                 <div class="row">
                     <div class="col-md-2">
                         <figure>
-                            <img src="{{ summoner.profileIconId|sumIcon }}"/>
+                            <img class="summoner-icon" src="{{ summoner.profileIconId|sumIcon }}"/>
                             <figcaption>{{ summoner.level }}</figcaption>
                         </figure>
                         {#
@@ -92,13 +98,13 @@
                         </button>
                     </div>
                     <div class="col-md-3 text-center">
-                        {% if ranks['solo'] is defined %}
-                            <img src="{{ asset('bundles/app/images/leagues/' ~ ranks['solo'].tier.image ~ '.png') }}"/>
+                        {% if ranks['best'] is defined %}
+                            <img src="{{ asset('bundles/app/images/leagues/' ~ ranks['best'].tier.image ~ '.png') }}"/>
                             <div class="row">
                                 <div class="col-md-12 text-center">
-                                    {{ ranks['solo'].tier.name }} <br>
-                                    {{ ranks['solo'].leaguePoints }} {{ 'league.points'|trans }} <br>
-                                    <span class="positive-color">{{ ranks['solo'].wins }} W</span> - <span class="negative-color">{{ ranks['solo'].losses }} L</span>
+                                    {{ ranks['best'].tier.name }} <br>
+                                    {{ ranks['best'].leaguePoints }} {{ 'league.points'|trans }} <br>
+                                    <span class="positive-color">{{ ranks['best'].wins }} W</span> - <span class="negative-color">{{ ranks['best'].losses }} L</span>
                                 </div>
                             </div>
                         {% else %}

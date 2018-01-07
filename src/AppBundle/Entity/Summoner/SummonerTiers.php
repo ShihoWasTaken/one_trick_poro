@@ -98,6 +98,27 @@ class SummonerTiers
     private $miniSeries = "";
 
     /**
+     * @param $tier1
+     * @param $tier2
+     */
+    public static function getHigherRank(SummonerTiers $tier1, SummonerTiers $tier2)
+    {
+        // Si le rang est différent entre les deux
+        if ($tier1->getTier()->getId() != $tier2->getTier()->getId()) {
+            return $tier1->getTier()->getId() > $tier2->getTier()->getId() ? $tier1 : $tier2;
+        } // Sinon même palier
+        else {
+            // Si les points sont différents entre les deux
+            if ($tier1->getLeaguePoints() != $tier2->getLeaguePoints()) {
+                return $tier1->getLeaguePoints() > $tier2->getLeaguePoints() ? $tier1 : $tier2;
+            } // Sinon on renvoie le 1er
+            else {
+                return $tier1;
+            }
+        }
+    }
+
+    /**
      * Set queueId
      *
      * @param integer $queueId

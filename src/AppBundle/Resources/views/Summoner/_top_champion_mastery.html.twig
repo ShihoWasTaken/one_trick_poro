@@ -1,13 +1,19 @@
 <div class="col-md-12">
     <h2>{{ 'champion.masteries'|trans }}</h2>
-    {% for mastery in topChampionsMastery %}
-        <div class="col-md-4 text-center">
-            <h4>{{ champions[mastery.championId].name }}</h4>
-            <img src="http://ddragon.leagueoflegends.com/cdn/{{ static_data_version }}/img/champion/{{ champions[mastery.championId].key }}.png"><br>
-            <img src="{{ asset('bundles/app/images/champion-masteries/' ~ mastery.championLevel ~ '.png') }}"/>
-            <br>{{ 'champion.masteries.level'|trans }} : {{ mastery.championLevel }}
-            <br>{{ 'champion.masteries.points'|trans }} : {{ mastery.championPoints }}
-        </div>
+    {% for index in [1,0,2] %}
+        {% if topChampionsMastery[index] is defined %}
+            <div class="col-md-4 text-center">
+                <h4>{{ champions[topChampionsMastery[index].championId].name }}</h4>
+                <img src="http://ddragon.leagueoflegends.com/cdn/{{ static_data_version }}/img/champion/{{ champions[topChampionsMastery[index].championId].key }}.png"><br>
+                <img src="{{ asset('bundles/app/images/champion-masteries/' ~ topChampionsMastery[index].championLevel ~ '.png') }}"/>
+                <br>{{ 'champion.masteries.level'|trans }} : {{ topChampionsMastery[index].championLevel }}
+                <br>{{ 'champion.masteries.points'|trans }} : {{ topChampionsMastery[index].championPoints }}
+            </div>
+        {% else %}
+            <div class="col-md-4 text-center">
+                <h4></h4>
+                <img class="empty-champion-mastery" src="{{ asset('bundles/app/images/champion-masteries/Mystery_Champion_(Blue_Essence).png') }}"/>
+            </div>
+        {% endif %}
     {% endfor %}
-
 </div>

@@ -4,6 +4,7 @@
 namespace AppBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use AppBundle\Entity\Summoner\Summoner;
@@ -202,19 +203,14 @@ class SummonerController extends Controller
                 $lg_data[$participant['summonerId']]['img'] = $lg_soloqimg;
             }
         }*/
-        $topChampionsMastery = $api->getChampionsMastery($safeRegion, $summonerId);
-        echo $api->getURL();
-        if (!empty($topChampionsMastery) && (count($topChampionsMastery) > 2)) {
-            for ($i = 0; $i < count($topChampionsMastery); $i++) {
-                $arr = array('championKey' => $champions[$topChampionsMastery[$i]['championId']]['key']);
-                $topChampionsMastery[$i] = array_merge($topChampionsMastery[$i], $arr);
-            }
-            // Switch du 1er et 2eme
-            $tempChampMastery = $topChampionsMastery[0];
-            $topChampionsMastery[0] = $topChampionsMastery[1];
-            $topChampionsMastery[1] = $tempChampMastery;
+        $topChampionsMasteryData = $api->getChampionsMastery($safeRegion, $summonerId);
+        $topChampionsMastery = array();
+        // Pour tester avec moins de 3 champion mastery
+        //$topChampionsMasteryData = array_slice($topChampionsMasteryData, 0, 3);
+        for ($i = 0; $i < count($topChampionsMasteryData) && $i < 3; $i++) {
+            $arr = array('championKey' => $champions[$topChampionsMasteryData[$i]['championId']]['key']);
+            $topChampionsMastery[$i] = array_merge($topChampionsMasteryData[$i], $arr);
         }
-
 
         return $this->render('AppBundle:Summoner:index.html.twig',
             array(
