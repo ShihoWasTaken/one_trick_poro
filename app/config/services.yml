@@ -21,8 +21,9 @@ services:
         arguments:    ['@logger', '@doctrine.orm.entity_manager', '@app.lolapi']
     app.interceptor.action_listener:
         class: AppBundle\EventListener\InterceptorListener
-        arguments: ['@twig', '%static_data_version%']
+        arguments: ['@logger', "%kernel.environment%", '@twig', '%static_data_version%']
         tags:
+            - { name: kernel.event_listener, event: kernel.controller, method: onKernelController }
             - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
     app.authentication_handler:
         class:        AppBundle\Handler\AuthenticationHandler

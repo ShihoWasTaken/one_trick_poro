@@ -16,3 +16,7 @@ app_dev_monitoring:
 app_dev_monitoring_ajax:
     path:     /monitoringAjax
     defaults: { _controller: AppBundle:Dev:monitoringAjax }
+
+app_summoner_history_ajax:
+    path:     /summoner/{region}/{summonerId}/historyAjax
+    defaults: { _controller: AppBundle:SummonerAjax:history }
