@@ -93,6 +93,7 @@ class SummonerController extends Controller
             }
             $newSummoner = new Summoner($summonerId, $region);
             $newSummoner->setUser(null);
+            $newSummoner->setAccountId($summonerData['accountId']);
             $newSummoner->setName($summonerData['name']);
             $newSummoner->setLevel($summonerData['summonerLevel']);
             $newSummoner->setProfileIconId($summonerData['profileIconId']);

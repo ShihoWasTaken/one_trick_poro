@@ -255,6 +255,7 @@ class SummonerAjaxController extends AbstractAjaxController
                     }
                     $newSummoner = new Summoner($player['summonerId'], $region);
                     $newSummoner->setUser(null);
+                    $newSummoner->setAccountId($summonerData['accountId']);
                     $newSummoner->setName($summonerData['name']);
                     $newSummoner->setLevel($summonerData['summonerLevel']);
                     $newSummoner->setProfileIconId($summonerData['profileIconId']);

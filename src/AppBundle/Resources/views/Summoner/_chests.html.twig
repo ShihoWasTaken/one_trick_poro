@@ -22,7 +22,7 @@
 
         <div id="filtr-container-chests" class="filtr-container">
             {% for key, champion in champions %}
-                <div class="col-md-3 text-center champion filtr-item" data-category="{{ dataCategory[champion.key] }}"
+                <div class="col-lg-2 col-md-4 col-sm-3 col-xs-2 text-center champion filtr-item" data-category="{{ dataCategory[champion.key] }}"
                      data-sort="value">
                     <h4>{{ champion.name }}</h4>
                     <img src="http://ddragon.leagueoflegends.com/cdn/{{ static_data_version }}/img/champion/{{ champion.key }}.png">

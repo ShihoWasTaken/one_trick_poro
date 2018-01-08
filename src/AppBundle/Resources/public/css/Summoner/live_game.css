@@ -1,5 +1,4 @@
-#blue_team th
-{
+#blue_team th {
     background-color: #0381bb;
     color: white;
     font-weight: normal;
@@ -7,8 +6,7 @@
     line-height: 50px;
 }
 
-#purple_team th
-{
+#purple_team th {
     background-color: #814092;
     color: white;
     font-weight: normal;
@@ -16,43 +14,40 @@
     line-height: 50px;
 }
 
-img.live-game-champion
-{
+img.live-game-champion {
     width: 48px;
 }
 
-img.live-game-summoner
-{
+img.empty-banned-champion {
+    -webkit-filter: grayscale(100%); /* Safari 6.0 - 9.0 */
+    filter: grayscale(100%);
+}
+
+img.live-game-summoner {
     width: 24px;
 }
 
-img.live-game-rank
-{
+img.live-game-rank {
     display: inline-block;
     width: 32px;
 }
 
-span.live-game-rank
-{
+span.live-game-rank {
     display: inline-block;
 }
 
-span.live-game-name
-{
+span.live-game-name {
     overflow: hidden;
 }
 
-th.live-game-name
-{
+th.live-game-name {
     width: 100px;
 }
 
-th.live-game-champion
-{
+th.live-game-champion {
     width: 48px;
 }
 
-img.live-game-banned
-{
+img.live-game-banned {
     width: 64px;
 }

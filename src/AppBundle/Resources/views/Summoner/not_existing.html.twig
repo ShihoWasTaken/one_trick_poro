@@ -23,16 +23,16 @@
                 {% for region in data.regions %}
                     {% if data.summoners[region.slug] is defined %}
                         <div class="col-lg-3 col-sm-4 col-xs-6">
-                            <a href="{{ path('app_summoner',{'region': region.slug, 'summonerId': data.summoners[region.slug][formattedName]['id']}) }}">
+                            <a href="{{ path('app_summoner',{'region': region.slug, 'summonerId': data.summoners[region.slug]['id']}) }}">
                                 <div class="panel panel-default summoner-not-found-pannel">
                                     <div class="panel-heading">{{ region.name }}</div>
                                     <div class="panel-body">
-                                        <p class="col-md-12">{{ data.summoners[region.slug][formattedName]['name'] }}</p>
-                                        <img class=" img-responsive col-md-6"
-                                             src="{{ data.summoners[region.slug][formattedName]['profileIconId']|sumIcon }}"/>
+                                        <p class="col-md-12">{{ data.summoners[region.slug]['name'] }}</p>
+                                        <img class=" img-responsive col-md-6 summoner-icon"
+                                             src="{{ data.summoners[region.slug]['profileIconId']|sumIcon }}"/>
                                         <div class="col-md-6">
                                             <p>
-                                                Level {{ data.summoners[region.slug][formattedName]['summonerLevel'] }}</p>
+                                                Level {{ data.summoners[region.slug]['summonerLevel'] }}</p>
                                         </div>
                                     </div>
                                 </div>

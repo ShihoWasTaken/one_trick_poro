@@ -10,7 +10,11 @@
     </thead>
     <tr>
         {% for bannedChampion in bannedChampions %}
-            <img class="live-game-banned" src="http://ddragon.leagueoflegends.com/cdn/{{ static_data_version }}/img/champion/{{ champions[bannedChampion.championId]['key'] }}.png">
+            {% if bannedChampion.championId != -1 %}
+                <img class="live-game-banned" src="http://ddragon.leagueoflegends.com/cdn/{{ static_data_version }}/img/champion/{{ champions[bannedChampion.championId]['key'] }}.png">
+            {% else %}
+                <img class="live-game-banned empty-banned-champion" src="{{ asset('bundles/app/images/Unlock_a_Champion.jpg') }}">
+            {% endif %}
         {% endfor %}
     </tr>
     {% for player in players %}
@@ -18,8 +22,8 @@
             <td><a target="_blank" href="{{ url('app_summoner', {'summonerId': player.summonerId,'region': summoner.region.slug}) }}"><span class="live-game-name">{{ player.summonerName }}</span></a></td>
             <td>
                 {% if live_game_data is not empty %}
-                    <img class="live-game-rank" src="{{ asset('bundles/app/images/leagues/' ~ live_game_data[player.summonerId].img ~ '.png') }}" />
-                    <span class="live-game-rank" >{{ live_game_data[player.summonerId].rank }}</span>
+                    <img class="live-game-rank" src="{{ asset('bundles/app/images/leagues/' ~ live_game_data[player.summonerId].img ~ '.png') }}"/>
+                    <span class="live-game-rank">{{ live_game_data[player.summonerId].rank }}</span>
                 {% endif %}
             </td>
             <td>

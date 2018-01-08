@@ -43,6 +43,7 @@ class SummonerService
         if ($this->api->getResponseCode() == 404) {
             $this->logger->error("Echec à la firstUpdateSummoner() du Summoner " . $summoner->getSummonerId() . " de la region " . $summoner->getRegion()->getSlug() . ", il n'existe pas dans l'API de Riot");
         }
+        $summoner->setAccountId($summonerData['accountId']);
         $summoner->setName($summonerData['name']);
         $summoner->setLevel($summonerData['summonerLevel']);
         $summoner->setProfileIconId($summonerData['profileIconId']);
@@ -689,7 +690,7 @@ class SummonerService
         $data = array();
         $summoners = array();
         foreach ($regions as $region) {
-            $summoner = $this->api->getSummonerByNames($region, array($name));
+            $summoner = $this->api->getSummonerByName($region, $name);
             if ($this->api->getResponseCode() != 404) {
                 $summoners[$region->getSlug()] = $summoner;
             }

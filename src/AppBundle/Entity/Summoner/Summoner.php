@@ -31,6 +31,10 @@ class Summoner
      */
     private $id;
 
+    /**
+     * @ORM\Column(name="account_id", type="integer")
+     */
+    private $accountId;
 
     /**
      * @ORM\Column(name="summoner_id", type="integer")
@@ -147,6 +151,31 @@ class Summoner
     public function getId()
     {
         return $this->id;
+    }
+
+
+    /**
+     * Set account id
+     *
+     * @param integer $accountId
+     *
+     * @return Summoner
+     */
+    public function setAccountId($accountId)
+    {
+        $this->accountId = $accountId;
+
+        return $this;
+    }
+
+    /**
+     * Get account id
+     *
+     * @return integer
+     */
+    public function getAccountId()
+    {
+        return $this->accountId;
     }
 
 
